@@ -1,0 +1,425 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E7EA2236243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2228243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift */; };
+		E7EA2237243D1ED5009DDEEC /* Promise+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */; };
+		E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */; };
+		E7EA2239243D1ED5009DDEEC /* UINavigationFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222B243D1ED5009DDEEC /* UINavigationFlowController.swift */; };
+		E7EA223A243D1ED5009DDEEC /* FlowTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222C243D1ED5009DDEEC /* FlowTableViewController.swift */; };
+		E7EA223B243D1ED5009DDEEC /* FlowKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E7EA222D243D1ED5009DDEEC /* FlowKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E7EA223C243D1ED5009DDEEC /* FlowResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222E243D1ED5009DDEEC /* FlowResolver.swift */; };
+		E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */; };
+		E7EA223F243D1ED5009DDEEC /* FlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2231243D1ED5009DDEEC /* FlowController.swift */; };
+		E7EA2240243D1ED5009DDEEC /* FiniteStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2232243D1ED5009DDEEC /* FiniteStateMachine.swift */; };
+		E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */; };
+		E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2234243D1ED5009DDEEC /* Flow.swift */; };
+		E7EA2243243D1ED5009DDEEC /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */; };
+		E7EA2246243D21DB009DDEEC /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2245243D21DB009DDEEC /* PromiseKit.framework */; };
+		E7EA2248243D21FD009DDEEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2247243D21FD009DDEEC /* UIKit.framework */; };
+		E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2249243D2204009DDEEC /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E7EA2203243D1E2F009DDEEC /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E7EA2228243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FiniteStateMachineEventManager.swift; path = src/main/swift/FiniteStateMachineEventManager.swift; sourceTree = SOURCE_ROOT; };
+		E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Promise+Extensions.swift"; path = "src/main/swift/Promise+Extensions.swift"; sourceTree = SOURCE_ROOT; };
+		E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationTransaction.swift; path = src/main/swift/NavigationTransaction.swift; sourceTree = SOURCE_ROOT; };
+		E7EA222B243D1ED5009DDEEC /* UINavigationFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UINavigationFlowController.swift; path = src/main/swift/UINavigationFlowController.swift; sourceTree = SOURCE_ROOT; };
+		E7EA222C243D1ED5009DDEEC /* FlowTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowTableViewController.swift; path = src/main/swift/FlowTableViewController.swift; sourceTree = SOURCE_ROOT; };
+		E7EA222D243D1ED5009DDEEC /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlowKit.h; path = src/main/swift/FlowKit.h; sourceTree = SOURCE_ROOT; };
+		E7EA222E243D1ED5009DDEEC /* FlowResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowResolver.swift; path = src/main/swift/FlowResolver.swift; sourceTree = SOURCE_ROOT; };
+		E7EA222F243D1ED5009DDEEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = src/main/swift/Info.plist; sourceTree = SOURCE_ROOT; };
+		E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Extension.swift"; path = "src/main/swift/UINavigationViewController+Extension.swift"; sourceTree = SOURCE_ROOT; };
+		E7EA2231243D1ED5009DDEEC /* FlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowController.swift; path = src/main/swift/FlowController.swift; sourceTree = SOURCE_ROOT; };
+		E7EA2232243D1ED5009DDEEC /* FiniteStateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FiniteStateMachine.swift; path = src/main/swift/FiniteStateMachine.swift; sourceTree = SOURCE_ROOT; };
+		E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Transaction.swift"; path = "src/main/swift/UINavigationViewController+Transaction.swift"; sourceTree = SOURCE_ROOT; };
+		E7EA2234243D1ED5009DDEEC /* Flow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Flow.swift; path = src/main/swift/Flow.swift; sourceTree = SOURCE_ROOT; };
+		E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = src/main/swift/FlowViewController.swift; sourceTree = SOURCE_ROOT; };
+		E7EA2245243D21DB009DDEEC /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/iOS/PromiseKit.framework; sourceTree = "<group>"; };
+		E7EA2247243D21FD009DDEEC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		E7EA2249243D2204009DDEEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E7EA2200243D1E2F009DDEEC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */,
+				E7EA2248243D21FD009DDEEC /* UIKit.framework in Frameworks */,
+				E7EA2246243D21DB009DDEEC /* PromiseKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E7EA21CB243D1C50009DDEEC = {
+			isa = PBXGroup;
+			children = (
+				E7EA220B243D1E62009DDEEC /* FlowKit */,
+				E7EA224B243D2269009DDEEC /* Resources */,
+				E7EA21D6243D1C50009DDEEC /* Products */,
+				E7EA2244243D21DB009DDEEC /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E7EA21D6243D1C50009DDEEC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E7EA2203243D1E2F009DDEEC /* FlowKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E7EA220B243D1E62009DDEEC /* FlowKit */ = {
+			isa = PBXGroup;
+			children = (
+				E7EA2232243D1ED5009DDEEC /* FiniteStateMachine.swift */,
+				E7EA2228243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift */,
+				E7EA2234243D1ED5009DDEEC /* Flow.swift */,
+				E7EA2231243D1ED5009DDEEC /* FlowController.swift */,
+				E7EA222E243D1ED5009DDEEC /* FlowResolver.swift */,
+				E7EA222C243D1ED5009DDEEC /* FlowTableViewController.swift */,
+				E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */,
+				E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */,
+				E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */,
+				E7EA222B243D1ED5009DDEEC /* UINavigationFlowController.swift */,
+				E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */,
+				E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */,
+			);
+			name = FlowKit;
+			path = src/main/FlowKit;
+			sourceTree = "<group>";
+		};
+		E7EA2244243D21DB009DDEEC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E7EA2249243D2204009DDEEC /* Foundation.framework */,
+				E7EA2247243D21FD009DDEEC /* UIKit.framework */,
+				E7EA2245243D21DB009DDEEC /* PromiseKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E7EA224B243D2269009DDEEC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E7EA222D243D1ED5009DDEEC /* FlowKit.h */,
+				E7EA222F243D1ED5009DDEEC /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E7EA21FE243D1E2F009DDEEC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E7EA223B243D1ED5009DDEEC /* FlowKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E7EA2202243D1E2F009DDEEC /* FlowKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E7EA2208243D1E2F009DDEEC /* Build configuration list for PBXNativeTarget "FlowKit" */;
+			buildPhases = (
+				E7EA21FE243D1E2F009DDEEC /* Headers */,
+				E7EA21FF243D1E2F009DDEEC /* Sources */,
+				E7EA2200243D1E2F009DDEEC /* Frameworks */,
+				E7EA2201243D1E2F009DDEEC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlowKit;
+			productName = FlowKit;
+			productReference = E7EA2203243D1E2F009DDEEC /* FlowKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E7EA21CC243D1C50009DDEEC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "InMotion Software";
+				TargetAttributes = {
+					E7EA2202243D1E2F009DDEEC = {
+						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
+					};
+				};
+			};
+			buildConfigurationList = E7EA21CF243D1C50009DDEEC /* Build configuration list for PBXProject "FlowKit" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E7EA21CB243D1C50009DDEEC;
+			productRefGroup = E7EA21D6243D1C50009DDEEC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E7EA2202243D1E2F009DDEEC /* FlowKit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E7EA2201243D1E2F009DDEEC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E7EA21FF243D1E2F009DDEEC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */,
+				E7EA2236243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift in Sources */,
+				E7EA2243243D1ED5009DDEEC /* FlowViewController.swift in Sources */,
+				E7EA2239243D1ED5009DDEEC /* UINavigationFlowController.swift in Sources */,
+				E7EA2240243D1ED5009DDEEC /* FiniteStateMachine.swift in Sources */,
+				E7EA223F243D1ED5009DDEEC /* FlowController.swift in Sources */,
+				E7EA2237243D1ED5009DDEEC /* Promise+Extensions.swift in Sources */,
+				E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */,
+				E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */,
+				E7EA223A243D1ED5009DDEEC /* FlowTableViewController.swift in Sources */,
+				E7EA223C243D1ED5009DDEEC /* FlowResolver.swift in Sources */,
+				E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E7EA21DB243D1C50009DDEEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E7EA21DC243D1C50009DDEEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E7EA2209243D1E2F009DDEEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = TLYSQC6HRM;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = src/main/swift/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inmotionsoftware.FlowKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E7EA220A243D1E2F009DDEEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = TLYSQC6HRM;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = src/main/swift/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inmotionsoftware.FlowKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E7EA21CF243D1C50009DDEEC /* Build configuration list for PBXProject "FlowKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E7EA21DB243D1C50009DDEEC /* Debug */,
+				E7EA21DC243D1C50009DDEEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E7EA2208243D1E2F009DDEEC /* Build configuration list for PBXNativeTarget "FlowKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E7EA2209243D1E2F009DDEEC /* Debug */,
+				E7EA220A243D1E2F009DDEEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E7EA21CC243D1C50009DDEEC /* Project object */;
+}

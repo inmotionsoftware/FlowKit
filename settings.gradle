@@ -1,0 +1,4 @@
+rootProject.name = 'FlowKit'
+include ':FlowKitCompiler', 'FlowKitLib'
+project(':FlowKitCompiler').projectDir = new File('./compiler')
+project(':FlowKitLib').projectDir = new File('./lib')
