@@ -63,19 +63,11 @@ fun processPuml(namespace: String, file: File, exportFormat: ExportFormat, write
             when (it.leafType) {
                 LeafType.CIRCLE_START -> {
                     val type = it.bodier.rawBody.firstOrNull()
-                    states[it.uid] =
-                        State(
-                            name = "Begin",
-                            type = type
-                        )
+                    states[it.uid] = State(name = "Begin", type = type)
                 }
                 LeafType.CIRCLE_END -> {
                     val type = it.bodier.rawBody.firstOrNull()
-                    states[it.uid] =
-                        State(
-                            name = "End",
-                            type = type
-                        )
+                    states[it.uid] = State(name = "End", type = type)
                 }
                 LeafType.STATE -> {
                     when (it.parentContainer.groupType) {
@@ -87,11 +79,7 @@ fun processPuml(namespace: String, file: File, exportFormat: ExportFormat, write
                         }
                     }
                     val type = it.bodier.rawBody.firstOrNull()
-                    states[it.uid] =
-                        State(
-                            name = it.codeGetName,
-                            type = type
-                        )
+                    states[it.uid] = State(name = it.codeGetName, type = type)
                 }
                 else -> {}
             }
@@ -99,33 +87,36 @@ fun processPuml(namespace: String, file: File, exportFormat: ExportFormat, write
         diagram.entityFactory.groups().forEach {
             val group = it.groupType
             val type = it.bodier.rawBody.firstOrNull()
-            states[it.uid] = State(
-                name = it.codeGetName,
-                type = type
-            )
+            states[it.uid] = State( name = it.codeGetName, type = type )
         }
         diagram.entityFactory.links.forEach {
             val id1 = it.entity1.uid
             val id2 = it.entity2.uid
-//            println("from: ${it.entity1.codeGetName} (${id1}) to: ${it.entity2.codeGetName} (${id2})")
 
             val from = states.get(id1)
             val to = states.get(id2)
 
             if (from == null) {
-//                println("missing from: ${it.entity1.codeGetName} (${id1})")
                 return@forEach
             }
 
             if (to == null) {
-//                println("missing to: ${it.entity2.codeGetName} (${id2})")
                 return@forEach
             }
 
+            if (from.name == "Begin") {
+                from.type = if (it.label.size() == 0) null else it.label?.firstOrNull()?.toString()
+            }
+
+            if (to.name == "End") {
+                to.type = if (it.label.size() == 0) null else it.label?.firstOrNull()?.toString()
+            }
+
+            val type: String? = if (it.label.size() == 0) null else it.label?.firstOrNull()?.toString()
             transitions += Transition(
                 from = from,
                 to = to,
-                type = to.type
+                type = type
             )
         }
     }

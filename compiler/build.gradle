@@ -28,4 +28,18 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-mainClassName = 'com.inmotionsoftware.flowkit.Main'
+mainClassName = 'com.inmotionsoftware.flowkit.compiler.MainKt'
+
+jar {
+    manifest {
+        attributes(
+            "Implementation-Title": project.name,
+            "Implementation-Version": project.version,
+            'Main-Class': mainClassName
+        )
+    }
+}
+
+application {
+    mainClassName = mainClassName
+}

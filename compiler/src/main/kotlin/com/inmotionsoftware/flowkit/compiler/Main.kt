@@ -1,4 +1,3 @@
-@file:JvmName("Main")
 package com.inmotionsoftware.flowkit.compiler
 
 import gnu.getopt.LongOpt;
@@ -53,11 +52,17 @@ fun printHelp() {
 }
 
 fun main(_args: Array<String>) {
-    val args = arrayOf("--export", "kotlin", "../test/src/main/example.puml")
-
-    print("args: ")
-    args.forEach { println(it) }
+    println("args: ")
+    _args.forEach { println(it) }
     println()
+
+    val args = _args
+
+//    val args = arrayOf<String>(
+//        "--export", "swift",
+//        "--output", "/Users/bghoward/Library/Developer/Xcode/DerivedData/ExampleFlow-eaanvgxflaclurgpuxwawntdfgtl/Build/Intermediates.noindex/ExampleFlow.build/Debug-iphonesimulator/ExampleFlow.build/DerivedSources/LoginFlow.swift",
+//        "/Users/bghoward/Projects/FlowKit/example/ios/ExampleFlow/ExampleFlow/LoginFlow.puml"
+//    )
 
     val longopts = arrayOf<LongOpt>(
         LongOpt("export", LongOpt.REQUIRED_ARGUMENT, null, 'e'.toInt()),
