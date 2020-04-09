@@ -16,28 +16,29 @@ public enum LoginViewResult {
     case forgotPassword(email: String)
 }
 
-struct LoginView: FlowView, View {
+struct LoginView: ViewFlow, View {
     typealias Input = String
     typealias Output = LoginViewResult
-    var proxy = ProxyFlow<Output>()
+
+    private let promise = Promise<Output>.pending()
 
     @State private var email: String = ""
     @State private var password: String = ""
 
     func login() {
-        resolve(.login(email: email, password: password))
+        self.promise.resolver.fulfill(.login(email: email, password: password))
     }
 
     func register() {
-        resolve(.register)
+        self.promise.resolver.fulfill(.register)
     }
 
     func forgot() {
-        resolve(.forgotPassword(email: email))
+        self.promise.resolver.fulfill(.forgotPassword(email: email))
     }
 
-    func attach(context: Input) {
-        email = context
+    func startFlow(context: String) -> Promise<LoginViewResult> {
+        return self.promise.promise
     }
 
     var body: some View {

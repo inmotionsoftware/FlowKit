@@ -10,7 +10,9 @@ import SwiftUI
 import PromiseKit
 import FlowKit
 
-struct RegisterView: FlowView, View {
+struct RegisterView: ViewFlow, View {
+
+
     typealias Input = Void
     typealias Output = User
 
@@ -19,10 +21,15 @@ struct RegisterView: FlowView, View {
     @State private var email: String = ""
     @State private var password: String = ""
 
-    var proxy = ProxyFlow<Output>()
+    private let promise = Promise<Output>.pending()
+
+    func startFlow(context: Void) -> Promise<User> {
+        return self.promise.promise
+    }
 
     func register() {
-        resolve(User(firstName: firstName, lastName: lastName, email: email, password: password))
+        let user = User(firstName: firstName, lastName: lastName, email: email, password: password)
+        self.promise.resolver.fulfill(user)
     }
 
     func attach(context: Void) {

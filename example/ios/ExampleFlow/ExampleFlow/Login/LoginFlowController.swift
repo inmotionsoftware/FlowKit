@@ -11,16 +11,21 @@ import PromiseKit
 import SwiftUI
 import FlowKit
 
-class LoginFlowController: FlowNavigationController<OAuthToken>, LoginFlowStateMachine {
+class LoginFlowController: LoginFlowStateMachine {
     private var animated = false
+
+    private let nav: UINavigationController
+    init(nav: UINavigationController) {
+        self.nav = nav
+    }
 
     func onBegin(state: LoginFlowState, context: String) -> Promise<LoginFlowState.Begin> {
         return Promise.value(.prompt(context))
     }
 
     func onPrompt(state: LoginFlowState, context: String) -> Promise<LoginFlowState.Prompt> {
-        return self
-            .startflow(flow: LoginView(), args: context, animated: animated)
+        return ViewSubflow(view: LoginView(), nav: nav)
+            .startFlow(context: context)
             .map { result in
                 self.animated = true
                 switch (result) {
@@ -42,9 +47,9 @@ class LoginFlowController: FlowNavigationController<OAuthToken>, LoginFlowStateM
 
     func onForgotPass(state: LoginFlowState, context: String) -> Promise<LoginFlowState.ForgotPass> {
         let view = ForgotPasswordViewController.init(nibName: "ForgotPassword", bundle: Bundle.main)
+        let flow = ViewControllerSubflow(viewController: view, nav: self.nav)
 
-        return self
-            .startflow(flow: view, args: context, animated: animated)
+        return flow.startFlow(context: context)
             .map { email in
                 return LoginFlowState.ForgotPass.prompt(email)
             }
@@ -55,8 +60,8 @@ class LoginFlowController: FlowNavigationController<OAuthToken>, LoginFlowStateM
     }
 
     func onEnterAccountInfo(state: LoginFlowState, context: Void) -> Promise<LoginFlowState.EnterAccountInfo> {
-        return self
-            .startflow(flow: RegisterView(), args: ())
+        return ViewSubflow(view: RegisterView(), nav: nav)
+            .startFlow(context: context)
             .map { .createAccount($0) }
     }
 

@@ -7,17 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E75C26A3243F629200B3C467 /* FlowHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26A2243F629200B3C467 /* FlowHostingController.swift */; };
-		E76531DC243E711300E4ACC8 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76531DB243E711300E4ACC8 /* FlowView.swift */; };
+		E75C26AD243FBADF00B3C467 /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26AC243FBADF00B3C467 /* FlowViewController.swift */; };
 		E7EA2237243D1ED5009DDEEC /* Promise+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */; };
 		E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */; };
-		E7EA2239243D1ED5009DDEEC /* FlowNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222B243D1ED5009DDEEC /* FlowNavigationController.swift */; };
 		E7EA223B243D1ED5009DDEEC /* FlowKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E7EA222D243D1ED5009DDEEC /* FlowKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E7EA223C243D1ED5009DDEEC /* ProxyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222E243D1ED5009DDEEC /* ProxyFlow.swift */; };
 		E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */; };
 		E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */; };
 		E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2234243D1ED5009DDEEC /* Flow.swift */; };
-		E7EA2243243D1ED5009DDEEC /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */; };
 		E7EA2246243D21DB009DDEEC /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2245243D21DB009DDEEC /* PromiseKit.framework */; };
 		E7EA2248243D21FD009DDEEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2247243D21FD009DDEEC /* UIKit.framework */; };
 		E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2249243D2204009DDEEC /* Foundation.framework */; };
@@ -34,19 +30,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E75C26A2243F629200B3C467 /* FlowHostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowHostingController.swift; path = src/main/swift/FlowHostingController.swift; sourceTree = SOURCE_ROOT; };
-		E76531DB243E711300E4ACC8 /* FlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowView.swift; path = src/main/swift/FlowView.swift; sourceTree = SOURCE_ROOT; };
+		E75C26AC243FBADF00B3C467 /* FlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = ../../../../example/ios/ExampleFlow/ExampleFlow/FlowViewController.swift; sourceTree = "<group>"; };
 		E7EA2203243D1E2F009DDEEC /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Promise+Extensions.swift"; path = "src/main/swift/Promise+Extensions.swift"; sourceTree = SOURCE_ROOT; };
 		E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationTransaction.swift; path = src/main/swift/NavigationTransaction.swift; sourceTree = SOURCE_ROOT; };
-		E7EA222B243D1ED5009DDEEC /* FlowNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowNavigationController.swift; path = src/main/swift/FlowNavigationController.swift; sourceTree = SOURCE_ROOT; };
 		E7EA222D243D1ED5009DDEEC /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlowKit.h; path = src/main/swift/FlowKit.h; sourceTree = SOURCE_ROOT; };
-		E7EA222E243D1ED5009DDEEC /* ProxyFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyFlow.swift; path = src/main/swift/ProxyFlow.swift; sourceTree = SOURCE_ROOT; };
 		E7EA222F243D1ED5009DDEEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = src/main/swift/Info.plist; sourceTree = SOURCE_ROOT; };
 		E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Extension.swift"; path = "src/main/swift/UINavigationViewController+Extension.swift"; sourceTree = SOURCE_ROOT; };
 		E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Transaction.swift"; path = "src/main/swift/UINavigationViewController+Transaction.swift"; sourceTree = SOURCE_ROOT; };
 		E7EA2234243D1ED5009DDEEC /* Flow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Flow.swift; path = src/main/swift/Flow.swift; sourceTree = SOURCE_ROOT; };
-		E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = src/main/swift/FlowViewController.swift; sourceTree = SOURCE_ROOT; };
 		E7EA2245243D21DB009DDEEC /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/iOS/PromiseKit.framework; sourceTree = "<group>"; };
 		E7EA2247243D21FD009DDEEC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E7EA2249243D2204009DDEEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -88,15 +80,11 @@
 			isa = PBXGroup;
 			children = (
 				E7EA2234243D1ED5009DDEEC /* Flow.swift */,
-				E76531DB243E711300E4ACC8 /* FlowView.swift */,
-				E7EA222E243D1ED5009DDEEC /* ProxyFlow.swift */,
-				E75C26A2243F629200B3C467 /* FlowHostingController.swift */,
-				E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */,
-				E7EA222B243D1ED5009DDEEC /* FlowNavigationController.swift */,
 				E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */,
 				E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */,
 				E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */,
 				E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */,
+				E75C26AC243FBADF00B3C467 /* FlowViewController.swift */,
 			);
 			name = FlowKit;
 			path = src/main/FlowKit;
@@ -137,7 +125,7 @@
 /* Begin PBXLegacyTarget section */
 		E75C269C243F619F00B3C467 /* FlowKitCompiler */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(ACTION)";
+			buildArgumentsString = "$(ACTION) installDist";
 			buildConfigurationList = E75C269F243F619F00B3C467 /* Build configuration list for PBXLegacyTarget "FlowKitCompiler" */;
 			buildPhases = (
 			);
@@ -224,14 +212,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */,
-				E7EA2243243D1ED5009DDEEC /* FlowViewController.swift in Sources */,
-				E76531DC243E711300E4ACC8 /* FlowView.swift in Sources */,
-				E7EA2239243D1ED5009DDEEC /* FlowNavigationController.swift in Sources */,
 				E7EA2237243D1ED5009DDEEC /* Promise+Extensions.swift in Sources */,
+				E75C26AD243FBADF00B3C467 /* FlowViewController.swift in Sources */,
 				E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */,
-				E75C26A3243F629200B3C467 /* FlowHostingController.swift in Sources */,
 				E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */,
-				E7EA223C243D1ED5009DDEEC /* ProxyFlow.swift in Sources */,
 				E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
