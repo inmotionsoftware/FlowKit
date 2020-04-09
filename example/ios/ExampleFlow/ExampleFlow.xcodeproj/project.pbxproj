@@ -7,9 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E73E321E243E671500E06854 /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73E321D243E671500E06854 /* ForgotPasswordView.swift */; };
+		E73E3220243E673300E06854 /* RegisterAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73E321F243E673300E06854 /* RegisterAccountView.swift */; };
+		E75C26A9243F71C400B3C467 /* ForgotPassword.xib in Resources */ = {isa = PBXBuildFile; fileRef = E75C26A8243F71C400B3C467 /* ForgotPassword.xib */; };
+		E75C26AB243F72C100B3C467 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26AA243F72C100B3C467 /* ForgotPasswordViewController.swift */; };
+		E76531DE243E738100E4ACC8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76531DD243E738100E4ACC8 /* HomeView.swift */; };
+		E79306BD243E473F002C1A13 /* FlowKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E79306BC243E473F002C1A13 /* FlowKit.framework */; };
+		E79306BE243E473F002C1A13 /* FlowKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E79306BC243E473F002C1A13 /* FlowKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E79306C0243E5D77002C1A13 /* LoginFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79306BF243E5D77002C1A13 /* LoginFlowController.swift */; };
+		E79306C3243E5DA7002C1A13 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79306C2243E5DA7002C1A13 /* Credentials.swift */; };
+		E79306C5243E5DBB002C1A13 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79306C4243E5DBB002C1A13 /* User.swift */; };
+		E79306C7243E5DE6002C1A13 /* OAuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79306C6243E5DE6002C1A13 /* OAuthToken.swift */; };
 		E7EA2259243D25A3009DDEEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2258243D25A3009DDEEC /* AppDelegate.swift */; };
 		E7EA225B243D25A3009DDEEC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA225A243D25A3009DDEEC /* SceneDelegate.swift */; };
-		E7EA225D243D25A3009DDEEC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA225C243D25A3009DDEEC /* ContentView.swift */; };
+		E7EA225D243D25A3009DDEEC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA225C243D25A3009DDEEC /* LoginView.swift */; };
 		E7EA225F243D25A7009DDEEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7EA225E243D25A7009DDEEC /* Assets.xcassets */; };
 		E7EA2262243D25A7009DDEEC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7EA2261243D25A7009DDEEC /* Preview Assets.xcassets */; };
 		E7EA2265243D25A7009DDEEC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E7EA2263243D25A7009DDEEC /* LaunchScreen.storyboard */; };
@@ -43,6 +54,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				E7EA2273243D3DB4009DDEEC /* PromiseKit.framework in Embed Frameworks */,
+				E79306BE243E473F002C1A13 /* FlowKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -50,10 +62,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E73E321D243E671500E06854 /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
+		E73E321F243E673300E06854 /* RegisterAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAccountView.swift; sourceTree = "<group>"; };
+		E75C26A8243F71C400B3C467 /* ForgotPassword.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForgotPassword.xib; sourceTree = "<group>"; };
+		E75C26AA243F72C100B3C467 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		E76531DD243E738100E4ACC8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		E79306BC243E473F002C1A13 /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E79306BF243E5D77002C1A13 /* LoginFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowController.swift; sourceTree = "<group>"; };
+		E79306C2243E5DA7002C1A13 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
+		E79306C4243E5DBB002C1A13 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		E79306C6243E5DE6002C1A13 /* OAuthToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthToken.swift; sourceTree = "<group>"; };
 		E7EA2255243D25A3009DDEEC /* ExampleFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7EA2258243D25A3009DDEEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7EA225A243D25A3009DDEEC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		E7EA225C243D25A3009DDEEC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E7EA225C243D25A3009DDEEC /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		E7EA225E243D25A7009DDEEC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E7EA2261243D25A7009DDEEC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E7EA2264243D25A7009DDEEC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -68,12 +90,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7EA2272243D3DB4009DDEEC /* PromiseKit.framework in Frameworks */,
+				E79306BD243E473F002C1A13 /* FlowKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E79306C1243E5D89002C1A13 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				E79306BF243E5D77002C1A13 /* LoginFlowController.swift */,
+				E7EA226D243D3AF5009DDEEC /* LoginFlow.puml */,
+				E79306C2243E5DA7002C1A13 /* Credentials.swift */,
+				E79306C4243E5DBB002C1A13 /* User.swift */,
+				E79306C6243E5DE6002C1A13 /* OAuthToken.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 		E7EA224C243D25A3009DDEEC = {
 			isa = PBXGroup;
 			children = (
@@ -94,10 +129,15 @@
 		E7EA2257243D25A3009DDEEC /* ExampleFlow */ = {
 			isa = PBXGroup;
 			children = (
-				E7EA226D243D3AF5009DDEEC /* LoginFlow.puml */,
+				E79306C1243E5D89002C1A13 /* Login */,
 				E7EA2258243D25A3009DDEEC /* AppDelegate.swift */,
 				E7EA225A243D25A3009DDEEC /* SceneDelegate.swift */,
-				E7EA225C243D25A3009DDEEC /* ContentView.swift */,
+				E7EA225C243D25A3009DDEEC /* LoginView.swift */,
+				E76531DD243E738100E4ACC8 /* HomeView.swift */,
+				E73E321F243E673300E06854 /* RegisterAccountView.swift */,
+				E73E321D243E671500E06854 /* ForgotPasswordView.swift */,
+				E75C26A8243F71C400B3C467 /* ForgotPassword.xib */,
+				E75C26AA243F72C100B3C467 /* ForgotPasswordViewController.swift */,
 				E7EA225E243D25A7009DDEEC /* Assets.xcassets */,
 				E7EA2263243D25A7009DDEEC /* LaunchScreen.storyboard */,
 				E7EA2266243D25A7009DDEEC /* Info.plist */,
@@ -117,6 +157,7 @@
 		E7EA2270243D3DB4009DDEEC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E79306BC243E473F002C1A13 /* FlowKit.framework */,
 				E7EA2271243D3DB4009DDEEC /* PromiseKit.framework */,
 			);
 			name = Frameworks;
@@ -185,6 +226,7 @@
 				E7EA2265243D25A7009DDEEC /* LaunchScreen.storyboard in Resources */,
 				E7EA2262243D25A7009DDEEC /* Preview Assets.xcassets in Resources */,
 				E7EA225F243D25A7009DDEEC /* Assets.xcassets in Resources */,
+				E75C26A9243F71C400B3C467 /* ForgotPassword.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,10 +237,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E79306C3243E5DA7002C1A13 /* Credentials.swift in Sources */,
+				E73E3220243E673300E06854 /* RegisterAccountView.swift in Sources */,
 				E7EA226F243D3D23009DDEEC /* LoginFlow.puml in Sources */,
+				E79306C0243E5D77002C1A13 /* LoginFlowController.swift in Sources */,
 				E7EA2259243D25A3009DDEEC /* AppDelegate.swift in Sources */,
+				E76531DE243E738100E4ACC8 /* HomeView.swift in Sources */,
 				E7EA225B243D25A3009DDEEC /* SceneDelegate.swift in Sources */,
-				E7EA225D243D25A3009DDEEC /* ContentView.swift in Sources */,
+				E79306C7243E5DE6002C1A13 /* OAuthToken.swift in Sources */,
+				E75C26AB243F72C100B3C467 /* ForgotPasswordViewController.swift in Sources */,
+				E7EA225D243D25A3009DDEEC /* LoginView.swift in Sources */,
+				E73E321E243E671500E06854 /* ForgotPasswordView.swift in Sources */,
+				E79306C5243E5DBB002C1A13 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

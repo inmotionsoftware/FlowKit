@@ -95,6 +95,7 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
     builder.appendln("""
     import Foundation
     import PromiseKit
+    import FlowKit
 
     """.trimIndent())
 
@@ -107,13 +108,23 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
     public protocol ${stateMachineName}: Flow where Input == ${input}, Output == ${output} {
         typealias State = ${stateEnum.name}
         func onStateDidChange(prev: State, curr: State)
+        func attach(_ promise: Promise<Output>) -> Promise<Output>
         ${ stateEnum.values.filter { it.name != "Terminate" }.concatln { "func on${it.name}(state: State, context: ${convertType(it.context)}) -> Promise<State.${it.name}>" }}
     }
 
+
     extension ${stateMachineName} {
-        func startFlow(context: ${input}) -> Promise<${output}> { return nextState(prev: .begin(context), next: .begin(context)) }
+        func startFlow(context: ${input}) -> Promise<${output}> {
+            let state = State.begin(context)
+            return attach(nextState(prev: state, next: state)) 
+        }
+        
+        func attach(_ promise: Promise<Output>) -> Promise<Output> {
+            return promise
+        }
+
         func onStateDidChange(prev: State, curr: State) {}
-        private func nextState(prev: State, next: State) -> Promise<${output}> {
+        fileprivate func nextState(prev: State, next: State) -> Promise<${output}> {
             onStateDidChange(prev:prev, curr:next)
             switch(next) { 
             ${ stateEnum.values.filter { it.name == "Terminate" }.concatln { "case .${it.name.decapitalize()}(let context): return Promise.value(context)" } }

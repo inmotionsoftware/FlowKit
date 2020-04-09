@@ -2,57 +2,29 @@
 //  Flow.swift
 //  FlowKit
 //
-//  Created by Khuong Huynh on 3/21/17.
-//  Copyright © 2017 InMotion Software, LLC. All rights reserved.
+//  Created by Brian Howard on 4/8/20.
+//  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
 
 import Foundation
 import PromiseKit
 
-
-public protocol FlowState: StateType {
-    typealias Transition = FSMTransition<Self>
+public protocol Flow {
+    associatedtype Input
+    associatedtype Output
+    func startFlow(context: Input) -> Promise<Output>
 }
 
-public protocol FlowResultBase {
-    associatedtype Result
-    var isBack: Bool { get }
-    var isCancel: Bool { get }
-    var isComplete: (Bool,Result?) { get }
+extension Flow where Input == Void {
+    func startFlow() -> Promise<Output> {
+        return self.startFlow(context: ())
+    }
 }
 
-public enum FlowResult<Return> {
-    case complete(result: Return)
+public enum FlowError: Error {
+    case canceled
     case back
-    case cancel
 }
-
-extension FlowResult: FlowResultBase {
-    public typealias Result = Return
-
-    public var isBack: Bool {
-        switch(self) {
-            case .back: return true
-            default: return false
-        }
-    }
-
-    public var isCancel: Bool {
-        switch(self) {
-            case .cancel: return true
-            default: return false
-        }
-    }
-
-    public var isComplete: (Bool,Result?) {
-        switch(self) {
-            case .complete(let t): return (true, t)
-            default: return (false, nil)
-        }
-    }
-}
-
-public typealias FlowPromise<Result> = Promise<FlowResult<Result>>
 
 public protocol Backable {
     func back()
@@ -68,21 +40,20 @@ public protocol Resolvable {
     func reject(_ error: Error)
 }
 
-public protocol Flow: Resolvable, Cancelable, Backable where Result == Return {
-    associatedtype Args
-    associatedtype Return
-    
-
-    func reject(_ error: Error)
-    func resolve(_ value: Return)
-    func cancel()
-    func back()
-
-    func run(args: Args) -> FlowPromise<Return>
+public extension Resolvable where Self: Backable {
+    func back() { self.reject(FlowError.back) }
 }
 
-extension Flow where Args == Void {
-    func run() -> FlowPromise<Return> {
-        return run(args: ())
-    }
+public extension Resolvable where Self: Cancelable {
+    func cancel() { self.reject(FlowError.canceled) }
+}
+
+public protocol Reusable {
+    func prepareForReuse()
+}
+
+public protocol Promisable {
+    var isPending: Bool { get }
+    var isResolved: Bool { get }
+    var isRejected: Bool { get }
 }

@@ -20,15 +20,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView()
+        let nav = UINavigationController()
+        let home = HomeView()
+        nav.pushViewController(UIHostingController(rootView: home), animated: false)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: contentView)
+            window.rootViewController = nav
             self.window = window
             window.makeKeyAndVisible()
         }
+
+        let controller = LoginFlowController(navigationController: nav)
+        controller.startFlow(context: "test@test.com")
+        .map { value in
+            print(value)
+
+        }
+        .ensure { nav.currentTransaction?.commit() }
+
+//        let contentView = LoginView()
+//
+//        // Use a UIHostingController as window root view controller.
+//        if let windowScene = scene as? UIWindowScene {
+//            let window = UIWindow(windowScene: windowScene)
+//            window.rootViewController = UIHostingController(rootView: contentView)
+//            self.window = window
+//            window.makeKeyAndVisible()
+//        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

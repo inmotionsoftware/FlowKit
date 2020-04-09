@@ -3,7 +3,7 @@
 //  FlowKit
 //
 //  Created by Brian Howard on 3/29/17.
-//  Copyright © 2017 InMotion Software, LLC. All rights reserved.
+//  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
 
 import Foundation

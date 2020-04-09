@@ -3,7 +3,7 @@
 //  FlowKit
 //
 //  Created by Khuong Huynh on 1/5/17.
-//  Copyright © 2017 InMotion Software, LLC. All rights reserved.
+//  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
 
 import UIKit

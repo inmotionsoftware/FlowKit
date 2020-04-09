@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E7EA2236243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2228243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift */; };
+		E75C26A3243F629200B3C467 /* FlowHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26A2243F629200B3C467 /* FlowHostingController.swift */; };
+		E75C26A7243F630100B3C467 /* ProxyFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26A6243F630100B3C467 /* ProxyFlowController.swift */; };
+		E76531DC243E711300E4ACC8 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76531DB243E711300E4ACC8 /* FlowView.swift */; };
 		E7EA2237243D1ED5009DDEEC /* Promise+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */; };
 		E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */; };
-		E7EA2239243D1ED5009DDEEC /* UINavigationFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222B243D1ED5009DDEEC /* UINavigationFlowController.swift */; };
+		E7EA2239243D1ED5009DDEEC /* FlowNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222B243D1ED5009DDEEC /* FlowNavigationController.swift */; };
 		E7EA223A243D1ED5009DDEEC /* FlowTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222C243D1ED5009DDEEC /* FlowTableViewController.swift */; };
 		E7EA223B243D1ED5009DDEEC /* FlowKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E7EA222D243D1ED5009DDEEC /* FlowKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E7EA223C243D1ED5009DDEEC /* FlowResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222E243D1ED5009DDEEC /* FlowResolver.swift */; };
+		E7EA223C243D1ED5009DDEEC /* ProxyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222E243D1ED5009DDEEC /* ProxyFlow.swift */; };
 		E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */; };
-		E7EA223F243D1ED5009DDEEC /* FlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2231243D1ED5009DDEEC /* FlowController.swift */; };
-		E7EA2240243D1ED5009DDEEC /* FiniteStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2232243D1ED5009DDEEC /* FiniteStateMachine.swift */; };
 		E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */; };
 		E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2234243D1ED5009DDEEC /* Flow.swift */; };
 		E7EA2243243D1ED5009DDEEC /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */; };
@@ -25,19 +25,29 @@
 		E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2249243D2204009DDEEC /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E75C26A0243F626300B3C467 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E7EA21CC243D1C50009DDEEC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E75C269C243F619F00B3C467;
+			remoteInfo = FlowKitCompiler;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		E75C26A2243F629200B3C467 /* FlowHostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowHostingController.swift; path = src/main/swift/FlowHostingController.swift; sourceTree = SOURCE_ROOT; };
+		E75C26A6243F630100B3C467 /* ProxyFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyFlowController.swift; path = src/main/swift/ProxyFlowController.swift; sourceTree = SOURCE_ROOT; };
+		E76531DB243E711300E4ACC8 /* FlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowView.swift; path = src/main/swift/FlowView.swift; sourceTree = SOURCE_ROOT; };
 		E7EA2203243D1E2F009DDEEC /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7EA2228243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FiniteStateMachineEventManager.swift; path = src/main/swift/FiniteStateMachineEventManager.swift; sourceTree = SOURCE_ROOT; };
 		E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Promise+Extensions.swift"; path = "src/main/swift/Promise+Extensions.swift"; sourceTree = SOURCE_ROOT; };
 		E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationTransaction.swift; path = src/main/swift/NavigationTransaction.swift; sourceTree = SOURCE_ROOT; };
-		E7EA222B243D1ED5009DDEEC /* UINavigationFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UINavigationFlowController.swift; path = src/main/swift/UINavigationFlowController.swift; sourceTree = SOURCE_ROOT; };
+		E7EA222B243D1ED5009DDEEC /* FlowNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowNavigationController.swift; path = src/main/swift/FlowNavigationController.swift; sourceTree = SOURCE_ROOT; };
 		E7EA222C243D1ED5009DDEEC /* FlowTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowTableViewController.swift; path = src/main/swift/FlowTableViewController.swift; sourceTree = SOURCE_ROOT; };
 		E7EA222D243D1ED5009DDEEC /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlowKit.h; path = src/main/swift/FlowKit.h; sourceTree = SOURCE_ROOT; };
-		E7EA222E243D1ED5009DDEEC /* FlowResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowResolver.swift; path = src/main/swift/FlowResolver.swift; sourceTree = SOURCE_ROOT; };
+		E7EA222E243D1ED5009DDEEC /* ProxyFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyFlow.swift; path = src/main/swift/ProxyFlow.swift; sourceTree = SOURCE_ROOT; };
 		E7EA222F243D1ED5009DDEEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = src/main/swift/Info.plist; sourceTree = SOURCE_ROOT; };
 		E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Extension.swift"; path = "src/main/swift/UINavigationViewController+Extension.swift"; sourceTree = SOURCE_ROOT; };
-		E7EA2231243D1ED5009DDEEC /* FlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowController.swift; path = src/main/swift/FlowController.swift; sourceTree = SOURCE_ROOT; };
-		E7EA2232243D1ED5009DDEEC /* FiniteStateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FiniteStateMachine.swift; path = src/main/swift/FiniteStateMachine.swift; sourceTree = SOURCE_ROOT; };
 		E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Transaction.swift"; path = "src/main/swift/UINavigationViewController+Transaction.swift"; sourceTree = SOURCE_ROOT; };
 		E7EA2234243D1ED5009DDEEC /* Flow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Flow.swift; path = src/main/swift/Flow.swift; sourceTree = SOURCE_ROOT; };
 		E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = src/main/swift/FlowViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -81,16 +91,16 @@
 		E7EA220B243D1E62009DDEEC /* FlowKit */ = {
 			isa = PBXGroup;
 			children = (
-				E7EA2232243D1ED5009DDEEC /* FiniteStateMachine.swift */,
-				E7EA2228243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift */,
 				E7EA2234243D1ED5009DDEEC /* Flow.swift */,
-				E7EA2231243D1ED5009DDEEC /* FlowController.swift */,
-				E7EA222E243D1ED5009DDEEC /* FlowResolver.swift */,
+				E76531DB243E711300E4ACC8 /* FlowView.swift */,
+				E7EA222E243D1ED5009DDEEC /* ProxyFlow.swift */,
 				E7EA222C243D1ED5009DDEEC /* FlowTableViewController.swift */,
+				E75C26A6243F630100B3C467 /* ProxyFlowController.swift */,
+				E75C26A2243F629200B3C467 /* FlowHostingController.swift */,
 				E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */,
+				E7EA222B243D1ED5009DDEEC /* FlowNavigationController.swift */,
 				E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */,
 				E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */,
-				E7EA222B243D1ED5009DDEEC /* UINavigationFlowController.swift */,
 				E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */,
 				E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */,
 			);
@@ -130,6 +140,23 @@
 		};
 /* End PBXHeadersBuildPhase section */
 
+/* Begin PBXLegacyTarget section */
+		E75C269C243F619F00B3C467 /* FlowKitCompiler */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = E75C269F243F619F00B3C467 /* Build configuration list for PBXLegacyTarget "FlowKitCompiler" */;
+			buildPhases = (
+			);
+			buildToolPath = gradlew;
+			buildWorkingDirectory = "$(SOURCE_ROOT)/../";
+			dependencies = (
+			);
+			name = FlowKitCompiler;
+			passBuildSettingsInEnvironment = 1;
+			productName = FlowKitCompiler;
+		};
+/* End PBXLegacyTarget section */
+
 /* Begin PBXNativeTarget section */
 		E7EA2202243D1E2F009DDEEC /* FlowKit */ = {
 			isa = PBXNativeTarget;
@@ -143,6 +170,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				E75C26A1243F626300B3C467 /* PBXTargetDependency */,
 			);
 			name = FlowKit;
 			productName = FlowKit;
@@ -158,6 +186,9 @@
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "InMotion Software";
 				TargetAttributes = {
+					E75C269C243F619F00B3C467 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
 					E7EA2202243D1E2F009DDEEC = {
 						CreatedOnToolsVersion = 11.3.1;
 						LastSwiftMigration = 1130;
@@ -178,6 +209,7 @@
 			projectRoot = "";
 			targets = (
 				E7EA2202243D1E2F009DDEEC /* FlowKit */,
+				E75C269C243F619F00B3C467 /* FlowKitCompiler */,
 			);
 		};
 /* End PBXProject section */
@@ -198,23 +230,58 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */,
-				E7EA2236243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift in Sources */,
 				E7EA2243243D1ED5009DDEEC /* FlowViewController.swift in Sources */,
-				E7EA2239243D1ED5009DDEEC /* UINavigationFlowController.swift in Sources */,
-				E7EA2240243D1ED5009DDEEC /* FiniteStateMachine.swift in Sources */,
-				E7EA223F243D1ED5009DDEEC /* FlowController.swift in Sources */,
+				E76531DC243E711300E4ACC8 /* FlowView.swift in Sources */,
+				E7EA2239243D1ED5009DDEEC /* FlowNavigationController.swift in Sources */,
 				E7EA2237243D1ED5009DDEEC /* Promise+Extensions.swift in Sources */,
 				E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */,
+				E75C26A7243F630100B3C467 /* ProxyFlowController.swift in Sources */,
+				E75C26A3243F629200B3C467 /* FlowHostingController.swift in Sources */,
 				E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */,
 				E7EA223A243D1ED5009DDEEC /* FlowTableViewController.swift in Sources */,
-				E7EA223C243D1ED5009DDEEC /* FlowResolver.swift in Sources */,
+				E7EA223C243D1ED5009DDEEC /* ProxyFlow.swift in Sources */,
 				E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		E75C26A1243F626300B3C467 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E75C269C243F619F00B3C467 /* FlowKitCompiler */;
+			targetProxy = E75C26A0243F626300B3C467 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		E75C269D243F619F00B3C467 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = TLYSQC6HRM;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E75C269E243F619F00B3C467 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = TLYSQC6HRM;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		E7EA21DB243D1C50009DDEEC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -401,6 +468,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E75C269F243F619F00B3C467 /* Build configuration list for PBXLegacyTarget "FlowKitCompiler" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E75C269D243F619F00B3C467 /* Debug */,
+				E75C269E243F619F00B3C467 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E7EA21CF243D1C50009DDEEC /* Build configuration list for PBXProject "FlowKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

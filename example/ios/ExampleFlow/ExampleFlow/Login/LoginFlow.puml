@@ -8,6 +8,8 @@ Prompt --> Authenticate
 Prompt --> ForgotPass
 Prompt -> EnterAccountInfo
 
+Prompt: String
+
 Authenticate: Credentials
 
 ForgotPass --> Prompt
