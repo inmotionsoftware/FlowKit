@@ -9,20 +9,26 @@
 import SwiftUI
 import PromiseKit
 
-public protocol FlowView: SwiftUI.View, Flow, Resolvable, Cancelable, Backable, Promisable, Reusable where Result == Output {
+public protocol FlowProxy: Resolvable, Cancelable, Backable {
+    associatedtype Output
     var proxy: ProxyFlow<Output> { get }
 }
 
-public extension FlowView {
+public extension FlowProxy {
     var isPending: Bool { return self.proxy.isPending }
     var isResolved: Bool { return self.proxy.isResolved }
     var isRejected: Bool { return self.proxy.isRejected }
     func resolve(_ result: Output) { self.proxy.resolve(result) }
     func reject(_ error: Error) { self.proxy.reject(error) }
+}
 
+public protocol FlowView: SwiftUI.View, Flow, FlowProxy, Reusable where Result == Output {
+    var proxy: ProxyFlow<Output> { get }
+    func attach(context: Input)
+}
+
+public extension FlowView {
     func prepareForReuse() {}
-    func attach(context: Input) {}
-
     func startFlow(context: Input) -> Promise<Output> {
         prepareForReuse()
         return proxy.startFlow {

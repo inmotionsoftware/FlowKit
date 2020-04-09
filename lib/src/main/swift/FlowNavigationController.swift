@@ -33,8 +33,6 @@ extension UINavigationController: UINavigationBarDelegate {
     }
 }
 
-public protocol BackableFlow: UIViewController, BackableView, Flow {}
-
 open class FlowNavigationController<Output> {
     private(set) public var navigationController: UINavigationController
     private weak var rootViewController: UIViewController?
@@ -42,6 +40,15 @@ open class FlowNavigationController<Output> {
 
     public init(navigationController nav: UINavigationController)   {
         self.navigationController = nav
+    }
+
+    public func popOrPush<Content: View>(hosting: UIHostingController<Content>, animated: Bool) {
+        if let trans = self.navigationController.currentTransaction {
+            trans.popToOrPush(viewController: hosting)
+            trans.commit()
+            return
+        }
+        self.navigationController.popToOrPush(viewController: hosting, animated: animated)
     }
 
     public func popOrPush(viewController: UIViewController, animated: Bool) {
@@ -92,14 +99,18 @@ extension FlowNavigationController {
 extension FlowNavigationController {
     public func startflow<Input, Output, View: FlowView>(flow: View, args: Input, animated: Bool = true ) -> Promise<Output> where Input == View.Input, Output == View.Output {
         let container = FlowHostingController<View>(rootView: flow)
-        return self.startflow(flow: container, args: args, animated: animated);
+        self.popOrPush(viewController: container, animated: animated)
+        let _ = container.view // force load of the view controller
+        container.prepareForReuse()
+        container.backDelegate = self
+        return container.startFlow(context: args)
     }
 
     public func startflow<Input, Output, View: FlowViewController>(flow: View, args: Input, animated: Bool = true ) -> Promise<Output> where Input == View.Input, Output == View.Output {
         var viewController = flow
         self.popOrPush(viewController: viewController, animated: animated)
         let _ = viewController.view // force load of the view controller
-//        View.prepareForReuse()
+        viewController.prepareForReuse()
         viewController.backDelegate = self
         return viewController.startFlow(context: args)
     }

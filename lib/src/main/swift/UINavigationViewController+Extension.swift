@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 extension UINavigationController {
     var rootViewController : UIViewController? {
@@ -21,6 +22,19 @@ extension UINavigationController {
 
     func setRootViewController(_ viewController: UIViewController, animated: Bool = true) {
         self.setViewControllers([viewController], animated: animated)
+    }
+
+    @discardableResult
+    func popToOrPush<Content: View, T:UIHostingController<Content>>(viewController: T, animated: Bool = true) -> T {
+        let top = self.topViewController
+        guard top != viewController else { return top as! T }
+        if let found = self.viewControllers.first(where: { $0 is UIHostingController<Content> }) {
+            self.popToViewController(found, animated: animated)
+            return found as! T
+        } else {
+            self.pushViewController(viewController, animated: animated)
+        }
+        return viewController
     }
 
     @discardableResult

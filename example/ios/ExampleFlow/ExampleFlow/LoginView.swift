@@ -37,7 +37,7 @@ struct LoginView: FlowView, View {
     }
 
     func attach(context: Input) {
-        self.email = context
+        email = context
     }
 
     var body: some View {

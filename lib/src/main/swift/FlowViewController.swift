@@ -9,11 +9,16 @@
 import UIKit
 import PromiseKit
 
-public protocol BaseFlowViewController: Flow, Resolvable, Cancelable, Backable, Reusable where Result == Output {}
 
+public protocol FlowViewController: Flow, FlowProxy, Reusable, BackableView, BackButtonDelegate where Self: UIViewController, Result == Output {
+    func attach(context: Input)
+}
 
-public protocol FlowViewController: Flow, Resolvable, Cancelable, Backable, Reusable, BackableView, Promisable, BackButtonDelegate where Self: UIViewController, Result == Output {
-
+public extension FlowViewController {
+    func startFlow(context: Input) -> Promise<Output> {
+        attach(context: context)
+        return self.proxy.promise
+    }
 }
 
 extension FlowViewController {
@@ -36,7 +41,7 @@ extension FlowViewController {
     }
 }
 
-extension FlowViewController {
+public extension FlowViewController {
     func willMove(toParent parent: UIViewController?) {
         // Cancel our promise if the view controller is being popped from the
         // view stack

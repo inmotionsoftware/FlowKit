@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E73E321E243E671500E06854 /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73E321D243E671500E06854 /* ForgotPasswordView.swift */; };
 		E73E3220243E673300E06854 /* RegisterAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73E321F243E673300E06854 /* RegisterAccountView.swift */; };
 		E75C26A9243F71C400B3C467 /* ForgotPassword.xib in Resources */ = {isa = PBXBuildFile; fileRef = E75C26A8243F71C400B3C467 /* ForgotPassword.xib */; };
 		E75C26AB243F72C100B3C467 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26AA243F72C100B3C467 /* ForgotPasswordViewController.swift */; };
@@ -62,7 +61,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E73E321D243E671500E06854 /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
 		E73E321F243E673300E06854 /* RegisterAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAccountView.swift; sourceTree = "<group>"; };
 		E75C26A8243F71C400B3C467 /* ForgotPassword.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForgotPassword.xib; sourceTree = "<group>"; };
 		E75C26AA243F72C100B3C467 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
@@ -135,7 +133,6 @@
 				E7EA225C243D25A3009DDEEC /* LoginView.swift */,
 				E76531DD243E738100E4ACC8 /* HomeView.swift */,
 				E73E321F243E673300E06854 /* RegisterAccountView.swift */,
-				E73E321D243E671500E06854 /* ForgotPasswordView.swift */,
 				E75C26A8243F71C400B3C467 /* ForgotPassword.xib */,
 				E75C26AA243F72C100B3C467 /* ForgotPasswordViewController.swift */,
 				E7EA225E243D25A7009DDEEC /* Assets.xcassets */,
@@ -247,7 +244,6 @@
 				E79306C7243E5DE6002C1A13 /* OAuthToken.swift in Sources */,
 				E75C26AB243F72C100B3C467 /* ForgotPasswordViewController.swift in Sources */,
 				E7EA225D243D25A3009DDEEC /* LoginView.swift in Sources */,
-				E73E321E243E671500E06854 /* ForgotPasswordView.swift in Sources */,
 				E79306C5243E5DBB002C1A13 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

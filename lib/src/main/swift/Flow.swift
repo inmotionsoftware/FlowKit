@@ -36,6 +36,10 @@ public protocol Cancelable {
 
 public protocol Resolvable {
     associatedtype Result
+
+    var isPending: Bool { get }
+    var isResolved: Bool { get }
+    var isRejected: Bool { get }
     func resolve(_ result: Result)
     func reject(_ error: Error)
 }
@@ -50,10 +54,4 @@ public extension Resolvable where Self: Cancelable {
 
 public protocol Reusable {
     func prepareForReuse()
-}
-
-public protocol Promisable {
-    var isPending: Bool { get }
-    var isResolved: Bool { get }
-    var isRejected: Bool { get }
 }

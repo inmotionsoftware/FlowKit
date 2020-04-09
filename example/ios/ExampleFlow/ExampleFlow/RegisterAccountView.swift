@@ -25,6 +25,10 @@ struct RegisterView: FlowView, View {
         resolve(User(firstName: firstName, lastName: lastName, email: email, password: password))
     }
 
+    func attach(context: Void) {
+        print("attached")
+    }
+
     var body: some View {
         VStack {
             Text("Login")

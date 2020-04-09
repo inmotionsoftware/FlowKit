@@ -9,6 +9,9 @@
 import PromiseKit
 
 public struct Resolver<Output>: Resolvable {
+    public var isPending: Bool { return proxy.promise.isPending }
+    public var isResolved: Bool { return proxy.promise.isResolved }
+    public var isRejected: Bool { return proxy.promise.isRejected }
     private let proxy = Promise<Output>.pending()
 
     public var promise: Promise<Output> {
