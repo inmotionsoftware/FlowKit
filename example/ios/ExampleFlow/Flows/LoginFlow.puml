@@ -1,5 +1,7 @@
 @startuml
 
+!$platform = %getenv("PLATFORM_NAME")
+
 title Login Flow
 
 [*] --> Prompt
@@ -24,7 +26,9 @@ CreateAccount --> EnterAccountInfo
 
 EnterAccountInfo: String?
 
-note "This is a note about login" as N1
+
+note "This is a note $platform about login " as N1
+
 note left of Prompt
     This is where the
     login screen goes
