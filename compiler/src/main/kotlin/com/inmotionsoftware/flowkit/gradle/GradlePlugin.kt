@@ -72,10 +72,11 @@ open class FlowKitGeneratorTask : DefaultTask() {
 
                 val ns = namespace ?: defaultNameSpace
                 processPuml(
-                    ns,
-                    it,
-                    format,
-                    writer
+                    namespace = ns,
+                    file = it,
+                    imageDir = null,
+                    exportFormat = format,
+                    writer = writer
                 )
                 writer.close()
             }

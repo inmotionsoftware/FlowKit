@@ -46,14 +46,15 @@ fun convertName(name: String)
 }
 
 
-fun processPuml(namespace: String, file: File, exportFormat: ExportFormat, writer: Writer) {
+fun processPuml(namespace: String, file: File, imageDir: File?, exportFormat: ExportFormat, writer: Writer) {
     val states = mutableMapOf<String, State>()
     val transitions = mutableListOf<Transition>()
 
     var title = file.nameWithoutExtension
 
-    val outdir = file.parentFile
-    val option = FileFormatOption(FileFormat.XMI_STANDARD)
+    val outdir = imageDir ?: file.parentFile
+    outdir.mkdirs()
+    val option = FileFormatOption(if (imageDir != null) FileFormat.PNG else FileFormat.XMI_STANDARD )
     val reader: ISourceFileReader = SourceFileReader(file, outdir, option)
     reader.setCheckMetadata(false)
     reader.blocks.forEach {

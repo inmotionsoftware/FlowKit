@@ -43,7 +43,7 @@
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.swift",
 			);
 			runOncePerArchitecture = 0;
-			script = "# Type a script or drag a script file from your workspace to insert its path.\n../../compiler/build/install/FlowKitCompiler/bin/FlowKitCompiler --export swift --output ${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}.swift ${INPUT_FILE_DIR}/${INPUT_FILE_NAME}\n";
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n../../compiler/build/install/FlowKitCompiler/bin/FlowKitCompiler --export swift --image ${INPUT_FILE_DIR} --output ${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}.swift ${INPUT_FILE_DIR}/${INPUT_FILE_NAME}\n";
 		};
 /* End PBXBuildRule section */
 
@@ -84,6 +84,7 @@
 		E7EA2264243D25A7009DDEEC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E7EA2266243D25A7009DDEEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E7EA2271243D3DB4009DDEEC /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/iOS/PromiseKit.framework; sourceTree = "<group>"; };
+		E7EAB943244133F10002898B /* LoginFlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LoginFlow.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +105,7 @@
 			children = (
 				E75B5DEC244129F90096473A /* LoginFlowController.swift */,
 				E75B5DED244129F90096473A /* LoginFlow.puml */,
+				E7EAB943244133F10002898B /* LoginFlow.png */,
 			);
 			path = Flows;
 			sourceTree = "<group>";

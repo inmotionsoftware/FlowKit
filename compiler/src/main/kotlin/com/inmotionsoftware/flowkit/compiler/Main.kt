@@ -61,13 +61,14 @@ fun main(_args: Array<String>) {
 //    val args = arrayOf<String>(
 //        "--export", "swift",
 //        "--output", "/Users/bghoward/Library/Developer/Xcode/DerivedData/ExampleFlow-eaanvgxflaclurgpuxwawntdfgtl/Build/Intermediates.noindex/ExampleFlow.build/Debug-iphonesimulator/ExampleFlow.build/DerivedSources/LoginFlow.swift",
-//        "/Users/bghoward/Projects/FlowKit/example/ios/ExampleFlow/ExampleFlow/LoginFlow.puml"
+//        "/Users/bghoward/Projects/FlowKit/example/ios/ExampleFlow/Flows/LoginFlow.puml"
 //    )
 
     val longopts = arrayOf<LongOpt>(
         LongOpt("export", LongOpt.REQUIRED_ARGUMENT, null, 'e'.toInt()),
         LongOpt("format", LongOpt.REQUIRED_ARGUMENT, null, 'f'.toInt()),
         LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o'.toInt()),
+        LongOpt("image", LongOpt.REQUIRED_ARGUMENT, null, 'i'.toInt()),
         LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'.toInt())
     )
 
@@ -75,8 +76,8 @@ fun main(_args: Array<String>) {
 
     val getopt = Getopt(appName, args, "e:f:i:o:h", longopts)
 
-    var format =
-        ExportFormat.KOTLIN
+    var format = ExportFormat.KOTLIN
+    var imageDir: File? = null
 
     while (true) {
         val c = getopt.getopt()
@@ -94,6 +95,9 @@ fun main(_args: Array<String>) {
             'h'.toInt() -> {
                 printHelp()
                 System.exit(0)
+            }
+            'i'.toInt() -> {
+                imageDir = File(getopt.optarg)
             }
             'e'.toInt() -> {
                 when (getopt.optarg) {
@@ -130,6 +134,7 @@ fun main(_args: Array<String>) {
         processPuml(
             namespace = defaultNameSpace,
             file = file,
+            imageDir = imageDir,
             exportFormat = format,
             writer = out
         )
