@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:lib/../example/ios/ExampleFlow/ExampleFlow.xcodeproj">
+      location = "group:example/ios/ExampleFlow.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:lib/FlowKit.xcodeproj">

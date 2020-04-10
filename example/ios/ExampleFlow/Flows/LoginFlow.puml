@@ -5,15 +5,15 @@ title Login Flow
 [*] --> Prompt
 
 Prompt --> Authenticate
-Prompt --> ForgotPass
-Prompt -> EnterAccountInfo
-Prompt -> Prompt
+Prompt -> ForgotPass
+Prompt --> EnterAccountInfo
+Prompt --> Prompt
 Prompt: String?
 
-Authenticate -> Prompt
+Authenticate --> Prompt
 Authenticate: Credentials
 
-ForgotPass --> Prompt
+ForgotPass -> Prompt
 ForgotPass: String
 EnterAccountInfo --> CreateAccount
 EnterAccountInfo --> Prompt
@@ -30,5 +30,5 @@ note left of Prompt
     login screen goes
 end note
 
-Authenticate -> [*]: OAuthToken
+Authenticate --> [*]: OAuthToken
 @enduml
