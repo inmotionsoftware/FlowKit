@@ -11,24 +11,30 @@ import PromiseKit
 import SwiftUI
 import FlowKit
 
-
 class LoginFlowController: NavigationStateMachine<OAuthToken>, LoginFlowStateMachine {
 
     private lazy var forgotPassword = ForgotPasswordViewController(nibName: "ForgotPassword", bundle: Bundle.main)
     @FlowView var loginView = LoginView()
+    @FlowView var registerView = RegisterView()
 
-    func onBegin(state: LoginFlowState, context: String) -> Promise<LoginFlowState.Begin> {
-        return Promise.value(.prompt(context))
+    private let service = UserService()
+
+    func onBegin(state: LoginFlowState, context: Void) -> Promise<LoginFlowState.Begin> {
+        return Promise.value(.prompt(nil))
     }
 
-    func onPrompt(state: LoginFlowState, context: String) -> Promise<LoginFlowState.Prompt> {
+    func onPrompt(state: LoginFlowState, context: String?) -> Promise<LoginFlowState.Prompt> {
+        if let err = context {
+            self.showAlert(title: "Error", message: err)
+        }
+    
         return self.startFlow(view: $loginView, nav: nav, context: context)
             .map { result in
                 self.animated = true
                 switch (result) {
                     case .forgotPassword(let email): return .forgotPass(email)
                     case .login(let email, let pass): return .authenticate(Credentials(username: email, password: pass))
-                    case .register: return .enterAccountInfo(())
+                    case .register: return .enterAccountInfo(nil)
                 }
             }
             .back {
@@ -42,41 +48,45 @@ class LoginFlowController: NavigationStateMachine<OAuthToken>, LoginFlowStateMac
     }
 
     func onAuthenticate(state: LoginFlowState, context: Credentials) -> Promise<LoginFlowState.Authenticate> {
-        return self
+        return self.service
             .autenticate(credentials: context)
-            .map { .end($0) }
-            .recover { _ in Promise.value(.prompt(context.username)) }
+            .map {
+                .end($0)
+            }
+            .recover {
+                Promise.value(.prompt($0.localizedDescription))
+        }
     }
 
     func onForgotPass(state: LoginFlowState, context: String) -> Promise<LoginFlowState.ForgotPass> {
-        return self.startFlow(view: forgotPassword, nav: nav, context: context)
-            .map { LoginFlowState.ForgotPass.prompt($0) }
-            .back { .prompt("") }
+        return self
+            .startFlow(view: forgotPassword, nav: nav, context: context)
+            .map { .prompt($0) }
+            .canceled { _ in .prompt(nil) }
+            .recover { Promise.value(.prompt($0.localizedDescription)) }
     }
 
-    func onEnterAccountInfo(state: LoginFlowState, context: Void) -> Promise<LoginFlowState.EnterAccountInfo> {
-        self.startFlow(view: RegisterView(), nav: nav, context: context)
+    func onEnterAccountInfo(state: LoginFlowState, context: String?) -> Promise<LoginFlowState.EnterAccountInfo> {
+        if let err = context {
+            self.showAlert(title: "Error", message: err)
+        }
+        
+        return self
+            .startFlow(view: $registerView, nav: nav, context: ())
             .map { .createAccount($0) }
+            .back {
+                self.animated = false
+                return .prompt(context)
+            }
     }
 
     func onCreateAccount(state: LoginFlowState, context: User) -> Promise<LoginFlowState.CreateAccount> {
-        return Promise.value(.authenticate(Credentials(username: "", password: "")))
-    }
-
-//    func onTerminate(state: LoginFlowState, context: LoginFlowState.Result) -> Promise<LoginFlowState.Result> {
-//        return Promise.value(context)
-//    }
-//    func onEnd(state: LoginFlowState, context: OAuthToken) -> Promise<LoginFlowState.End> {
-//        return Promise.value(.terminate(context))
-//    }
-//    func onFail(state: LoginFlowState, context: Error) -> Promise<LoginFlowState.Fail> {
-//        return Promise.value(.terminate(context))
-//    }
-}
-
-extension LoginFlowController {
-    func autenticate(credentials: Credentials) -> Promise<OAuthToken> {
-        let token = OAuthToken(token: "049584309583.AB089EPF451.84050D9AB89CE7", type: "Bearer", expiration: Date())
-        return Promise.value(token)
+        return self.service
+            .createAccount(user: context)
+            .map {
+                let creds = Credentials(username: context.email, password: context.password)
+                return .authenticate(creds)
+            }
+            .recover { Promise.value(.enterAccountInfo($0.localizedDescription)) }
     }
 }

@@ -2,33 +2,27 @@
 
 title Login Flow
 
-[*] --> Prompt: String
+[*] --> Prompt
 
 Prompt --> Authenticate
 Prompt --> ForgotPass
 Prompt -> EnterAccountInfo
-
 Prompt -> Prompt
+Prompt: String?
 
 Authenticate -> Prompt
-
-Prompt: String
-
 Authenticate: Credentials
 
 ForgotPass --> Prompt
-
 ForgotPass: String
-
-'state EnterAccountInfo {
-'    [*] --> EnterEmail
-'    EnterEmail --> EnterPassword
-'    EnterPassword --> [*]
-'}
-
 EnterAccountInfo --> CreateAccount
+EnterAccountInfo --> Prompt
+
 CreateAccount: User
 CreateAccount --> Authenticate
+CreateAccount --> EnterAccountInfo
+
+EnterAccountInfo: String?
 
 note "This is a note about login" as N1
 note left of Prompt

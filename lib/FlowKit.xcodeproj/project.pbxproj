@@ -93,10 +93,10 @@
 				E75B5DE02440F5A70096473A /* FlowSubController.swift */,
 				E75C26BC2440D58900B3C467 /* NavigationStateMachine.swift */,
 				E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */,
+				E75B5DDE2440E9CF0096473A /* DeferredPromise.swift */,
 				E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */,
 				E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */,
 				E75C26B82440D53D00B3C467 /* Promise+Extensions.swift */,
-				E75B5DDE2440E9CF0096473A /* DeferredPromise.swift */,
 			);
 			name = FlowKit;
 			path = src/main/FlowKit;

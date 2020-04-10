@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         let controller = LoginFlowController(nav: nav)
-        controller.startFlow(context: "test@test.com")
+        controller.startFlow()
         .map { value in
             print(value)
         }

@@ -6,12 +6,14 @@
 //  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
 import PromiseKit
+import os
 
 @propertyWrapper
 public class DeferredPromise<Output> {
     public var pending = Promise<Output>.pending() {
         didSet {
             if (oldValue.promise.isPending) {
+                os_log("Canceling dangling promise", type: .error)
                 oldValue.resolver.reject(FlowError.canceled)
             }
         }
@@ -22,18 +24,30 @@ public class DeferredPromise<Output> {
 
     public init() {}
     deinit {
-        if (wrappedValue.isPending) { pending.resolver.reject(FlowError.canceled) }
+        if (wrappedValue.isPending) {
+            os_log("Canceling dangling promise", type: .error)
+            pending.resolver.reject(FlowError.canceled)
+        }
     }
 
     public func reset() {
-        self.pending = Promise.pending()
+        if (self.wrappedValue.isResolved) {
+            print("resetting promise")
+            self.pending = Promise.pending()
+        }
     }
 
     public func resolve(_ value: Output) {
+        if (self.wrappedValue.isResolved) {
+            os_log("Attempting to fullfill a resolved promise", type: .error)
+        }
         self.projectedValue.fulfill(value)
     }
 
     public func reject(_ error: Error) {
+        if (self.wrappedValue.isResolved) {
+            os_log("Attempting to reject a resolved promise", type: .error)
+        }
         self.projectedValue.reject(error)
     }
 }

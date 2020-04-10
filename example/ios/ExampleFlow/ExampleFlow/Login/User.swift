@@ -9,6 +9,7 @@
 import Foundation
 
 public struct User {
+    public let userId: UUID = UUID()
     public let firstName: String
     public let lastName: String
     public let email: String

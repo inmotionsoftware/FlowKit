@@ -19,15 +19,17 @@ struct RegisterView: FlowableView {
     @State private var email: String = ""
     @State private var password: String = ""
 
-    var proxy = DeferredPromise<User>()
+    let proxy = DeferredPromise<User>()
+
+    func attach(context: Void) {
+        self.proxy.reset()
+        assert(self.proxy.wrappedValue.isPending)
+    }
 
     func register() {
         let user = User(firstName: firstName, lastName: lastName, email: email, password: password)
+        assert(self.proxy.wrappedValue.isPending)
         self.resolve(user)
-    }
-
-    func attach(context: Void) {
-        print("attached")
     }
 
     var body: some View {

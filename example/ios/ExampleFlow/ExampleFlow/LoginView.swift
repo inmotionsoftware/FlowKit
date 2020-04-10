@@ -17,9 +17,10 @@ public enum LoginViewResult {
 }
 
 struct LoginView: FlowableView {
-    typealias Input = String
+    typealias Input = String?
     typealias Output = LoginViewResult
 
+    @State private var error: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
 
@@ -40,6 +41,7 @@ struct LoginView: FlowableView {
     var body: some View {
         VStack {
             Text("Login")
+            if (!error.isEmpty) { Text(error) }
             TextField("Email", text: $email)
                 .padding(10)
                 .border(Color.gray, width: 1)

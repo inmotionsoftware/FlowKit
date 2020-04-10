@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E73E3220243E673300E06854 /* RegisterAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73E321F243E673300E06854 /* RegisterAccountView.swift */; };
+		E75B5DE324410BC40096473A /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DE224410BC40096473A /* JWT.swift */; };
+		E75B5DE524410BE60096473A /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DE424410BE60096473A /* UserService.swift */; };
 		E75C26A9243F71C400B3C467 /* ForgotPassword.xib in Resources */ = {isa = PBXBuildFile; fileRef = E75C26A8243F71C400B3C467 /* ForgotPassword.xib */; };
 		E75C26AB243F72C100B3C467 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26AA243F72C100B3C467 /* ForgotPasswordViewController.swift */; };
 		E76531DE243E738100E4ACC8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76531DD243E738100E4ACC8 /* HomeView.swift */; };
@@ -62,6 +64,8 @@
 
 /* Begin PBXFileReference section */
 		E73E321F243E673300E06854 /* RegisterAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAccountView.swift; sourceTree = "<group>"; };
+		E75B5DE224410BC40096473A /* JWT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
+		E75B5DE424410BE60096473A /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		E75C26A8243F71C400B3C467 /* ForgotPassword.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForgotPassword.xib; sourceTree = "<group>"; };
 		E75C26AA243F72C100B3C467 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		E76531DD243E738100E4ACC8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 				E79306C2243E5DA7002C1A13 /* Credentials.swift */,
 				E79306C4243E5DBB002C1A13 /* User.swift */,
 				E79306C6243E5DE6002C1A13 /* OAuthToken.swift */,
+				E75B5DE224410BC40096473A /* JWT.swift */,
+				E75B5DE424410BE60096473A /* UserService.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -239,6 +245,8 @@
 				E7EA226F243D3D23009DDEEC /* LoginFlow.puml in Sources */,
 				E79306C0243E5D77002C1A13 /* LoginFlowController.swift in Sources */,
 				E7EA2259243D25A3009DDEEC /* AppDelegate.swift in Sources */,
+				E75B5DE324410BC40096473A /* JWT.swift in Sources */,
+				E75B5DE524410BE60096473A /* UserService.swift in Sources */,
 				E76531DE243E738100E4ACC8 /* HomeView.swift in Sources */,
 				E7EA225B243D25A3009DDEEC /* SceneDelegate.swift in Sources */,
 				E79306C7243E5DE6002C1A13 /* OAuthToken.swift in Sources */,

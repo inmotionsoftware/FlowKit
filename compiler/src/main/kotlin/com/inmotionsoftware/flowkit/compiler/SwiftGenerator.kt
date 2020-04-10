@@ -116,9 +116,9 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
             })
         }
         
-        func attach(_ promise: Promise<Output>) -> Promise<Output> {
-            return promise
-        }
+//        func attach(_ promise: Promise<Output>) -> Promise<Output> {
+//            return promise
+//        }
 
         func onStateDidChange(prev: State, curr: State) {}
         fileprivate func nextState(prev: State, next: State) -> Promise<Swift.Result<${output},Error>> {

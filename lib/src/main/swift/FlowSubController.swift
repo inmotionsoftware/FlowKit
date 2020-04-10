@@ -14,7 +14,7 @@ internal class FlowSubController<View: FlowViewController>: Flow, ViewController
 
     private(set) public var nav: UINavigationController
     private weak var delegate: ViewControllerDelegate? = nil
-    private let promise = Promise<Output>.pending()
+    private let proxy = DeferredPromise<Output>()
     private let viewController: View
     private let animated: Bool
 
@@ -27,7 +27,7 @@ internal class FlowSubController<View: FlowViewController>: Flow, ViewController
     public func startFlow(context: Input) -> Promise<Output> {
         self.viewController.delegate = self
         // listen for back button delegates
-
+        proxy.reset()
         // push on the stack
         if let trans = self.nav.currentTransaction {
             trans.popToOrPush(viewController: self.viewController)
@@ -39,12 +39,9 @@ internal class FlowSubController<View: FlowViewController>: Flow, ViewController
         // intercept the promise
         self.viewController
             .startFlow(context: context)
-            .done { self.promise.resolver.fulfill($0) }
-            .catch {
-                // unwind?
-                self.promise.resolver.reject($0)
-            }
-        return promise.promise
+            .done { self.proxy.resolve($0) }
+            .catch { self.proxy.reject($0) }
+        return proxy.wrappedValue
     }
 }
 
@@ -52,14 +49,14 @@ extension FlowSubController {
     public func willMove(toParent parent: UIViewController?) {
         // Cancel our promise if the view controller is being popped from the
         // view stack
-        if parent == nil && self.promise.promise.isPending {
-            self.promise.resolver.reject(FlowError.canceled)
+        if parent == nil && self.proxy.wrappedValue.isPending {
+            self.proxy.reject(FlowError.canceled)
         }
     }
 
     private func shouldPop(_ navigationController: UINavigationController) -> Bool {
-        if self.promise.promise.isPending {
-            self.promise.resolver.reject(FlowError.back)
+        if self.proxy.wrappedValue.isPending {
+            self.proxy.reject(FlowError.back)
         }
         return false
     }

@@ -15,7 +15,7 @@ public protocol Flow {
     func startFlow(context: Input) -> Promise<Output>
 }
 
-extension Flow where Input == Void {
+public extension Flow where Input == Void {
     func startFlow() -> Promise<Output> {
         return self.startFlow(context: ())
     }
