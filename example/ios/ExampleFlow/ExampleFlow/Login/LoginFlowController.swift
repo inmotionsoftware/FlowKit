@@ -11,21 +11,18 @@ import PromiseKit
 import SwiftUI
 import FlowKit
 
-class LoginFlowController: LoginFlowStateMachine {
-    private var animated = false
 
-    private let nav: UINavigationController
-    init(nav: UINavigationController) {
-        self.nav = nav
-    }
+class LoginFlowController: NavigationStateMachine<OAuthToken>, LoginFlowStateMachine {
+
+    private lazy var forgotPassword = ForgotPasswordViewController(nibName: "ForgotPassword", bundle: Bundle.main)
+    @FlowView var loginView = LoginView()
 
     func onBegin(state: LoginFlowState, context: String) -> Promise<LoginFlowState.Begin> {
         return Promise.value(.prompt(context))
     }
 
     func onPrompt(state: LoginFlowState, context: String) -> Promise<LoginFlowState.Prompt> {
-        return ViewSubflow(view: LoginView(), nav: nav)
-            .startFlow(context: context)
+        return self.startFlow(view: $loginView, nav: nav, context: context)
             .map { result in
                 self.animated = true
                 switch (result) {
@@ -34,38 +31,52 @@ class LoginFlowController: LoginFlowStateMachine {
                     case .register: return .enterAccountInfo(())
                 }
             }
-            .recover { err -> Promise<LoginFlowState.Prompt> in
+            .back {
                 self.animated = false
-                guard err is FlowError else { throw err }
-                return self.onPrompt(state: state, context: context)
+                return .prompt(context)
+            }
+            .cancel {
+                self.animated = false
+                return .prompt(context)
             }
     }
 
     func onAuthenticate(state: LoginFlowState, context: Credentials) -> Promise<LoginFlowState.Authenticate> {
-        return Promise.value(.end(OAuthToken(token: "", type: "", expiration: Date())))
+        return self
+            .autenticate(credentials: context)
+            .map { .end($0) }
+            .recover { _ in Promise.value(.prompt(context.username)) }
     }
 
     func onForgotPass(state: LoginFlowState, context: String) -> Promise<LoginFlowState.ForgotPass> {
-        let view = ForgotPasswordViewController.init(nibName: "ForgotPassword", bundle: Bundle.main)
-        let flow = ViewControllerSubflow(viewController: view, nav: self.nav)
-
-        return flow.startFlow(context: context)
-            .map { email in
-                return LoginFlowState.ForgotPass.prompt(email)
-            }
-            .recover { err -> Promise<LoginFlowState.ForgotPass> in
-                guard err is FlowError else { throw err }
-                return Promise.value(LoginFlowState.ForgotPass.prompt(""))
-            }
+        return self.startFlow(view: forgotPassword, nav: nav, context: context)
+            .map { LoginFlowState.ForgotPass.prompt($0) }
+            .back { .prompt("") }
     }
 
     func onEnterAccountInfo(state: LoginFlowState, context: Void) -> Promise<LoginFlowState.EnterAccountInfo> {
-        return ViewSubflow(view: RegisterView(), nav: nav)
-            .startFlow(context: context)
+        self.startFlow(view: RegisterView(), nav: nav, context: context)
             .map { .createAccount($0) }
     }
 
     func onCreateAccount(state: LoginFlowState, context: User) -> Promise<LoginFlowState.CreateAccount> {
         return Promise.value(.authenticate(Credentials(username: "", password: "")))
+    }
+
+//    func onTerminate(state: LoginFlowState, context: LoginFlowState.Result) -> Promise<LoginFlowState.Result> {
+//        return Promise.value(context)
+//    }
+//    func onEnd(state: LoginFlowState, context: OAuthToken) -> Promise<LoginFlowState.End> {
+//        return Promise.value(.terminate(context))
+//    }
+//    func onFail(state: LoginFlowState, context: Error) -> Promise<LoginFlowState.Fail> {
+//        return Promise.value(.terminate(context))
+//    }
+}
+
+extension LoginFlowController {
+    func autenticate(credentials: Credentials) -> Promise<OAuthToken> {
+        let token = OAuthToken(token: "049584309583.AB089EPF451.84050D9AB89CE7", type: "Bearer", expiration: Date())
+        return Promise.value(token)
     }
 }

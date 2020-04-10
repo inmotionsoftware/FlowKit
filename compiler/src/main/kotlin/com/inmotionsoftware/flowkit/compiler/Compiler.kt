@@ -30,6 +30,7 @@ class Enumeration(val name: String) {
     class Value(val name: String, val context: String? = null)
     var generics = mutableListOf<String>()
     var values = mutableListOf<Value>()
+    var aliasess = mutableListOf<Pair<String,String>>()
     var nested: Collection<Enumeration> = listOf<Enumeration>()
 }
 

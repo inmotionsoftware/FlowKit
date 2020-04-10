@@ -36,9 +36,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         controller.startFlow(context: "test@test.com")
         .map { value in
             print(value)
-
         }
-        .ensure { nav.currentTransaction?.commit() }
+        .ensure {
+            nav.currentTransaction?.commit()
+        }
+        .catch { err in
+            print("error")
+        }
 
 //        let contentView = LoginView()
 //

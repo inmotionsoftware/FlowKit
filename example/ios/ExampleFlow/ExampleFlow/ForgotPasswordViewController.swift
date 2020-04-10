@@ -11,27 +11,24 @@ import UIKit
 import FlowKit
 import PromiseKit
 
-class ForgotPasswordViewController: UIViewController, ViewControllerFlow {
+class ForgotPasswordViewController: UIViewController, FlowViewController, FlowResolver {
+
     typealias Input = String
     typealias Output = String
 
     var delegate: ViewControllerDelegate?
-
-    private let promise = Promise<Output>.pending()
+    var proxy = DeferredPromise<String>()
 
     func startFlow(context: String) -> Promise<String> {
-        return self.promise.promise
-    }
-
-    func navigationController(_ navigationController: UINavigationController, shouldPop viewController: UIViewController) -> Bool {
-        return self.delegate?.navigationController(navigationController, shouldPop: viewController) ?? false
+        self.proxy = DeferredPromise()
+        return proxy.wrappedValue.ensure{ print("ForgotPasswordViewController Done") }
     }
 
     @IBOutlet var email: UITextField!
 
     @IBAction
     public func onSubmit() {
-        self.promise.resolver.fulfill(email.text ?? "")
+        self.resolve(email.text ?? "")
     }
 
     func attach(context: Input) {

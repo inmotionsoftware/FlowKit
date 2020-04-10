@@ -1,0 +1,67 @@
+@startuml
+
+interface Flow<Input,Output> {
+    Output startFlow(Input)
+}
+
+interface MoveDelegate {
+    willMove()
+}
+interface BackDelegate {
+    shouldPop()
+}
+interface ViewControllerDelegate {
+}
+interface FlowResolver<Output> {
+    +proxy
+    cancel()
+    back()
+    resolve(Output)
+    reject(Error)
+}
+
+enum FlowError {
+    * canceled
+    * back
+}
+
+class FlowHostingController<Content> {
+    +delegate
+}
+interface FlowableView {
+    attach(Input)
+}
+
+class FlowSubController<FlowViewController> {
+    + nav: UINavigationController
+    + delegate: ViewControllerDelegate
+    + viewController: FlowViewController
+    + animated: Bool
+}
+
+interface FlowViewController {
+    +delegate
+}
+
+class NavigationStateMachine<Input> {
+    - stack: [UIViewController]
+    + nav: UINavigationController
+    + animated: Bool
+    Output attach(Output)
+}
+
+
+FlowViewController <-- FlowHostingController
+MoveDelegate <-- ViewControllerDelegate
+BackDelegate <-- ViewControllerDelegate
+ViewControllerDelegate <-- FlowViewController
+Flow <-- FlowViewController
+Flow <-- FlowSubController
+ViewControllerDelegate <-- FlowSubController
+Flow <-- FlowableView
+FlowResolver <-- FlowableView
+
+
+Swift.UIHostingController <-- FlowHostingController7
+
+@enduml
