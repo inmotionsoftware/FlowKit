@@ -3,6 +3,7 @@ package com.inmotionsoftware.flowkit.compiler
 import gnu.getopt.LongOpt;
 import gnu.getopt.Getopt;
 import java.io.*
+import kotlin.system.exitProcess
 
 val appName = "flowkit"
 
@@ -52,9 +53,9 @@ fun printHelp() {
 }
 
 fun main(_args: Array<String>) {
-    println("args: ")
-    _args.forEach { println(it) }
-    println()
+//    println("args: ")
+//    _args.forEach { println(it) }
+//    println()
 
     val args = _args
 
@@ -128,16 +129,23 @@ fun main(_args: Array<String>) {
 
     files.forEach {
         val file = File(it)
-        val name = file.nameWithoutExtension
-        val title = name.capitalize()
-        val out: Writer = output ?: OutputStreamWriter(System.out)
-        processPuml(
-            namespace = defaultNameSpace,
-            file = file,
-            imageDir = imageDir,
-            exportFormat = format,
-            writer = out
-        )
-        out.close()
+        try {
+
+            val name = file.nameWithoutExtension
+            val title = name.capitalize()
+            val out: Writer = output ?: OutputStreamWriter(System.out)
+            processPuml(
+                namespace = defaultNameSpace,
+                file = file,
+                imageDir = imageDir,
+                exportFormat = format,
+                writer = out
+            )
+            out.close()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            printErrLn("${file.absolutePath}: error: ${e.localizedMessage ?: e.toString()}")
+            exitProcess(1)
+        }
     }
 }

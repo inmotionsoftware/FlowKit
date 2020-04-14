@@ -5,6 +5,7 @@ import net.sourceforge.plantuml.ISourceFileReader
 import net.sourceforge.plantuml.SourceFileReader
 import net.sourceforge.plantuml.cucadiagram.GroupType
 import net.sourceforge.plantuml.cucadiagram.LeafType
+import net.sourceforge.plantuml.preproc.Defines
 import net.sourceforge.plantuml.statediagram.StateDiagram
 import java.io.*
 import java.lang.RuntimeException
@@ -47,20 +48,35 @@ fun convertName(name: String)
 
 
 fun processPuml(namespace: String, file: File, imageDir: File?, exportFormat: ExportFormat, writer: Writer) {
+
     val states = mutableMapOf<String, State>()
     val transitions = mutableListOf<Transition>()
 
-    var title = file.nameWithoutExtension
+    var title: String = file.nameWithoutExtension
 
     val outdir = imageDir ?: file.parentFile
     outdir.mkdirs()
     val option = FileFormatOption(if (imageDir != null) FileFormat.PNG else FileFormat.XMI_STANDARD )
+
     val reader: ISourceFileReader = SourceFileReader(file, outdir, option)
     reader.setCheckMetadata(false)
     reader.blocks.forEach {
+        it.diagram.warningOrError?.let {
+            printErrLn("${file.absolutePath}: warning: ${it}")
+        }
         val diagram = it.diagram as StateDiagram
         // override the title
-        diagram.title.display.firstOrNull()?.let { title = it.toString() }
+        if (diagram.title != null) {
+            val t = diagram.title
+            if (t != null) {
+                val display = t.display
+                if (display != null && display.size() > 0) {
+                    title = display.first().toString()
+                }
+            }
+        }
+
+//        diagram.title?.display?.firstOrNull()?.let { title = it.toString() }
         diagram.entityFactory.leafs().forEach {
             when (it.leafType) {
                 LeafType.CIRCLE_START -> {
@@ -141,4 +157,6 @@ fun processPuml(namespace: String, file: File, imageDir: File?, exportFormat: Ex
         ExportFormat.KOTLIN -> { generator.toKotlin(writer) }
         ExportFormat.SWIFT -> { generator.toSwift(writer) }
     }
+
+    reader.generatedImages.forEach { println("image: ${it.pngFile}") }
 }

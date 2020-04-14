@@ -26,27 +26,6 @@ public enum FlowError: Error {
     case back
 }
 
+public enum Bootstrap {
 
-public protocol FlowResolver {
-    associatedtype Output
-    var proxy: DeferredPromise<Output> { get }
-}
-
-public extension FlowResolver {
-
-    func cancel() {
-        self.reject(FlowError.canceled)
-    }
-
-    func back() {
-        self.reject(FlowError.back)
-    }
-
-    func resolve(_ value: Output) {
-        self.proxy.resolve(value)
-    }
-
-    func reject(_ error: Error) {
-        self.proxy.reject(error)
-    }
 }

@@ -1,5 +1,5 @@
 //
-//  FlowSubController.swift
+//  SubFlow.swift
 //  FlowKit
 //
 //  Created by Brian Howard on 4/9/20.
@@ -8,15 +8,17 @@
 import PromiseKit
 import UIKit
 
-internal class FlowSubController<View: FlowViewController>: Flow, ViewControllerDelegate {
+internal class SubFlow<View: FlowViewController>: Flow, ViewControllerDelegate {
     public typealias Input = View.Input
     public typealias Output = View.Output
 
     private(set) public var nav: UINavigationController
     private weak var delegate: ViewControllerDelegate? = nil
-    private let proxy = DeferredPromise<Output>()
-    private let viewController: View
+
+    private var viewController: View
     private let animated: Bool
+
+    private var proxy = Promise<Output>.pending()
 
     public init(viewController: View, nav: UINavigationController, animated: Bool = true) {
         self.viewController = viewController
@@ -27,7 +29,11 @@ internal class FlowSubController<View: FlowViewController>: Flow, ViewController
     public func startFlow(context: Input) -> Promise<Output> {
         self.viewController.delegate = self
         // listen for back button delegates
-        proxy.reset()
+        if (!proxy.promise.isPending) {
+            proxy.resolver.reject(FlowError.canceled)
+            self.proxy = Promise<Output>.pending()
+        }
+
         // push on the stack
         if let trans = self.nav.currentTransaction {
             trans.popToOrPush(viewController: self.viewController)
@@ -36,27 +42,26 @@ internal class FlowSubController<View: FlowViewController>: Flow, ViewController
             self.nav.popToOrPush(viewController: self.viewController, animated: animated)
         }
 
-        // intercept the promise
-        self.viewController
-            .startFlow(context: context)
-            .done { self.proxy.resolve($0) }
-            .catch { self.proxy.reject($0) }
-        return proxy.wrappedValue
+        self.viewController.startFlow(context: context)
+            .map { val -> Void in self.proxy.resolver.fulfill(val) }
+            .catch { self.proxy.resolver.reject($0) }
+
+        return proxy.promise
     }
 }
 
-extension FlowSubController {
+extension SubFlow {
     public func willMove(toParent parent: UIViewController?) {
         // Cancel our promise if the view controller is being popped from the
         // view stack
-        if parent == nil && self.proxy.wrappedValue.isPending {
-            self.proxy.reject(FlowError.canceled)
+        if parent == nil && self.proxy.promise.isPending {
+            self.proxy.resolver.reject(FlowError.canceled)
         }
     }
 
     private func shouldPop(_ navigationController: UINavigationController) -> Bool {
-        if self.proxy.wrappedValue.isPending {
-            self.proxy.reject(FlowError.back)
+        if self.proxy.promise.isPending {
+            self.proxy.resolver.reject(FlowError.back)
         }
         return false
     }

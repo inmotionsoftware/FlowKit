@@ -24,20 +24,33 @@ public fun <T> Iterable<T>.fork(transform: (T) -> Boolean, a: (T) -> Unit, b: (T
 fun Enumeration.toSwift(builder: Writer) {
     builder.append("public enum ${name}")
     if (!generics.isEmpty()) generics.joinTo(buffer=builder, prefix = "<", separator = ",", postfix = ">")
-    builder.appendln("{")
-    aliasess.joinTo(buffer=builder, separator = "\n\t") { "public typealias ${it.first} = ${it.second}" }
+    builder.appendln(" {")
+    aliasess.joinTo(buffer=builder, separator = "\n\t", prefix = "\t") { "public typealias ${it.first} = ${it.second}" }
     builder.appendln()
-    values.joinTo(buffer=builder, separator= "\n\t") {"case ${it.name.decapitalize()}(_ context: ${convertType(it.context)})" }
+    values.joinTo(buffer=builder, separator= "\n\t", prefix = "\t") {"case ${it.name.decapitalize()}(_ context: ${convertType(it.context)})" }
     builder.appendln()
-    nested.forEach { it.toSwift(builder) }
+    nested.forEach {
+        builder.append("\t")
+        it.toSwift(builder)
+        val context = when (it.name) {
+            "Terminate" -> return@forEach
+            "Fail" -> ".failure(context)"
+            "End" -> ".success(context)"
+            else -> "context"
+        }
+        builder.appendln("""    
+        fileprivate init(substate: ${it.name}) {
+            switch substate {
+                ${ it.values.joinToString(separator = "\n\t\t") { "case .${it.name.decapitalize()}(let context): self = .${it.name.decapitalize()}(${context})" } }
+            }            
+            }""".trimIndent())
+    }
     builder.appendln("}");
     builder.appendln()
 }
 
 fun StateMachineGenerator.toSwift(builder: Writer) {
     val stateEnum = Enumeration(stateName)
-//    stateEnum.generics.add("Input")
-//    stateEnum.generics.add("Output")
     val enums = mutableMapOf<String, Enumeration>()
 
     val input = convertType(transitions.find { it.from.name == "Begin" }?.type)
@@ -45,32 +58,23 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
 
     stateEnum.aliasess.add(Pair("Result", "Swift.Result<${output}, Error>"))
 
-//    val back = Enumeration.Value("Back")
-//    val cancel = Enumeration.Value("Cancel")
-    val fail = Enumeration.Value("Fail","Error" )
-
-//    stateEnum.values.add(back)
-//    stateEnum.values.add(cancel)
-    stateEnum.values.add(fail)
-
     states.forEach {
         val name = it.name
         stateEnum.values.add(Enumeration.Value(name, it.type ))
+        enums[name] = Enumeration(name = name)
     }
 
-    stateEnum.values.forEach {
-        val name = it.name
-
-        val enum = Enumeration(name = "${name}")
-//        enum.values.add( if (name != "Back") back else Enumeration.Value("Terminate","Result<${output}>"))
-//        enum.values.add( if (name != "Cancel") cancel else Enumeration.Value("Terminate", "Result<${output}>"))
-        enum.values.add( if (name != "Fail") fail else Enumeration.Value("Terminate","Error" ))
-
-        if (name == "End") {
-            enum.values.add(Enumeration.Value("Terminate","${output}"))
-        }
-        enums[name] = enum
+    if (states.find { it.name == "Fail" } == null) {
+        val fail = Enumeration.Value("Fail", "Error")
+        stateEnum.values.add(fail)
+        enums["Fail"] = Enumeration(name = "Fail")
     }
+
+    val terminate = Enumeration.Value("Terminate", "Result" )
+    stateEnum.values.add(terminate)
+
+    enums["End"]?.values?.add(Enumeration.Value("Terminate", "${output}"))
+    enums["Fail"]?.values?.add(Enumeration.Value("Terminate", "Error"))
 
     transitions.forEach {
         val enum = enums[it.from.name]!!
@@ -89,46 +93,34 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
 
     """.trimIndent())
 
-    stateEnum.values.add(Enumeration.Value("Terminate", "Result"))
+//    stateEnum.values.add(Enumeration.Value("Terminate", "Result"))
     stateEnum.nested = enums.values
     stateEnum.toSwift(builder)
-    enums.forEach { Handler(stateMachineName, stateEnum.name,it.value).toSwift(builder) }
+//    enums.forEach { Handler(stateMachineName, stateEnum.name,it.value).toSwift(builder) }
 
     builder.appendln("""
-    public protocol ${stateMachineName}: Flow where Input == ${input}, Output == ${output} {
-        typealias State = ${stateEnum.name}
-        func onStateDidChange(prev: State, curr: State)
-        func attach(_ promise: Promise<Output>) -> Promise<Output>
-        ${ stateEnum.values.filter { it.name != "Terminate" }.concatln { "func on${it.name}(state: State, context: ${convertType(it.context)}) -> Promise<State.${it.name}>" }}
+    public protocol ${stateMachineName}: StateMachine where State == ${this.stateName}, Input == ${input}, Output == ${output} {
+        ${ stateEnum.values.filter{it.name != "Terminate"}.concatln { "func on${it.name}(state: State, context: ${convertType(it.context)}) -> Promise<State.${it.name}>" }}
         func onTerminate(state: State, context: State.Result) -> Promise<State.Result>
     }
 
-
-    extension ${stateMachineName} {
-        func startFlow(context: ${input}) -> Promise<${output}> {
-            let state = State.begin(context)
-            return attach(nextState(prev: state, next: state)
-            .map {
-                switch($0) {
-                    case .success(let context): return context
-                    case .failure(let err): throw err
-                }
-            })
-        }
-        
-//        func attach(_ promise: Promise<Output>) -> Promise<Output> {
-//            return promise
-//        }
-
-        func onStateDidChange(prev: State, curr: State) {}
-        fileprivate func nextState(prev: State, next: State) -> Promise<Swift.Result<${output},Error>> {
-            onStateDidChange(prev:prev, curr:next)
-            switch(next) { 
-            case .terminate(let context): return onTerminate(state: next, context: context)
-            ${ stateEnum.values.filter { it.name != "Terminate" }.concatln { "case .${it.name.decapitalize()}(let context): return on${it.name}(state: prev, context: context).then{ $0.handle() }.then { self.nextState(prev: next, next: $0) }" } }
+    public extension ${stateMachineName} {
+        func terminal(state: State) -> State.Result? {
+            switch state {
+            case .terminate(let context): return context
+            default: return nil
             }
         }
-        
+
+        func firstState(context: Input) -> State { return .begin(context) } 
+    
+        func dispatch(state: State) -> Promise<State> {
+            switch state {
+            case .terminate(let context): return onTerminate(state: state, context: context).map { _ in State.terminate(context) }
+            ${ enums.values.concatln { "case .${it.name.decapitalize()}(let context): return on${it.name}(state: state, context: context).map { State(substate: \$0) }" } }
+            }
+        }
+
         func onTerminate(state: State, context: State.Result) -> Promise<State.Result> { return Promise.value(context) }
         func onEnd(state: State, context: ${output}) -> Promise<State.End> { return Promise.value(.terminate(context)) }
         func onFail(state: State, context: Error) -> Promise<State.Fail> { return Promise.value(.terminate(context)) }
@@ -137,24 +129,24 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
 
 }
 
-fun Handler.toSwift(builder: Writer) {
-    val names = enum.values.map { it.name.decapitalize() }
-    builder.appendln("""
-    fileprivate extension ${name}.${enum.name} {
-        func handle() -> Promise<${name}> {
-            switch self { ${ 
-                if (!names.contains("terminate")) 
-                    ""
-                else
-                    if (enum.name == "Fail") {
-                        "case .terminate(let context): return Promise.value(.terminate(.failure(context)))"
-                    } else {
-                        "case .terminate(let context): return Promise.value(.terminate(.success(context)))"
-                    } 
-            }
-            ${ names.filter{ it != "terminate" }.concatln { "case .${it}(let context): return Promise.value(.${it}(context))" } }
-            }
-        }
-    }
-    """.trimIndent())
-}
+//fun Handler.toSwift(builder: Writer) {
+//    val names = enum.values.map { it.name.decapitalize() }
+//    builder.appendln("""
+//    fileprivate extension ${name}.${enum.name} {
+//        func handle() -> Promise<${name}> {
+//            switch self { ${
+//                if (!names.contains("terminate"))
+//                    ""
+//                else
+//                    if (enum.name == "Fail") {
+//                        "case .terminate(let context): return Promise.value(.terminate(.failure(context)))"
+//                    } else {
+//                        "case .terminate(let context): return Promise.value(.terminate(.success(context)))"
+//                    }
+//            }
+//            ${ names.filter{ it != "terminate" }.concatln { "case .${it}(let context): return Promise.value(.${it}(context))" } }
+//            }
+//        }
+//    }
+//    """.trimIndent())
+//}

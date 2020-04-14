@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E75B5DFB244129F90096473A /* LoginFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DEC244129F90096473A /* LoginFlowController.swift */; };
+		E75B5DFB244129F90096473A /* LoginFlowStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DEC244129F90096473A /* LoginFlowStateMachine.swift */; };
 		E75B5DFD244129F90096473A /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DEF244129F90096473A /* UserService.swift */; };
 		E75B5DFE244129F90096473A /* RegisterAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DF1244129F90096473A /* RegisterAccountView.swift */; };
 		E75B5DFF244129F90096473A /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DF2244129F90096473A /* LoginView.swift */; };
@@ -28,7 +28,9 @@
 		E7EA2265243D25A7009DDEEC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E7EA2263243D25A7009DDEEC /* LaunchScreen.storyboard */; };
 		E7EA2272243D3DB4009DDEEC /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2271243D3DB4009DDEEC /* PromiseKit.framework */; };
 		E7EA2273243D3DB4009DDEEC /* PromiseKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2271243D3DB4009DDEEC /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7EAB945244138C60002898B /* LoginFlow.png in Resources */ = {isa = PBXBuildFile; fileRef = E7EAB944244138C60002898B /* LoginFlow.png */; };
+		E7EAB9532445155F0002898B /* app.puml in Sources */ = {isa = PBXBuildFile; fileRef = E7EAB951244514F80002898B /* app.puml */; };
+		E7EAB95524451EEB0002898B /* app.png in Resources */ = {isa = PBXBuildFile; fileRef = E7EAB95424451EEA0002898B /* app.png */; };
+		E7EAB95724451EFF0002898B /* AppFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EAB95624451EFF0002898B /* AppFlowController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -44,7 +46,7 @@
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).swift",
 			);
 			runOncePerArchitecture = 0;
-			script = "# Type a script or drag a script file from your workspace to insert its path.\n../../compiler/build/install/FlowKitCompiler/bin/FlowKitCompiler --export swift --image ${INPUT_FILE_DIR} --output ${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}.swift ${INPUT_FILE_DIR}/${INPUT_FILE_NAME}\n";
+			script = "# Type a script or drag a script file from your workspace to insert its path.\nexport export_lang=swift\n../../compiler/build/install/FlowKitCompiler/bin/FlowKitCompiler --export swift --image ${INPUT_FILE_DIR} --output ${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}.swift ${INPUT_FILE_DIR}/${INPUT_FILE_NAME}\n";
 		};
 /* End PBXBuildRule section */
 
@@ -64,7 +66,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E75B5DEC244129F90096473A /* LoginFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFlowController.swift; sourceTree = "<group>"; };
+		E75B5DEC244129F90096473A /* LoginFlowStateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFlowStateMachine.swift; sourceTree = "<group>"; };
 		E75B5DED244129F90096473A /* LoginFlow.puml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LoginFlow.puml; sourceTree = "<group>"; };
 		E75B5DEF244129F90096473A /* UserService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		E75B5DF1244129F90096473A /* RegisterAccountView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterAccountView.swift; sourceTree = "<group>"; };
@@ -86,6 +88,9 @@
 		E7EA2266243D25A7009DDEEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E7EA2271243D3DB4009DDEEC /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/iOS/PromiseKit.framework; sourceTree = "<group>"; };
 		E7EAB944244138C60002898B /* LoginFlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LoginFlow.png; sourceTree = "<group>"; };
+		E7EAB951244514F80002898B /* app.puml */ = {isa = PBXFileReference; lastKnownFileType = text; path = app.puml; sourceTree = "<group>"; };
+		E7EAB95424451EEA0002898B /* app.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app.png; sourceTree = "<group>"; };
+		E7EAB95624451EFF0002898B /* AppFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFlowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,9 +109,8 @@
 		E75B5DEB244129F90096473A /* Flows */ = {
 			isa = PBXGroup;
 			children = (
-				E75B5DEC244129F90096473A /* LoginFlowController.swift */,
-				E75B5DED244129F90096473A /* LoginFlow.puml */,
-				E7EAB944244138C60002898B /* LoginFlow.png */,
+				E7EAB95824451F3C0002898B /* App */,
+				E7EAB95924451F680002898B /* Login */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -193,6 +197,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E7EAB95824451F3C0002898B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E7EAB951244514F80002898B /* app.puml */,
+				E7EAB95424451EEA0002898B /* app.png */,
+				E7EAB95624451EFF0002898B /* AppFlowController.swift */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
+		E7EAB95924451F680002898B /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				E75B5DEC244129F90096473A /* LoginFlowStateMachine.swift */,
+				E75B5DED244129F90096473A /* LoginFlow.puml */,
+				E7EAB944244138C60002898B /* LoginFlow.png */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -253,9 +277,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7EAB945244138C60002898B /* LoginFlow.png in Resources */,
 				E7EA2265243D25A7009DDEEC /* LaunchScreen.storyboard in Resources */,
 				E7EA2262243D25A7009DDEEC /* Preview Assets.xcassets in Resources */,
+				E7EAB95524451EEB0002898B /* app.png in Resources */,
 				E75B5E02244129F90096473A /* ForgotPassword.xib in Resources */,
 				E7EA225F243D25A7009DDEEC /* Assets.xcassets in Resources */,
 			);
@@ -268,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7EAB9532445155F0002898B /* app.puml in Sources */,
 				E75B5E0724412A4E0096473A /* LoginFlow.puml in Sources */,
 				E75B5E01244129F90096473A /* ForgotPasswordViewController.swift in Sources */,
 				E75B5DFF244129F90096473A /* LoginView.swift in Sources */,
@@ -280,7 +305,8 @@
 				E75B5E05244129F90096473A /* OAuthToken.swift in Sources */,
 				E7EA225B243D25A3009DDEEC /* SceneDelegate.swift in Sources */,
 				E75B5E04244129F90096473A /* User.swift in Sources */,
-				E75B5DFB244129F90096473A /* LoginFlowController.swift in Sources */,
+				E75B5DFB244129F90096473A /* LoginFlowStateMachine.swift in Sources */,
+				E7EAB95724451EFF0002898B /* AppFlowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

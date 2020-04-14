@@ -1,6 +1,7 @@
 @startuml
 
 !$platform = %getenv("PLATFORM_NAME")
+!$export_lang = %getenv("export_lang")
 
 title Login Flow
 
@@ -27,7 +28,7 @@ CreateAccount --> EnterAccountInfo
 EnterAccountInfo: String?
 
 
-note "This is a note $platform about login " as N1
+note "This is a note $platform $export_lang about login " as N1
 
 note left of Prompt
     This is where the

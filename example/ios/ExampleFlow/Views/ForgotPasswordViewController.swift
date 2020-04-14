@@ -11,24 +11,26 @@ import UIKit
 import FlowKit
 import PromiseKit
 
-class ForgotPasswordViewController: UIViewController, FlowViewController, FlowResolver {
-
+class ForgotPasswordViewController: UIViewController, FlowViewController {
     typealias Input = String
     typealias Output = String
 
     var delegate: ViewControllerDelegate?
-    var proxy = DeferredPromise<String>()
+    @IBOutlet var email: UITextField!
+
+    private var proxy = Promise<Output>.pending()
 
     func startFlow(context: String) -> Promise<String> {
-        self.proxy = DeferredPromise()
-        return proxy.wrappedValue.ensure{ print("ForgotPasswordViewController Done") }
+        if (!proxy.promise.isPending) {
+            proxy.resolver.reject(FlowError.canceled)
+            proxy = Promise<Output>.pending()
+        }
+        return proxy.promise
     }
-
-    @IBOutlet var email: UITextField!
 
     @IBAction
     public func onSubmit() {
-        self.resolve(email.text ?? "")
+        self.proxy.resolver.fulfill(email.text ?? "")
     }
 
     func attach(context: Input) {

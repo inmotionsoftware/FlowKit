@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		E75B5DDF2440E9CF0096473A /* DeferredPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DDE2440E9CF0096473A /* DeferredPromise.swift */; };
-		E75B5DE12440F5A70096473A /* FlowSubController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DE02440F5A70096473A /* FlowSubController.swift */; };
+		E75B5DE12440F5A70096473A /* SubFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DE02440F5A70096473A /* SubFlow.swift */; };
 		E75C26B0243FBB4100B3C467 /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26AE243FBB4100B3C467 /* FlowViewController.swift */; };
 		E75C26B1243FBB4100B3C467 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26AF243FBB4100B3C467 /* FlowView.swift */; };
 		E75C26B92440D53D00B3C467 /* Promise+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26B82440D53D00B3C467 /* Promise+Extensions.swift */; };
-		E75C26BD2440D58900B3C467 /* NavigationStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26BC2440D58900B3C467 /* NavigationStateMachine.swift */; };
+		E75C26BD2440D58900B3C467 /* NavigationStateMachineHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26BC2440D58900B3C467 /* NavigationStateMachineHost.swift */; };
 		E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */; };
 		E7EA223B243D1ED5009DDEEC /* FlowKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E7EA222D243D1ED5009DDEEC /* FlowKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */; };
@@ -21,6 +21,8 @@
 		E7EA2246243D21DB009DDEEC /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2245243D21DB009DDEEC /* PromiseKit.framework */; };
 		E7EA2248243D21FD009DDEEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2247243D21FD009DDEEC /* UIKit.framework */; };
 		E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2249243D2204009DDEEC /* Foundation.framework */; };
+		E7EAB9502444BB8B0002898B /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EAB94F2444BB8B0002898B /* StateMachine.swift */; };
+		E7EAB95D244602370002898B /* ViewCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EAB95C244602370002898B /* ViewCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,11 +37,11 @@
 
 /* Begin PBXFileReference section */
 		E75B5DDE2440E9CF0096473A /* DeferredPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeferredPromise.swift; path = src/main/swift/DeferredPromise.swift; sourceTree = SOURCE_ROOT; };
-		E75B5DE02440F5A70096473A /* FlowSubController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowSubController.swift; path = src/main/swift/FlowSubController.swift; sourceTree = SOURCE_ROOT; };
+		E75B5DE02440F5A70096473A /* SubFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubFlow.swift; path = src/main/swift/SubFlow.swift; sourceTree = SOURCE_ROOT; };
 		E75C26AE243FBB4100B3C467 /* FlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = src/main/swift/FlowViewController.swift; sourceTree = SOURCE_ROOT; };
 		E75C26AF243FBB4100B3C467 /* FlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowView.swift; path = src/main/swift/FlowView.swift; sourceTree = SOURCE_ROOT; };
 		E75C26B82440D53D00B3C467 /* Promise+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Promise+Extensions.swift"; path = "src/main/swift/Promise+Extensions.swift"; sourceTree = SOURCE_ROOT; };
-		E75C26BC2440D58900B3C467 /* NavigationStateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationStateMachine.swift; path = src/main/swift/NavigationStateMachine.swift; sourceTree = SOURCE_ROOT; };
+		E75C26BC2440D58900B3C467 /* NavigationStateMachineHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationStateMachineHost.swift; path = src/main/swift/NavigationStateMachineHost.swift; sourceTree = SOURCE_ROOT; };
 		E7EA2203243D1E2F009DDEEC /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationTransaction.swift; path = src/main/swift/NavigationTransaction.swift; sourceTree = SOURCE_ROOT; };
 		E7EA222D243D1ED5009DDEEC /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlowKit.h; path = src/main/swift/FlowKit.h; sourceTree = SOURCE_ROOT; };
@@ -50,6 +52,8 @@
 		E7EA2245243D21DB009DDEEC /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/iOS/PromiseKit.framework; sourceTree = "<group>"; };
 		E7EA2247243D21FD009DDEEC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E7EA2249243D2204009DDEEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		E7EAB94F2444BB8B0002898B /* StateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateMachine.swift; path = src/main/swift/StateMachine.swift; sourceTree = SOURCE_ROOT; };
+		E7EAB95C244602370002898B /* ViewCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewCache.swift; path = src/main/swift/ViewCache.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,10 +92,12 @@
 			isa = PBXGroup;
 			children = (
 				E7EA2234243D1ED5009DDEEC /* Flow.swift */,
-				E75C26AF243FBB4100B3C467 /* FlowView.swift */,
+				E7EAB94F2444BB8B0002898B /* StateMachine.swift */,
 				E75C26AE243FBB4100B3C467 /* FlowViewController.swift */,
-				E75B5DE02440F5A70096473A /* FlowSubController.swift */,
-				E75C26BC2440D58900B3C467 /* NavigationStateMachine.swift */,
+				E75C26AF243FBB4100B3C467 /* FlowView.swift */,
+				E7EAB95C244602370002898B /* ViewCache.swift */,
+				E75B5DE02440F5A70096473A /* SubFlow.swift */,
+				E75C26BC2440D58900B3C467 /* NavigationStateMachineHost.swift */,
 				E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */,
 				E75B5DDE2440E9CF0096473A /* DeferredPromise.swift */,
 				E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */,
@@ -224,15 +230,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */,
+				E7EAB95D244602370002898B /* ViewCache.swift in Sources */,
 				E75C26B1243FBB4100B3C467 /* FlowView.swift in Sources */,
 				E75C26B0243FBB4100B3C467 /* FlowViewController.swift in Sources */,
 				E75C26B92440D53D00B3C467 /* Promise+Extensions.swift in Sources */,
 				E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */,
-				E75B5DE12440F5A70096473A /* FlowSubController.swift in Sources */,
+				E75B5DE12440F5A70096473A /* SubFlow.swift in Sources */,
+				E7EAB9502444BB8B0002898B /* StateMachine.swift in Sources */,
 				E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */,
 				E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */,
 				E75B5DDF2440E9CF0096473A /* DeferredPromise.swift in Sources */,
-				E75C26BD2440D58900B3C467 /* NavigationStateMachine.swift in Sources */,
+				E75C26BD2440D58900B3C467 /* NavigationStateMachineHost.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,0 +1,10 @@
+@startuml
+
+[*] --> Home
+Home --> Login
+Home --> Home
+
+Login --> Home
+Home --> [*]
+
+@enduml

@@ -20,11 +20,16 @@ struct LoginView: FlowableView {
     typealias Input = String?
     typealias Output = LoginViewResult
 
-    @State private var error: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
 
-    var proxy = DeferredPromise<LoginViewResult>()
+    private var error: String?
+    public let resolver: Resolver<Output>
+
+    init(context: String?, resolver: Resolver<Output>) {
+        self.resolver = resolver
+        self.error = context
+    }
 
     func login() {
         self.resolve(.login(email: email, password: password))
@@ -39,9 +44,10 @@ struct LoginView: FlowableView {
     }
 
     var body: some View {
-        VStack {
+        return VStack {
+            error.map { Text($0) }
+            Spacer()
             Text("Login")
-            if (!error.isEmpty) { Text(error) }
             TextField("Email", text: $email)
                 .padding(10)
                 .border(Color.gray, width: 1)
@@ -63,6 +69,6 @@ struct LoginView: FlowableView {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        return LoginView()
+        return LoginView(context: nil, resolver: Promise.pending().resolver)
     }
 }

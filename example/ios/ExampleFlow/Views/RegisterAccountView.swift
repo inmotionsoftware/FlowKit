@@ -19,16 +19,14 @@ struct RegisterView: FlowableView {
     @State private var email: String = ""
     @State private var password: String = ""
 
-    let proxy = DeferredPromise<User>()
+    public let resolver: Resolver<Output>
 
-    func attach(context: Void) {
-        self.proxy.reset()
-        assert(self.proxy.wrappedValue.isPending)
+    init(context: Void, resolver: Resolver<User>) {
+        self.resolver = resolver
     }
 
     func register() {
         let user = User(firstName: firstName, lastName: lastName, email: email, password: password)
-        assert(self.proxy.wrappedValue.isPending)
         self.resolve(user)
     }
 
@@ -59,6 +57,7 @@ struct RegisterView: FlowableView {
 
 struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
-        return RegisterView()
+        let pending = Promise<User>.pending()
+        return RegisterView(resolver: pending.resolver)
     }
 }

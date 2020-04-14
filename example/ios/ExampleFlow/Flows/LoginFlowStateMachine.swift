@@ -11,24 +11,31 @@ import PromiseKit
 import SwiftUI
 import FlowKit
 
-class LoginFlowController: NavigationStateMachine<OAuthToken>, LoginFlowStateMachine {
+extension StateMachine {
+    @discardableResult
+    func showAlert(title: String, message: String) -> Promise<Void> {
+        return self.showAlert(title: title, message: message, actions: ["OK"]).then { _ -> Promise<Void> in return Promise() }
+    }
 
-    private lazy var forgotPassword = ForgotPasswordViewController(nibName: "ForgotPassword", bundle: Bundle.main)
-    @FlowView var loginView = LoginView()
-    @FlowView var registerView = RegisterView()
+    @discardableResult
+    func showAlert(title: String? = nil, message: String, actions: [String], preferredActionIndex: Int? = nil) -> Promise<Int> {
+        return Promise(error: FlowError.canceled)
+    }
+}
 
+public class LoginFlowController: ViewCache, NavStateMachine, LoginFlowStateMachine {
+
+    public var nav: UINavigationController!
+    public typealias State = LoginFlowState
+    private var animated: Bool = false
     private let service = UserService()
 
-    func onBegin(state: LoginFlowState, context: Void) -> Promise<LoginFlowState.Begin> {
+    public func onBegin(state: State, context: Void) -> Promise<State.Begin> {
         return Promise.value(.prompt(nil))
     }
 
-    func onPrompt(state: LoginFlowState, context: String?) -> Promise<LoginFlowState.Prompt> {
-        if let err = context {
-            self.showAlert(title: "Error", message: err)
-        }
-    
-        return self.startFlow(view: $loginView, nav: nav, context: context)
+    public func onPrompt(state: State, context: String?) -> Promise<State.Prompt> {
+        return self.subflow(to: LoginView.self, context: context)
             .map { result in
                 self.animated = true
                 switch (result) {
@@ -47,7 +54,7 @@ class LoginFlowController: NavigationStateMachine<OAuthToken>, LoginFlowStateMac
             }
     }
 
-    func onAuthenticate(state: LoginFlowState, context: Credentials) -> Promise<LoginFlowState.Authenticate> {
+    public func onAuthenticate(state: State, context: Credentials) -> Promise<State.Authenticate> {
         return self.service
             .autenticate(credentials: context)
             .map {
@@ -58,21 +65,21 @@ class LoginFlowController: NavigationStateMachine<OAuthToken>, LoginFlowStateMac
         }
     }
 
-    func onForgotPass(state: LoginFlowState, context: String) -> Promise<LoginFlowState.ForgotPass> {
+    public func onForgotPass(state: State, context: String) -> Promise<State.ForgotPass> {
         return self
-            .startFlow(view: forgotPassword, nav: nav, context: context)
+            .subflow(to: ForgotPasswordViewController.self, nib: "ForgotPassword", context: context)
             .map { .prompt($0) }
             .canceled { _ in .prompt(nil) }
             .recover { Promise.value(.prompt($0.localizedDescription)) }
     }
 
-    func onEnterAccountInfo(state: LoginFlowState, context: String?) -> Promise<LoginFlowState.EnterAccountInfo> {
+    public func onEnterAccountInfo(state: State, context: String?) -> Promise<State.EnterAccountInfo> {
         if let err = context {
             self.showAlert(title: "Error", message: err)
         }
-        
+
         return self
-            .startFlow(view: $registerView, nav: nav, context: ())
+            .subflow(to: RegisterView.self, context: ())
             .map { .createAccount($0) }
             .back {
                 self.animated = false
@@ -80,7 +87,7 @@ class LoginFlowController: NavigationStateMachine<OAuthToken>, LoginFlowStateMac
             }
     }
 
-    func onCreateAccount(state: LoginFlowState, context: User) -> Promise<LoginFlowState.CreateAccount> {
+    public func onCreateAccount(state: State, context: User) -> Promise<State.CreateAccount> {
         return self.service
             .createAccount(user: context)
             .map {
