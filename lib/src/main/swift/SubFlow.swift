@@ -20,6 +20,12 @@ internal class SubFlow<View: FlowViewController>: Flow, ViewControllerDelegate {
 
     private var proxy = Promise<Output>.pending()
 
+    deinit {
+        if (proxy.promise.isPending) {
+            proxy.resolver.reject(FlowError.canceled)
+        }
+    }
+
     public init(viewController: View, nav: UINavigationController, animated: Bool = true) {
         self.viewController = viewController
         self.nav = nav
@@ -41,6 +47,9 @@ internal class SubFlow<View: FlowViewController>: Flow, ViewControllerDelegate {
         } else {
             self.nav.popToOrPush(viewController: self.viewController, animated: animated)
         }
+
+        // force load of the view
+        let _ = self.viewController.view
 
         self.viewController.startFlow(context: context)
             .map { val -> Void in self.proxy.resolver.fulfill(val) }

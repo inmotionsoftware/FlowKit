@@ -17,6 +17,7 @@ class ForgotPasswordViewController: UIViewController, FlowViewController {
 
     var delegate: ViewControllerDelegate?
     @IBOutlet var email: UITextField!
+    @IBOutlet var error: UILabel!
 
     private var proxy = Promise<Output>.pending()
 
@@ -25,15 +26,22 @@ class ForgotPasswordViewController: UIViewController, FlowViewController {
             proxy.resolver.reject(FlowError.canceled)
             proxy = Promise<Output>.pending()
         }
+        self.error.text = nil
         return proxy.promise
+    }
+
+    override func willMove(toParent parent: UIViewController?) {
+        self.delegate?.willMove(toParent: parent)
+        super.willMove(toParent: parent)
     }
 
     @IBAction
     public func onSubmit() {
-        self.proxy.resolver.fulfill(email.text ?? "")
-    }
-
-    func attach(context: Input) {
-        self.email.text = context
+        if let email = email.text, email.isValidEmail() {
+            self.error.text = nil
+            self.proxy.resolver.fulfill(email)
+        } else {
+            self.error.text = "Invalid email"
+        }
     }
 }
