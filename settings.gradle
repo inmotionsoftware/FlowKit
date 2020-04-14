@@ -1,4 +1,4 @@
-rootProject.name = 'FlowKit'
-include ':FlowKitCompiler', 'FlowKitLib'
-project(':FlowKitCompiler').projectDir = new File('./compiler')
-project(':FlowKitLib').projectDir = new File('./lib')
+rootProject.name='FlowKit'
+include ':app', ':lib', ':compiler'
+project(':app').projectDir = new File('example/android/app')
+include ':compiler'
