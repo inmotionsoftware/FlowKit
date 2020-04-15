@@ -9,113 +9,72 @@ private fun convertType(name: String?): String
 }
 
 fun Enumeration.toKotlin(builder: Writer) {
-    builder.appendln("sealed class ${name} {")
-    values.forEach {
-        builder.appendln("\tclass ${it.name}(val context: ${convertType(
-            it.context
-        )}): ${name}()")
+    builder.append("sealed class ${name}()")
+    if (!generics.isEmpty()) generics.joinTo(buffer=builder, prefix = "<", separator = ",", postfix = ">")
+    builder.appendln(" {")
+    aliasess.joinTo(buffer=builder, separator = "\n\t", prefix = "\t") { "public typealias ${it.first} = ${it.second}" }
+    builder.appendln()
+    values.joinTo(buffer=builder, separator= "\n\t", prefix = "\t") { "class ${it.name.capitalize()}(val context: ${convertType(it.context)}): ${name}()" }
+    builder.appendln()
+    nested.forEach {
+        builder.append("\t")
+        it.toKotlin(builder)
+        val context = when (it.name) {
+            "Terminate" -> return@forEach
+            "Fail" -> ".Failure(context)"
+            "End" -> ".Success(context)"
+            else -> "context"
+        }
+//        builder.appendln("""
+//        constructor(substate: ${it.name}): this() {
+//            when (substate) {
+//                ${ it.values.joinToString(separator = "\n\t\t") { "is ${it.name.capitalize()} -> this = ${name}.${it.name.capitalize()}(context=substate.context)" } }
+//            }
+//            }""".trimIndent())
     }
-    nested.forEach { it.toSwift(builder) }
     builder.appendln("}");
     builder.appendln()
 }
 
 fun Handler.toKotlin(builder: Writer) {
-    builder.appendln("private fun ${enum.name}.handle(stateMachine: ${state}): Promise<State> =")
-    builder.appendln("\twhen (this) {")
-    enum.values.forEach {
-        if (enum.name == "Fail" && it.name == "Terminate") {
-            builder.appendln("\t\tis ${enum.name}.${it.name} -> Promise(error=context)")
-        } else {
-            builder.appendln("\t\tis ${enum.name}.${it.name} -> Promise.value(State.${it.name}(context))")
-        }
-    }
-    builder.appendln("\t}")
-    builder.appendln()
+    builder.appendln("""
+        internal fun to${this.state}(substate: ${this.state}.From${this.name}): ${this.state} = 
+            when (substate) {
+                ${ this.enum.values.filter{ it.name != "Terminate" }.joinToString(separator="\n\t") { "is ${this.state}.From${this.name}.${it.name} -> ${this.state}.${it.name}(context=substate.context)" } }
+                ${ this.enum.values.filter{ it.name == "Terminate" }.joinToString(separator="\n\t") { "is ${this.state}.From${this.name}.${it.name} -> ${this.state}.${it.name}(context=Result.${ if (this.name == "End") "Success" else "Failure" }(substate.context))" } }
+            }
+    """.trimIndent())
 }
 
 fun StateMachineGenerator.toKotlin(builder: Writer) {
-
-    val stateEnum =
-        Enumeration("State")
+    val stateEnum = Enumeration(stateName)
     val enums = mutableMapOf<String, Enumeration>()
 
-//    val back = Enumeration.Value("Back")
-//    val cancel = Enumeration.Value("Cancel")
-    val fail = Enumeration.Value(
-        "Fail",
-        "Throwable"
-    )
-
-    transitions.forEach {
-        if (it.from.name == "Begin") {
-            it.from.type = it.type
-        }
-
-        if (it.to.name == "End") {
-            it.to.type = it.type
-        }
-    }
+    val input = convertType(transitions.find { it.from.name == "Begin" }?.type)
+    val output = convertType(transitions.find { it.to.name == "End" }?.type)
+    val result = "Result<${output}>"
 
     states.forEach {
         val name = it.name
-        stateEnum.values.add(
-            Enumeration.Value(
-                name,
-                it.type
-            )
-        )
+        stateEnum.values.add(Enumeration.Value(name, it.type ))
+        enums[name] = Enumeration(name = "From${name}")
     }
 
-    var endType: String?
-    states.first { it.name == "End" }.let {
-        endType = it.type
+    if (states.find { it.name == "Fail" } == null) {
+        val fail = Enumeration.Value("Fail", "Throwable")
+        stateEnum.values.add(fail)
+        enums["Fail"] = Enumeration(name = "FromFail")
     }
-    val output = endType ?: "Unit"
 
-    var beginType: String?
-    states.first { it.name == "Begin" }.let {
-        beginType = it.type
-    }
-    val input = beginType ?: "Unit"
+    val terminate = Enumeration.Value("Terminate", result )
+    stateEnum.values.add(terminate)
 
-//    stateEnum.values.add(back)
-//    stateEnum.values.add(cancel)
-    stateEnum.values.add(fail)
-
-    stateEnum.values.forEach {
-        val name = it.name
-
-        val enum =
-            Enumeration(name = "${name}")
-//        enum.values.add( if (name != "Back") back else Enumeration.Value("Terminate", "Result<${output}>"))
-//        enum.values.add( if (name != "Cancel") cancel else Enumeration.Value("Terminate", "Result<${output}>"))
-        enum.values.add( if (name != "Fail") fail else Enumeration.Value(
-            "Terminate",
-            "Throwable"
-        )
-        )
-
-        if (name == "End") {
-            enum.values.add(
-                Enumeration.Value(
-                    "Terminate",
-                    "Result<${output}>"
-                )
-            )
-        }
-        enums[name] = enum
-    }
+    enums["End"]?.values?.add(Enumeration.Value("Terminate", "${output}"))
+    enums["Fail"]?.values?.add(Enumeration.Value("Terminate", "Throwable"))
 
     transitions.forEach {
-        val name = it.from.name
-        val enum = enums[name]!!
-        enum.values.add(
-            Enumeration.Value(
-                it.to.name,
-                it.to.type
-            )
-        )
+        val enum = enums[it.from.name]!!
+        enum.values.add(Enumeration.Value(it.to.name, convertType(it.to.type)))
     }
 
     var defaultInitialState: String? = null
@@ -123,69 +82,50 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
         defaultInitialState = it.to.name
     }
 
-//    builder.appendln("@file:JvmName(\"${stateMachineName}\")")
-    if (namespace.isNotEmpty()) builder.appendln("package ${namespace}")
-    builder.appendln("import com.inmotionsoftware.promisekt.Promise")
-    builder.appendln("import com.inmotionsoftware.promisekt.thenMap")
-    builder.appendln("import com.inmotionsoftware.promisekt.recover")
-    builder.appendln("import com.inmotionsoftware.flowkit.*")
+    builder.appendln("""
+        package ${ if (namespace.isNotEmpty()) namespace else "com.inmotionsoftware.flowkit.generated" }
+        import com.inmotionsoftware.promisekt.Promise
+        import com.inmotionsoftware.promisekt.thenMap
+        import com.inmotionsoftware.promisekt.map
+        import com.inmotionsoftware.promisekt.then
+        import com.inmotionsoftware.promisekt.recover
+        import com.inmotionsoftware.flowkit.*
+        
+        """.trimIndent())
 
-    builder.appendln()
-    builder.appendln()
-    builder.appendln("typealias Result<T> = FlowResult<T>")
-    builder.appendln()
-    builder.appendln("interface ${stateMachineName}: Flow<${input}, ${output}> {")
-
-    stateEnum.values.add(
-        Enumeration.Value(
-            "Terminate",
-            "Result<${output}>"
-        )
-    )
+    stateEnum.nested = enums.values
     stateEnum.toKotlin(builder)
+
     enums.forEach {
-        it.value.toKotlin(builder)
-        Handler(
-            stateMachineName,
-            stateEnum.name,
-            it.value
-        ).toKotlin(builder)
+        Handler(state=stateEnum.name, name=it.key, enum=it.value).toKotlin(builder)
     }
 
-    builder.appendln("fun onStateDidChange(prev: State, curr: State) {}")
-    builder.appendln("override fun start(context: ${input}): Promise<Result<${convertType(
-        output
-    )}>> = next(State.Begin(context), State.Begin(context))")
-    builder.appendln("private fun next(prev: State, next: State): Promise<Result<${output}>> {")
-    builder.appendln("try { onStateDidChange(prev=prev, curr=next) } catch (e: Throwable) {}")
-    builder.appendln("\treturn when(next) {")
-    stateEnum.values.forEach {
-        if (it.name == "Terminate") {
-            builder.appendln("\t\tis State.${it.name} -> Promise.value(next.context)")
-        } else {
-            builder.append("\t\tis State.${it.name} -> on${it.name}(prev, next.context).thenMap{ it.handle(this) }.thenMap{ next(next, it) }")
-            if (it.name != "Fail") {
-                builder.append(".recover { next(next, State.Fail(context=it)) }")
+    builder.appendln("""
+        interface ${stateMachineName}: StateMachine<${stateName}, ${input}, ${output}> {
+            ${ stateEnum.values
+                .filter{ it.name != "Terminate"  && it.name != "End" && it.name != "Fail" }
+                .joinToString(separator = "\n\t") { "fun on${it.name}(state: ${stateName}, context: ${convertType(it.context)}): Promise<${stateName}.From${it.name}>" } 
             }
-            builder.appendln()
-        }
-    }
-    builder.appendln("\t}")
-    builder.appendln("}")
 
-    stateEnum.values.forEach {
-        val type =
-            convertType(it.context)
-        builder.appendln(when (it.name) {
-//            "Begin" -> "fun on${it.name}(state: State, context: ${type}): Promise<${it.name}> = Promise.value(${it.name}.${defaultInitialState!!}(context))"
-//            "Back" -> "fun on${it.name}(state: State, context: ${type}): Promise<${it.name}> = Promise.value(${it.name}.Terminate(Result.Back(Unit)))"
-//            "Cancel" -> "fun on${it.name}(state: State, context: ${type}): Promise<${it.name}> = Promise.value(${it.name}.Terminate(Result.Cancel(Unit)))"
-            "Fail" -> "fun on${it.name}(state: State, context: ${type}): Promise<${it.name}> = Promise(error=context)"
-            "End" -> "fun on${it.name}(state: State, context: ${type}): Promise<${it.name}> = Promise.value(${it.name}.Terminate(Result.Success(context)))"
-            "Terminate" -> ""
-            else -> "fun on${it.name}(state: State, context: ${type}): Promise<${it.name}>"
-        })
-    }
-    builder.appendln("}")
-    builder.appendln()
+            fun onEnd(state: ${stateName}, context: ${output}) :  Promise<${stateName}.FromEnd> = Promise.value(${stateName}.FromEnd.Terminate(context))
+            fun onFail(state: ${stateName}, context: Throwable) :  Promise<${stateName}.FromFail> = Promise.value(${stateName}.FromFail.Terminate(context))
+            fun onTerminate(state: ${stateName}, context: ${result}) :  Promise<${result}> = Promise.value(context)
+
+            override fun dispatch(state: ${stateName}): Promise<${stateName}> =
+                when (state) {
+                    ${ stateEnum.values.filter{ it.name != "Terminate" }.joinToString(separator = "\n\t") { "is ${stateName}.${it.name} -> on${it.name}(state=state, context=state.context).map { to${stateName}(substate=it) }" } }
+                    is ${stateName}.Terminate -> onTerminate(state=state, context=state.context).map { ${stateName}.Terminate(context=it) }
+                }
+        
+            override fun terminal(state: ${stateName}): ${result}? =
+                when (state) {
+                    is ${stateName}.Terminate -> state.context
+                    else -> null
+                }
+        
+            override fun firstState(context: ${input}): ${stateName} = ${stateName}.Begin(context=context)
+        }
+
+
+    """.trimIndent())
 }

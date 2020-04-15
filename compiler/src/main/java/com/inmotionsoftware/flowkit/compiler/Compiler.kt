@@ -158,5 +158,7 @@ fun processPuml(namespace: String, file: File, imageDir: File?, exportFormat: Ex
         ExportFormat.SWIFT -> { generator.toSwift(writer) }
     }
 
-    reader.generatedImages.forEach { println("image: ${it.pngFile}") }
+    imageDir?.let {
+        reader.generatedImages.forEach { println("image: ${it.pngFile}") }
+    }
 }
