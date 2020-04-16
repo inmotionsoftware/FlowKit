@@ -11,8 +11,13 @@ sealed class FlowError: Throwable() {
     class Back: FlowError()
 }
 
-
 sealed class Result<T> {
     class Success<T>(val value: T): Result<T>()
     class Failure<T>(val cause: Throwable): Result<T>()
+}
+
+final class Bootstrap {
+    companion object {
+
+    }
 }
