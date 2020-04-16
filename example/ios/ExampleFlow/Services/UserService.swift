@@ -23,14 +23,14 @@ public struct UserService {
     }
 
     func resetPassword(email: String) -> Promise<Void> {
-        guard (users.contains { $0.email == email }) else {
+        guard (users.contains { $0.email.caseInsensitiveCompare(email) == .orderedSame }) else {
             return Promise(error: Error.invalidEmail)
         }
         return Promise.value(())
     }
 
     func autenticate(credentials: Credentials) -> Promise<OAuthToken> {
-        Promise().map {
+        return Promise().map {
             let found = users.first { $0.email.caseInsensitiveCompare(credentials.username) == .orderedSame && $0.password == credentials.password }
             guard let user = found else { throw Error.invalidCreds }
             let jwt = JWT(payload: JWT.Payload(sub: user.userId.uuidString))

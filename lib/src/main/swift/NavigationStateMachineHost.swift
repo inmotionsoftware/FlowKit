@@ -50,10 +50,7 @@ open class NavigationStateMachineHost<SM: NavStateMachine>: Flow  {
             .startFlow(context: context)
             .ensure {
                 if let trans = self.nav.currentTransaction {
-                    while trans.popViewController() != nil {}
-                    self.stack.forEach {
-                        trans.push(viewController: $0)
-                    }
+                    trans.setStack(self.stack)
                     trans.commit()
                 }
                 else {

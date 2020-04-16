@@ -89,6 +89,10 @@ public class NavigationTransaction {
         return
     }
 
+    public func setStack(_ stack: [UIViewController]) {
+        self.stack = stack
+    }
+
     public func commit() {
         guard let nav = self.navigationController else { return }
         guard let curr = nav.currentTransaction else { return }
