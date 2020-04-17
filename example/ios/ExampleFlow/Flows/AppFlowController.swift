@@ -10,7 +10,7 @@ import PromiseKit
 import FlowKit
 import SwiftUI
 
-final class AppFlowController: ViewCache, NavStateMachine, AppStateMachine {
+final class AppFlowController: NavStateMachine, AppStateMachine {
     var nav: UINavigationController!
 
     func onBegin(state: AppState, context: Void) -> Promise<AppState.Begin> {

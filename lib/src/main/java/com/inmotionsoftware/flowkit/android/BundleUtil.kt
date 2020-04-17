@@ -6,7 +6,7 @@ import android.util.Size
 import android.util.SizeF
 import java.io.Serializable
 
-fun <T> Bundle.put(key: String?, value: T) =
+fun <T> Bundle.put(key: String?, value: T): Bundle {
     when (value) {
         is Boolean -> this.putBoolean(key, value)
         is Byte -> this.putByte(key, value)
@@ -30,7 +30,10 @@ fun <T> Bundle.put(key: String?, value: T) =
         is Serializable -> this.putSerializable(key, value)
         is Size -> this.putSize(key, value)
         is SizeF -> this.putSizeF(key, value)
-        else -> throw ClassCastException()
+        is Unit -> { /*this.remove(key)*/ }
+        else -> throw ClassCastException("cannot put type ${value} into bundle")
     }
+    return this
+}
 
 inline fun <reified T> Bundle.getT(key: String?): T = this.get(key) as T

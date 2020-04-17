@@ -3,7 +3,7 @@ package com.inmotionsoftware.flowkit
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
-import com.inmotionsoftware.flowkit.android.FlowActivity
+import com.inmotionsoftware.flowkit.android.*
 import com.inmotionsoftware.promisekt.*
 
 interface StateMachine<State, Input, Output> {
@@ -40,22 +40,15 @@ open class StateMachineHost<State, Input, Output, SM: StateMachine<State, Input,
             Promise.value(result)
         }
     }
-
-    fun <State, Input, Output, SM: StateMachine<State,Input,Output>> subflow(stateMachine: SM, context: Input): Promise<Output> {
-        return Promise(error=FlowError.Canceled())
-    }
-
-    fun <State, Input, Output> subflow(activity: FlowActivity<Input, Output>, context: Input): Promise<Output> {
-        return Promise(error=FlowError.Canceled())
-    }
 }
 
-fun <State, Input, Output, State2, Input2, Output2> StateMachine<State, Input, Output>.subflow(stateMachine: StateMachine<State2, Input2, Output2>, context: Input2): Promise<Output2> {
-    return StateMachineHost(stateMachine=stateMachine)
-        .startFlow(context=context)
-}
+fun <S, I, O, S2, I2, O2, SM> StateMachine<S, I, O>.subflow(stateMachine: SM, activity: DispatchActivity, viewId: Int, context: I2): Promise<O2> where SM : StateMachine<S2, I2, O2>, SM: NavStateMachine =
+    NavigationStateMachineHost(stateMachine=stateMachine, activity=activity, viewId=viewId).startFlow(context=context)
 
-fun <State, Input, Output> Bootstrap.Companion.startFlow(stateMachine: StateMachine<State, Input, Output>, context: Input) {
+fun <S, I, O, S2, I2, O2, SM> StateMachine<S, I, O>.subflow(stateMachine: SM, context: I2): Promise<O2> where SM: StateMachine<S2, I2, O2> =
+    StateMachineHost(stateMachine=stateMachine).startFlow(context=context)
+
+fun <S, I, O> Bootstrap.Companion.startFlow(stateMachine: StateMachine<S, I, O>, context: I) {
     val rt = StateMachineHost(stateMachine=stateMachine)
     .startFlow(context=context)
         .ensure {
