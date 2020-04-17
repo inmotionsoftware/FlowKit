@@ -51,7 +51,7 @@ inline fun <I, reified O, A: FlowActivity<I, O>> NavStateMachine.subflow(activit
 fun <S, I, O, SM, S2, I2, O2, SM2> SM.subflow(stateMachine: SM2, context: I2): Promise<O2> where SM2: StateMachine<S2, I2, O2>, SM2: NavStateMachine, SM: StateMachine<S, I, O>, SM: NavStateMachine =
     NavigationStateMachineHost(stateMachine=stateMachine, activity=this.nav.activity, viewId=nav.viewId).startFlow(context=context)
 
-fun <S, I, O, SM> Bootstrap.Companion.startFlow(stateMachine: SM, activity: DispatchActivity, viewId: Int, context: I) where SM: StateMachine<S, I, O>, SM: NavStateMachine =
+fun <S, I, O, SM> Bootstrap.Companion.startFlow(stateMachine: SM, activity: DispatchActivity, viewId: Int, context: I): Unit where SM: StateMachine<S, I, O>, SM: NavStateMachine =
     NavigationStateMachineHost(stateMachine=stateMachine, activity=activity, viewId=viewId)
         .startFlow(context=context)
         .done {
@@ -61,7 +61,7 @@ fun <S, I, O, SM> Bootstrap.Companion.startFlow(stateMachine: SM, activity: Disp
             Log.e(Bootstrap::javaClass.name, "Root flow is being restarted", it)
         }
         .finally {
-            startFlow(stateMachine=stateMachine, context=context)
+            startFlow<S,I,O,SM>(stateMachine=stateMachine,  activity=activity, viewId=viewId, context=context)
         }
 
 class NavigationStateMachineHost<State, Input, Output, SM> (

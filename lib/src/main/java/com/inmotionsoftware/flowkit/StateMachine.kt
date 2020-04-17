@@ -48,13 +48,17 @@ fun <S, I, O, S2, I2, O2, SM> StateMachine<S, I, O>.subflow(stateMachine: SM, ac
 fun <S, I, O, S2, I2, O2, SM> StateMachine<S, I, O>.subflow(stateMachine: SM, context: I2): Promise<O2> where SM: StateMachine<S2, I2, O2> =
     StateMachineHost(stateMachine=stateMachine).startFlow(context=context)
 
-fun <S, I, O> Bootstrap.Companion.startFlow(stateMachine: StateMachine<S, I, O>, context: I) {
-    val rt = StateMachineHost(stateMachine=stateMachine)
+fun <S, I, O, SM: StateMachine<S, I, O>> Bootstrap.Companion.startFlow(stateMachine: SM, context: I): Unit =
+    StateMachineHost(stateMachine=stateMachine)
     .startFlow(context=context)
-        .ensure {
+        .done {
             Log.e(Bootstrap::javaClass.name, "Root flow is being restarted")
-            startFlow(stateMachine=stateMachine, context=context)
         }
-}
+        .catch {
+            Log.e(Bootstrap::javaClass.name, "Root flow is being restarted", it)
+        }
+        .finally {
+            startFlow<S,I,O,SM>(stateMachine=stateMachine, context=context)
+        }
 
 
