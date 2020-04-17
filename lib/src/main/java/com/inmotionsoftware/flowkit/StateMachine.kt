@@ -1,6 +1,9 @@
 package com.inmotionsoftware.flowkit
 
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import com.inmotionsoftware.flowkit.android.FlowActivity
 import com.inmotionsoftware.promisekt.*
 
 interface StateMachine<State, Input, Output> {
@@ -39,6 +42,10 @@ open class StateMachineHost<State, Input, Output, SM: StateMachine<State, Input,
     }
 
     fun <State, Input, Output, SM: StateMachine<State,Input,Output>> subflow(stateMachine: SM, context: Input): Promise<Output> {
+        return Promise(error=FlowError.Canceled())
+    }
+
+    fun <State, Input, Output> subflow(activity: FlowActivity<Input, Output>, context: Input): Promise<Output> {
         return Promise(error=FlowError.Canceled())
     }
 }
