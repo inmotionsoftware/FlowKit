@@ -2,13 +2,14 @@
     <string name="app_name">Example</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_home">Welcome Home!</string>
     <string name="title_login">Login</string>
     <string name="title_password">Password</string>
     <string name="title_submit">Submit</string>
+    <string name="title_cancel">Cancel</string>
     <string name="title_create">Create</string>
     <string name="title_create_account">Create Account</string>
     <string name="title_forgot_password">Forgot Password?</string>
-
 
 
     <string name="hint_email">email</string>

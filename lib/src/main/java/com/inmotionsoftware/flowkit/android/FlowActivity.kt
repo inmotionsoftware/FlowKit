@@ -1,7 +1,10 @@
 package com.inmotionsoftware.flowkit.android
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import com.inmotionsoftware.example.Backable
@@ -12,19 +15,11 @@ import com.inmotionsoftware.promisekt.Resolver
 import com.inmotionsoftware.promisekt.fulfill
 import com.inmotionsoftware.promisekt.reject
 
-class FlowActivity<Input, Output>: AppCompatActivity() {
+val FLOW_KIT_ACTIVITY_RESULT: String = "FLOWKIT"
 
-    lateinit var resolver: Resolver<Output>
+open class FlowActivity<Input, Output>: ComponentActivity() {
+
     var input: Input? = null
-
-    fun attach(resolver: Resolver<Output>) {
-        this.resolver = resolver
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        load()
-    }
 
     @CallSuper
     override fun onResume() {
@@ -33,11 +28,22 @@ class FlowActivity<Input, Output>: AppCompatActivity() {
     }
 
     fun resolve(value: Output) {
-        this.resolver.fulfill(value)
+        val intent = Intent()
+        val bundle = Bundle()
+        bundle.put(FLOW_KIT_ACTIVITY_RESULT, value)
+        intent.putExtra("result", bundle)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     fun reject(error: Throwable) {
-        this.resolver.reject(error)
+        val bundle = Bundle()
+        bundle.put("failure", error)
+
+        val intent = Intent()
+        intent.putExtra(FLOW_KIT_ACTIVITY_RESULT, bundle)
+        setResult(Activity.RESULT_CANCELED, intent)
+        finish()
     }
 
     fun cancel() {
@@ -53,6 +59,6 @@ class FlowActivity<Input, Output>: AppCompatActivity() {
     }
 
     private fun load() {
-        this.input = intent.getBundleExtra("FLOW_KIT")?.get("context") as Input
+        this.input = intent.getBundleExtra(FLOW_KIT_ACTIVITY_RESULT)?.get("context") as Input
     }
 }
