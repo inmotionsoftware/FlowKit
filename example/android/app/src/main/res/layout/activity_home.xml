@@ -5,6 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:gravity="center"
         tools:context=".HomeActivity">
 
     <TextView
@@ -14,24 +15,11 @@
             android:layout_height="50dp"
             android:text="@string/title_home"/>
 
-    <EditText
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:inputType="text"
-            android:hint="@string/hint_email"/>
-
     <Button
-            android:id="@+id/submit"
+            android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/title_submit" />
-
-    <Button
-            android:id="@+id/cancel"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/title_cancel" />
+            android:text="@string/title_login" />
 
 
 </LinearLayout>

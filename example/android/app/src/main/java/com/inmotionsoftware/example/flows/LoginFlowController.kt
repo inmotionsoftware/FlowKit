@@ -37,8 +37,8 @@ class LoginFlowController: NavStateMachine, LoginFlowStateMachine {
         return Promise.value(FromBegin.Prompt(null))
     }
 
-    override fun onPrompt(state: LoginFlowState, context: String?): Promise<FromPrompt> {
-        return this.subflow(to=LoginFragment::class.java, context=context)
+    override fun onPrompt(state: LoginFlowState, context: String?): Promise<FromPrompt> =
+        this.subflow2(fragment=LoginFragment::class.java, context=context)
             .map {
                 when(it) {
                     is LoginViewResult.ForgotPassword -> FromPrompt.ForgotPass(it.email)
@@ -54,10 +54,9 @@ class LoginFlowController: NavStateMachine, LoginFlowStateMachine {
                 this.animated = false
                 FromPrompt.Prompt(context)
             }
-    }
 
-    override fun onAuthenticate(state: LoginFlowState, context: Credentials): Promise<FromAuthenticate> {
-        return this.service
+    override fun onAuthenticate(state: LoginFlowState, context: Credentials): Promise<FromAuthenticate> =
+        this.service
             .autenticate(credentials=context)
             .map {
                 FromAuthenticate.End(it) as FromAuthenticate
@@ -65,32 +64,27 @@ class LoginFlowController: NavStateMachine, LoginFlowStateMachine {
             .recover {
                 Promise.value(FromAuthenticate.Prompt(it.localizedMessage))
             }
-    }
 
-    override fun onForgotPass(state: LoginFlowState, context: String): Promise<FromForgotPass> {
-        return this.subflow(to=ForgotPasswordFragment::class.java, context=context)
+    override fun onForgotPass(state: LoginFlowState, context: String): Promise<FromForgotPass> =
+        this.subflow2(fragment=ForgotPasswordFragment::class.java, context=context)
         .map { FromForgotPass.Prompt(it) as FromForgotPass }
             .canceled { FromForgotPass.Prompt(null) as FromForgotPass }
             .recover { Promise.value(FromForgotPass.Prompt(it.localizedMessage)) }
-    }
 
-    override fun onEnterAccountInfo(state: LoginFlowState, context: String?): Promise<FromEnterAccountInfo> {
-        return this
-            .subflow(to=CreateAccountFragment::class.java, context=context)
+    override fun onEnterAccountInfo(state: LoginFlowState, context: String?): Promise<FromEnterAccountInfo> =
+        this.subflow2(fragment=CreateAccountFragment::class.java, context=context)
             .map { FromEnterAccountInfo.CreateAccount(it) as FromEnterAccountInfo }
             .back {
                 this.animated = false
                 FromEnterAccountInfo.Prompt(context)
             }
-    }
 
-    override fun onCreateAccount(state: LoginFlowState, context: User): Promise<FromCreateAccount> {
-        return this.service
+    override fun onCreateAccount(state: LoginFlowState, context: User): Promise<FromCreateAccount> =
+        this.service
             .createAccount(user=context)
             .map {
                 val creds = Credentials(username=context.email, password=context.password)
                 FromCreateAccount.Authenticate(creds) as FromCreateAccount
             }
             .recover { Promise.value(FromCreateAccount.EnterAccountInfo(it.localizedMessage)) }
-    }
 }
