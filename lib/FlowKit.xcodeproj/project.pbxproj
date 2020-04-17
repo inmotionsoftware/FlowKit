@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3564A538244954CF0023DB38 /* PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3564A537244954CF0023DB38 /* PromiseKit */; };
 		E7EA2236243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2228243D1ED5009DDEEC /* FiniteStateMachineEventManager.swift */; };
 		E7EA2237243D1ED5009DDEEC /* Promise+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2229243D1ED5009DDEEC /* Promise+Extensions.swift */; };
 		E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */; };
@@ -20,7 +21,6 @@
 		E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */; };
 		E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2234243D1ED5009DDEEC /* Flow.swift */; };
 		E7EA2243243D1ED5009DDEEC /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */; };
-		E7EA2246243D21DB009DDEEC /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2245243D21DB009DDEEC /* PromiseKit.framework */; };
 		E7EA2248243D21FD009DDEEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2247243D21FD009DDEEC /* UIKit.framework */; };
 		E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2249243D2204009DDEEC /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -41,7 +41,6 @@
 		E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Transaction.swift"; path = "src/main/swift/UINavigationViewController+Transaction.swift"; sourceTree = SOURCE_ROOT; };
 		E7EA2234243D1ED5009DDEEC /* Flow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Flow.swift; path = src/main/swift/Flow.swift; sourceTree = SOURCE_ROOT; };
 		E7EA2235243D1ED5009DDEEC /* FlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = src/main/swift/FlowViewController.swift; sourceTree = SOURCE_ROOT; };
-		E7EA2245243D21DB009DDEEC /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/iOS/PromiseKit.framework; sourceTree = "<group>"; };
 		E7EA2247243D21FD009DDEEC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E7EA2249243D2204009DDEEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -52,8 +51,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */,
+				3564A538244954CF0023DB38 /* PromiseKit in Frameworks */,
 				E7EA2248243D21FD009DDEEC /* UIKit.framework in Frameworks */,
-				E7EA2246243D21DB009DDEEC /* PromiseKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,7 +102,6 @@
 			children = (
 				E7EA2249243D2204009DDEEC /* Foundation.framework */,
 				E7EA2247243D21FD009DDEEC /* UIKit.framework */,
-				E7EA2245243D21DB009DDEEC /* PromiseKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -145,6 +143,9 @@
 			dependencies = (
 			);
 			name = FlowKit;
+			packageProductDependencies = (
+				3564A537244954CF0023DB38 /* PromiseKit */,
+			);
 			productName = FlowKit;
 			productReference = E7EA2203243D1E2F009DDEEC /* FlowKit.framework */;
 			productType = "com.apple.product-type.framework";
@@ -173,6 +174,9 @@
 				Base,
 			);
 			mainGroup = E7EA21CB243D1C50009DDEEC;
+			packageReferences = (
+				3564A536244954CF0023DB38 /* XCRemoteSwiftPackageReference "PromiseKit" */,
+			);
 			productRefGroup = E7EA21D6243D1C50009DDEEC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -420,6 +424,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3564A536244954CF0023DB38 /* XCRemoteSwiftPackageReference "PromiseKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mxcl/PromiseKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.13.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3564A537244954CF0023DB38 /* PromiseKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3564A536244954CF0023DB38 /* XCRemoteSwiftPackageReference "PromiseKit" */;
+			productName = PromiseKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E7EA21CC243D1C50009DDEEC /* Project object */;
 }
