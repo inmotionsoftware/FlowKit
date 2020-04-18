@@ -12,7 +12,6 @@ dependencies {
     implementation "com.github.inmotionsoftware:promisekt:1.0.0"
     implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     implementation 'net.sourceforge.plantuml:plantuml:1.2020.4'
     implementation group: 'gnu.getopt', name: 'java-getopt', version: '1.0.13'
 }
