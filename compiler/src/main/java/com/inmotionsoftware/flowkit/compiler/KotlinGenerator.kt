@@ -109,7 +109,7 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
 
             fun onEnd(state: ${stateName}, context: ${output}) :  Promise<${stateName}.FromEnd> = Promise.value(${stateName}.FromEnd.Terminate(context))
             fun onFail(state: ${stateName}, context: Throwable) :  Promise<${stateName}.FromFail> = Promise.value(${stateName}.FromFail.Terminate(context))
-            fun onTerminate(state: ${stateName}, context: ${result}) :  Promise<${result}> = Promise.value(context)
+            override fun onTerminate(state: ${stateName}, context: ${result}) :  Promise<${result}> = Promise.value(context)
 
             override fun dispatch(state: ${stateName}): Promise<${stateName}> =
                 when (state) {
@@ -117,7 +117,7 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
                     is ${stateName}.Terminate -> onTerminate(state=state, context=state.context).map { ${stateName}.Terminate(context=it) }
                 }
         
-            override fun terminal(state: ${stateName}): ${result}? =
+            override fun getResult(state: ${stateName}): ${result}? =
                 when (state) {
                     is ${stateName}.Terminate -> state.context
                     else -> null

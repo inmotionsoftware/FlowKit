@@ -8,8 +8,9 @@ import com.inmotionsoftware.promisekt.*
 
 interface StateMachine<State, Input, Output> {
     fun dispatch(state: State): Promise<State>
-    fun terminal(state: State): Result<Output>?
     fun firstState(context: Input): State
+    fun getResult(state: State): Result<Output>?
+    fun onTerminate(state: State, context: Result<Output>) :  Promise<Result<Output>>
 }
 
 interface StateMachineDelegate<State> {
@@ -33,12 +34,10 @@ open class StateMachineHost<State, Input, Output, SM: StateMachine<State, Input,
 
     private fun nextState(prev: State, curr: State): Promise<Result<Output>> {
         this.delegate?.stateDidChange(from=prev, to=curr)
-        val result = this.stateMachine.terminal(state=curr)
-        return if (result == null) {
-            this.stateMachine.dispatch(state=curr).thenMap { this.nextState(prev=curr, curr=it) }
-        } else {
-            Promise.value(result)
+        this.stateMachine.getResult(state=curr)?.let {
+            return this.stateMachine.onTerminate(state=curr, context=it)
         }
+        return stateMachine.dispatch(state=curr).thenMap { nextState(prev=curr, curr=it) }
     }
 }
 
