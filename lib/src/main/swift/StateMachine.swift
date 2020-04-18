@@ -67,7 +67,6 @@ public struct StateMachineHost<SM: StateMachine>: Flow {
         guard let result = stateMachine.getResult(state: curr) else {
             return self.stateMachine.dispatch(state: curr).then { self.nextState(prev: curr, curr: $0) }
         }
-
         return self.stateMachine.onTerminate(state: curr, context: result)
     }
 }
