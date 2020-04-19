@@ -1,5 +1,6 @@
 package com.inmotionsoftware.example.flows
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
@@ -19,6 +20,7 @@ import com.inmotionsoftware.example.views.CreateAccountFragment
 import com.inmotionsoftware.example.views.ForgotPasswordFragment
 import com.inmotionsoftware.example.views.LoginFragment
 import com.inmotionsoftware.example.views.LoginViewResult
+import com.inmotionsoftware.flowkit.Result
 import com.inmotionsoftware.flowkit.android.*
 import com.inmotionsoftware.flowkit.subflow
 import com.inmotionsoftware.promisekt.map
@@ -28,14 +30,13 @@ typealias User = com.inmotionsoftware.example.models.User
 typealias OAuthToken = com.inmotionsoftware.example.models.OAuthToken
 typealias Credentials = com.inmotionsoftware.example.models.Credentials
 
-class LoginFlowController: NavStateMachine, LoginFlowStateMachine {
+class LoginFlowController: FragmentContainerActivity<LoginFlowState,Unit,OAuthToken>(), LoginFlowStateMachine {
     var animated: Boolean = true
-    override lateinit var nav: FragContainer
+    override var input = Unit
     private val service = UserService()
 
-    override fun onBegin(state: LoginFlowState, context: Unit): Promise<FromBegin> {
-        return Promise.value(FromBegin.Prompt(null))
-    }
+    override fun onBegin(state: LoginFlowState, context: Unit): Promise<FromBegin> =
+        Promise.value(FromBegin.Prompt(null))
 
     override fun onPrompt(state: LoginFlowState, context: String?): Promise<FromPrompt> =
         this.subflow2(fragment=LoginFragment::class.java, context=context)

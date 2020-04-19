@@ -16,6 +16,7 @@ sealed class HomeResult: Parcelable {
 }
 
 class HomeActivity : FlowActivity<Unit, HomeResult>() {
+    override var input: Unit = Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

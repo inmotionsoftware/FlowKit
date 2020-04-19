@@ -10,7 +10,7 @@ interface StateMachine<State, Input, Output> {
     fun dispatch(state: State): Promise<State>
     fun firstState(context: Input): State
     fun getResult(state: State): Result<Output>?
-    fun onTerminate(state: State, context: Result<Output>) :  Promise<Result<Output>>
+    fun onTerminate(state: State, context: Result<Output>) :  Promise<Result<Output>> = Promise.value(context)
 }
 
 interface StateMachineDelegate<State> {

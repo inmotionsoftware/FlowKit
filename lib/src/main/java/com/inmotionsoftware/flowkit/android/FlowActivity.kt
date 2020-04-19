@@ -93,14 +93,14 @@ class ResultDispatcher: LifecycleObserver {
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy() {
+    fun onDestroy(owner: LifecycleOwner) {
         println("onDestroy")
-        if (registry.isEmpty()) return
-
-        // cancel any pending results
-        val result = Result.Failure<Any>(FlowError.Canceled())
-        val data = result.toIntent()
-        registry.values.forEach { it(Activity.RESULT_CANCELED, data) }
+//        if (registry.isEmpty()) return
+//
+//        // cancel any pending results
+//        val result = Result.Failure<Any>(FlowError.Canceled())
+//        val data = result.toIntent()
+//        registry.values.forEach { it(Activity.RESULT_CANCELED, data) }
     }
 
 
@@ -146,14 +146,16 @@ abstract class DispatchActivity: AppCompatActivity() {
     }
 }
 
-open class FlowActivity<Input, Output>: DispatchActivity() {
+abstract class FlowActivity<Input, Output>: DispatchActivity() {
 
-    var input: Input? = null
+    abstract var input: Input
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.input = intent.getBundleExtra(FLOW_KIT_ACTIVITY_RESULT)?.get("context") as Input
+        if (!(this.input is Unit)) {
+            this.input = intent.getBundleExtra(FLOW_KIT_ACTIVITY_RESULT)?.get("context") as Input
+        }
     }
 
     private fun finish(code: Int, result: Result<Output>) {
