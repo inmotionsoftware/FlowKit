@@ -1,5 +1,6 @@
 package com.inmotionsoftware.flowkit.android
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import com.inmotionsoftware.flowkit.FlowError
@@ -20,12 +21,20 @@ abstract class FlowFragment<Input, Output>: Fragment(), Backable {
         this.resolver = resolver
     }
 
+    fun resolve(result: Result<Output>) {
+        if (!this::resolver.isInitialized) {
+            Log.e(FlowFragment::class.java.name, "Resolver has not been initialized")
+            return
+        }
+        this.resolver.resolve(result)
+    }
+
     fun resolve(value: Output) {
-        this.resolver.fulfill(value)
+        resolve(Result.fulfilled(value))
     }
 
     fun reject(error: Throwable) {
-        this.resolver.reject(error)
+        resolve(Result.rejected(error))
     }
 
     fun cancel() {

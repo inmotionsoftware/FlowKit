@@ -30,6 +30,6 @@ class AppFlowController: NavStateMachine, AppStateMachine {
             }
 
     override fun onLogin(state: AppState, context: Unit): Promise<AppState.FromLogin> =
-        this.subflow(stateMachine=LoginFlowController(), context=context)
+        this.subflow(activity=LoginFlowController::class.java, context=context)
             .map { FromLogin.Home(Unit) }
 }
