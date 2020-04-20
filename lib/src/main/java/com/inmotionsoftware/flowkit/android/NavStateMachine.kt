@@ -5,9 +5,12 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.inmotionsoftware.flowkit.Bootstrap
+import androidx.lifecycle.ViewModelProvider
+import com.inmotionsoftware.flowkit.Bootstrap
 import com.inmotionsoftware.flowkit.StateMachine
 import com.inmotionsoftware.flowkit.StateMachineHost
 import com.inmotionsoftware.example.FlowFragment
+import com.inmotionsoftware.example.FlowViewModel
 import com.inmotionsoftware.flowkit.*
 import com.inmotionsoftware.promisekt.*
 import java.lang.IllegalStateException
@@ -33,26 +36,37 @@ interface NavStateMachine {
     var nav: FragContainer
 }
 
-inline fun <I, reified O, F: FlowFragment<I, O>> NavStateMachine.subflow2(fragment: Class<F>, context: I): Promise<O> =
+inline fun <reified I, reified O, F: FlowFragment<I, O>> NavStateMachine.subflow2(fragment: Class<F>, context: I): Promise<O> =
     this.subflow(fragment=fragment.newInstance(), context = context)
 
 inline fun <I, reified O, F: FlowFragment<I, O>> NavStateMachine.subflow(fragment: F, context: I): Promise<O> {
-    val args = Bundle()
-    context?.let { args.put("context", it) }
-    fragment.arguments = args
+//    val args = Bundle()
+//    context?.let { args.put("context", it) }
+//    fragment.arguments = args
 
-    if (this.nav.activity.isDestroyed) {
+    val activity = this.nav.activity
+    if (activity.isDestroyed) {
         return Promise(error=IllegalStateException("Trying to add fragment to destroyed Activity"))
     }
 
     val pending = Promise.pending<O>()
-    fragment.attach(pending.second)
-    this.nav.fragmentManager.beginTransaction()
-        .replace(this.nav.viewId, fragment)
-        .addToBackStack(null)
-        .commitAllowingStateLoss()
+
+    activity.runOnUiThread {
+        @Suppress("UNCHECKED_CAST")
+        val viewModel = ViewModelProvider(activity).get(FlowViewModel::class.java) as FlowViewModel<I,O>
+        viewModel.input.value = context
+        viewModel.resolver = pending.second
+
+        this.nav.fragmentManager.beginTransaction()
+            .replace(this.nav.viewId, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
 
     return pending.first
+        .ensure {
+            // TODO: clear our viewModel...
+        }
 }
 
 inline fun <I, reified O, A: FlowActivity<I, O>> NavStateMachine.subflow(activity: Class<A>, context: I): Promise<O> =

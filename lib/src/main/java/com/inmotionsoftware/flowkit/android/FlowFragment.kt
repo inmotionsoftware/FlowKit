@@ -1,8 +1,16 @@
 package com.inmotionsoftware.flowkit.android
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.inmotionsoftware.flowkit.Flow
 import com.inmotionsoftware.flowkit.FlowError
 import com.inmotionsoftware.promisekt.Resolver
 import com.inmotionsoftware.promisekt.fulfill
@@ -12,21 +20,22 @@ interface Backable {
     fun onBackPressed()
 }
 
+class FlowViewModel<I, O>: ViewModel() {
+    val input = MutableLiveData<I>()
+    lateinit var resolver: Resolver<O>
+}
+
 abstract class FlowFragment<Input, Output>: Fragment(), Backable {
-
-    lateinit var resolver: Resolver<Output>
-    var input: Input? = null
-
-    fun attach(resolver: Resolver<Output>) {
-        this.resolver = resolver
-    }
+    lateinit var viewModel: FlowViewModel<Input, Output>
+    val input: Input? get() { return viewModel.input.value }
 
     fun resolve(result: Result<Output>) {
-        if (!this::resolver.isInitialized) {
+        if (!this::viewModel.isInitialized) {
             Log.e(FlowFragment::class.java.name, "Resolver has not been initialized")
             return
         }
-        this.resolver.resolve(result)
+
+        viewModel.resolver.resolve(result)
     }
 
     fun resolve(value: Output) {
@@ -49,20 +58,21 @@ abstract class FlowFragment<Input, Output>: Fragment(), Backable {
         back()
     }
 
-    private fun load() {
-        arguments?.let {
-            this.input = this.arguments?.get("context") as? Input
-        }
+    private fun loadViewModel() {
+        @Suppress("UNCHECKED_CAST")
+        viewModel = ViewModelProvider(requireActivity()).get(FlowViewModel::class.java) as FlowViewModel<Input,Output>
+        Log.d(this.javaClass.name, "input: ${viewModel.input.value}")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        load()
+        loadViewModel()
+        // TODO: Load bundle
     }
 
-    @CallSuper
-    override fun onResume() {
-        super.onResume()
-        load()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        // TODO save data
     }
 }
