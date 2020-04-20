@@ -9,11 +9,6 @@ import PromiseKit
 import UIKit
 import os
 
-public protocol Navigable {
-    var nav: UINavigationController! { get set }
-}
-
-public protocol NavStateMachine: StateMachine, Navigable {}
 
 /*
     Simple class for managing the navigation stack for a FlowStateMachine
@@ -82,49 +77,5 @@ public extension NavigationStateMachineHost {
 
             self.nav.present(vc, animated: true, completion: nil)
         }
-    }
-}
-
-public extension NavStateMachine where Self: ViewCacher {
-    func subflow<View: FlowableView>(to view: View.Type, context: View.Input) -> Promise<View.Output> {
-        let host = getCache(type: FlowHostingController<View>.self) { FlowHostingController<View>(context: context) }
-        return self.subflow(to: host, context: context)
-    }
-
-    func subflow<View: FlowViewController>(to view: View.Type, nib: String, context: View.Input) -> Promise<View.Output> {
-        let view = getCache(type: View.self) { View(nibName: nib, bundle: Bundle.main) }
-        return self.subflow(to: view, context: context)
-    }
-}
-
-public extension NavStateMachine {
-    func subflow<SM: NavStateMachine>(to stateMachine: SM, context: SM.Input) -> Promise<SM.Output> {
-        return NavigationStateMachineHost(stateMachine: stateMachine, nav: self.nav)
-            .startFlow(context: context)
-    }
-
-    func subflow<View: FlowableView>(to view: View, context: View.Input) -> Promise<View.Output> {
-        let host = FlowHostingController<View>(context: context)
-        return SubFlow(viewController: host, nav: self.nav)
-            .startFlow(context: context)
-    }
-
-    func subflow<View: FlowViewController>(to view: View, context: View.Input) -> Promise<View.Output> {
-        return SubFlow(viewController: view, nav: self.nav).startFlow(context: context)
-    }
-}
-
-public extension Bootstrap {
-    static func startFlow<SM: NavStateMachine&StateMachine>(stateMachine: SM, nav: UINavigationController, context: SM.Input) {
-        let _ = NavigationStateMachineHost(stateMachine: stateMachine, nav: nav)
-            .startFlow(context: context)
-            .ensure {
-                os_log("Root flow is being restarted", type: .error)
-                startFlow(stateMachine: stateMachine, nav: nav, context: context)
-            }
-    }
-
-    static func startFlow<SM: NavStateMachine&StateMachine>(stateMachine: SM, nav: UINavigationController) where SM.Input == Void {
-        startFlow(stateMachine: stateMachine, nav: nav, context: ())
     }
 }

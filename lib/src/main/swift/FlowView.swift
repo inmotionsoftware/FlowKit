@@ -9,41 +9,21 @@
 import SwiftUI
 import PromiseKit
 
-public protocol Resolvable {
-    associatedtype Output
-    var resolver: Resolver<Output> { get }
-}
-
+@available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
 public protocol FlowableView: SwiftUI.View, Resolvable {
     associatedtype Input
     associatedtype Output
     init(context: Input, resolver: PromiseKit.Resolver<Output>)
 }
 
+@available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
 public extension FlowableView where Input == Void {
     init(resolver: PromiseKit.Resolver<Output>) {
         self.init(context: (), resolver: resolver)
     }
 }
 
-public extension Resolvable {
-    func resolve(_ value: Output) {
-        self.resolver.fulfill(value)
-    }
-
-    func reject(_ error: Error) {
-        self.resolver.reject(error)
-    }
-
-    func cancel() {
-        self.reject(FlowError.canceled)
-    }
-
-    func back() {
-        self.reject(FlowError.back)
-    }
-}
-
+@available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
 public class FlowHostingController<Content: FlowableView>: UIHostingController<Content>, FlowViewController {
     public typealias Input = Content.Input
     public typealias Output = Content.Output
@@ -85,5 +65,37 @@ public class FlowHostingController<Content: FlowableView>: UIHostingController<C
 
     override public func willMove(toParent parent: UIViewController?) {
         self.delegate?.willMove(toParent: parent)
+    }
+}
+
+@available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
+public extension NavStateMachine where Self: ViewCacher {
+    func subflow<View: FlowableView>(to view: View.Type, context: View.Input) -> Promise<View.Output> {
+        let host = getCache(type: FlowHostingController<View>.self) { FlowHostingController<View>(context: context) }
+        return self.subflow(to: host, context: context)
+    }
+}
+
+@available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
+public extension NavStateMachine {
+    func subflow<View: FlowableView>(to view: View, context: View.Input) -> Promise<View.Output> {
+        let host = FlowHostingController<View>(context: context)
+        return self.subflow(to: host, context: context)
+    }
+}
+
+@available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
+extension UINavigationController {
+    @discardableResult
+    func popToOrPush<Content: View, T:UIHostingController<Content>>(viewController: T, animated: Bool = true) -> T {
+        let top = self.topViewController
+        guard top != viewController else { return top as! T }
+        if let found = self.viewControllers.first(where: { $0 is UIHostingController<Content> }) {
+            self.popToViewController(found, animated: animated)
+            return found as! T
+        } else {
+            self.pushViewController(viewController, animated: animated)
+        }
+        return viewController
     }
 }

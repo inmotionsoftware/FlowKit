@@ -4,6 +4,9 @@
 xcuserdata/
 *.xccheckout
 
+.swiftpm
+Package.resolved
+
 # Trash files
 .DS_Store
 

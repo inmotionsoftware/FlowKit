@@ -8,21 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		35B210B22449F2A300AD56FF /* PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = 35B210B12449F2A300AD56FF /* PromiseKit */; };
-		E75B5DDF2440E9CF0096473A /* DeferredPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DDE2440E9CF0096473A /* DeferredPromise.swift */; };
-		E75B5DE12440F5A70096473A /* SubFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DE02440F5A70096473A /* SubFlow.swift */; };
-		E75C26B0243FBB4100B3C467 /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26AE243FBB4100B3C467 /* FlowViewController.swift */; };
-		E75C26B1243FBB4100B3C467 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26AF243FBB4100B3C467 /* FlowView.swift */; };
-		E75C26B92440D53D00B3C467 /* Promise+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26B82440D53D00B3C467 /* Promise+Extensions.swift */; };
-		E75C26BD2440D58900B3C467 /* NavigationStateMachineHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75C26BC2440D58900B3C467 /* NavigationStateMachineHost.swift */; };
-		E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */; };
-		E7EA223B243D1ED5009DDEEC /* FlowKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E7EA222D243D1ED5009DDEEC /* FlowKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */; };
-		E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */; };
-		E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2234243D1ED5009DDEEC /* Flow.swift */; };
+		E75DDB21244E6C720076CA51 /* UINavigationViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB13244E6C720076CA51 /* UINavigationViewController+Extension.swift */; };
+		E75DDB22244E6C720076CA51 /* NavStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB14244E6C720076CA51 /* NavStateMachine.swift */; };
+		E75DDB23244E6C720076CA51 /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB15244E6C720076CA51 /* StateMachine.swift */; };
+		E75DDB24244E6C720076CA51 /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB16244E6C720076CA51 /* FlowViewController.swift */; };
+		E75DDB25244E6C720076CA51 /* Promise+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB17244E6C720076CA51 /* Promise+Extensions.swift */; };
+		E75DDB26244E6C720076CA51 /* NavigationTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB18244E6C720076CA51 /* NavigationTransaction.swift */; };
+		E75DDB27244E6C720076CA51 /* FlowKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E75DDB19244E6C720076CA51 /* FlowKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E75DDB28244E6C720076CA51 /* NavigationStateMachineHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1A244E6C720076CA51 /* NavigationStateMachineHost.swift */; };
+		E75DDB29244E6C720076CA51 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1B244E6C720076CA51 /* FlowView.swift */; };
+		E75DDB2A244E6C720076CA51 /* SubFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1C244E6C720076CA51 /* SubFlow.swift */; };
+		E75DDB2B244E6C720076CA51 /* UINavigationViewController+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1D244E6C720076CA51 /* UINavigationViewController+Transaction.swift */; };
+		E75DDB2C244E6C720076CA51 /* ViewCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1E244E6C720076CA51 /* ViewCache.swift */; };
+		E75DDB2D244E6C720076CA51 /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1F244E6C720076CA51 /* Flow.swift */; };
 		E7EA2248243D21FD009DDEEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2247243D21FD009DDEEC /* UIKit.framework */; };
 		E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7EA2249243D2204009DDEEC /* Foundation.framework */; };
-		E7EAB9502444BB8B0002898B /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EAB94F2444BB8B0002898B /* StateMachine.swift */; };
-		E7EAB95D244602370002898B /* ViewCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EAB95C244602370002898B /* ViewCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,23 +36,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E75B5DDE2440E9CF0096473A /* DeferredPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeferredPromise.swift; path = src/main/swift/DeferredPromise.swift; sourceTree = SOURCE_ROOT; };
-		E75B5DE02440F5A70096473A /* SubFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubFlow.swift; path = src/main/swift/SubFlow.swift; sourceTree = SOURCE_ROOT; };
-		E75C26AE243FBB4100B3C467 /* FlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = src/main/swift/FlowViewController.swift; sourceTree = SOURCE_ROOT; };
-		E75C26AF243FBB4100B3C467 /* FlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowView.swift; path = src/main/swift/FlowView.swift; sourceTree = SOURCE_ROOT; };
-		E75C26B82440D53D00B3C467 /* Promise+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Promise+Extensions.swift"; path = "src/main/swift/Promise+Extensions.swift"; sourceTree = SOURCE_ROOT; };
-		E75C26BC2440D58900B3C467 /* NavigationStateMachineHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationStateMachineHost.swift; path = src/main/swift/NavigationStateMachineHost.swift; sourceTree = SOURCE_ROOT; };
+		E75DDAD6244E63F30076CA51 /* FlowKit_SwiftUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlowKit_SwiftUI.h; sourceTree = "<group>"; };
+		E75DDAD7244E63F30076CA51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E75DDB13244E6C720076CA51 /* UINavigationViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Extension.swift"; path = "src/main/swift/UINavigationViewController+Extension.swift"; sourceTree = "<group>"; };
+		E75DDB14244E6C720076CA51 /* NavStateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavStateMachine.swift; path = src/main/swift/NavStateMachine.swift; sourceTree = "<group>"; };
+		E75DDB15244E6C720076CA51 /* StateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateMachine.swift; path = src/main/swift/StateMachine.swift; sourceTree = "<group>"; };
+		E75DDB16244E6C720076CA51 /* FlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = src/main/swift/FlowViewController.swift; sourceTree = "<group>"; };
+		E75DDB17244E6C720076CA51 /* Promise+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Promise+Extensions.swift"; path = "src/main/swift/Promise+Extensions.swift"; sourceTree = "<group>"; };
+		E75DDB18244E6C720076CA51 /* NavigationTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationTransaction.swift; path = src/main/swift/NavigationTransaction.swift; sourceTree = "<group>"; };
+		E75DDB19244E6C720076CA51 /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlowKit.h; path = src/main/swift/FlowKit.h; sourceTree = "<group>"; };
+		E75DDB1A244E6C720076CA51 /* NavigationStateMachineHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationStateMachineHost.swift; path = src/main/swift/NavigationStateMachineHost.swift; sourceTree = "<group>"; };
+		E75DDB1B244E6C720076CA51 /* FlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowView.swift; path = src/main/swift/FlowView.swift; sourceTree = "<group>"; };
+		E75DDB1C244E6C720076CA51 /* SubFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubFlow.swift; path = src/main/swift/SubFlow.swift; sourceTree = "<group>"; };
+		E75DDB1D244E6C720076CA51 /* UINavigationViewController+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Transaction.swift"; path = "src/main/swift/UINavigationViewController+Transaction.swift"; sourceTree = "<group>"; };
+		E75DDB1E244E6C720076CA51 /* ViewCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewCache.swift; path = src/main/swift/ViewCache.swift; sourceTree = "<group>"; };
+		E75DDB1F244E6C720076CA51 /* Flow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Flow.swift; path = src/main/swift/Flow.swift; sourceTree = "<group>"; };
+		E75DDB20244E6C720076CA51 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = src/main/swift/Info.plist; sourceTree = "<group>"; };
 		E7EA2203243D1E2F009DDEEC /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationTransaction.swift; path = src/main/swift/NavigationTransaction.swift; sourceTree = SOURCE_ROOT; };
 		E7EA222D243D1ED5009DDEEC /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlowKit.h; path = src/main/swift/FlowKit.h; sourceTree = SOURCE_ROOT; };
 		E7EA222F243D1ED5009DDEEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = src/main/swift/Info.plist; sourceTree = SOURCE_ROOT; };
-		E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Extension.swift"; path = "src/main/swift/UINavigationViewController+Extension.swift"; sourceTree = SOURCE_ROOT; };
-		E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Transaction.swift"; path = "src/main/swift/UINavigationViewController+Transaction.swift"; sourceTree = SOURCE_ROOT; };
-		E7EA2234243D1ED5009DDEEC /* Flow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Flow.swift; path = src/main/swift/Flow.swift; sourceTree = SOURCE_ROOT; };
 		E7EA2247243D21FD009DDEEC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E7EA2249243D2204009DDEEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		E7EAB94F2444BB8B0002898B /* StateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateMachine.swift; path = src/main/swift/StateMachine.swift; sourceTree = SOURCE_ROOT; };
-		E7EAB95C244602370002898B /* ViewCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewCache.swift; path = src/main/swift/ViewCache.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,11 +73,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E75DDAD5244E63F30076CA51 /* FlowKit+SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				E75DDAD6244E63F30076CA51 /* FlowKit_SwiftUI.h */,
+				E75DDAD7244E63F30076CA51 /* Info.plist */,
+			);
+			path = "FlowKit+SwiftUI";
+			sourceTree = "<group>";
+		};
+		E75DDADC244E658F0076CA51 /* FlowKit */ = {
+			isa = PBXGroup;
+			children = (
+				E75DDB1F244E6C720076CA51 /* Flow.swift */,
+				E75DDB1B244E6C720076CA51 /* FlowView.swift */,
+				E75DDB16244E6C720076CA51 /* FlowViewController.swift */,
+				E75DDB1A244E6C720076CA51 /* NavigationStateMachineHost.swift */,
+				E75DDB18244E6C720076CA51 /* NavigationTransaction.swift */,
+				E75DDB14244E6C720076CA51 /* NavStateMachine.swift */,
+				E75DDB17244E6C720076CA51 /* Promise+Extensions.swift */,
+				E75DDB15244E6C720076CA51 /* StateMachine.swift */,
+				E75DDB1C244E6C720076CA51 /* SubFlow.swift */,
+				E75DDB1E244E6C720076CA51 /* ViewCache.swift */,
+				E75DDB13244E6C720076CA51 /* UINavigationViewController+Extension.swift */,
+				E75DDB1D244E6C720076CA51 /* UINavigationViewController+Transaction.swift */,
+			);
+			name = FlowKit;
+			sourceTree = "<group>";
+		};
+		E75DDB2F244E6CB70076CA51 /* Other Files */ = {
+			isa = PBXGroup;
+			children = (
+				E75DDB19244E6C720076CA51 /* FlowKit.h */,
+				E75DDB20244E6C720076CA51 /* Info.plist */,
+			);
+			name = "Other Files";
+			sourceTree = "<group>";
+		};
 		E7EA21CB243D1C50009DDEEC = {
 			isa = PBXGroup;
 			children = (
-				E7EA220B243D1E62009DDEEC /* FlowKit */,
+				E75DDADC244E658F0076CA51 /* FlowKit */,
+				E75DDB2F244E6CB70076CA51 /* Other Files */,
 				E7EA224B243D2269009DDEEC /* Resources */,
+				E75DDAD5244E63F30076CA51 /* FlowKit+SwiftUI */,
 				E7EA21D6243D1C50009DDEEC /* Products */,
 				E7EA2244243D21DB009DDEEC /* Frameworks */,
 			);
@@ -85,26 +128,6 @@
 				E7EA2203243D1E2F009DDEEC /* FlowKit.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		E7EA220B243D1E62009DDEEC /* FlowKit */ = {
-			isa = PBXGroup;
-			children = (
-				E7EA2234243D1ED5009DDEEC /* Flow.swift */,
-				E7EAB94F2444BB8B0002898B /* StateMachine.swift */,
-				E75C26AE243FBB4100B3C467 /* FlowViewController.swift */,
-				E75C26AF243FBB4100B3C467 /* FlowView.swift */,
-				E7EAB95C244602370002898B /* ViewCache.swift */,
-				E75B5DE02440F5A70096473A /* SubFlow.swift */,
-				E75C26BC2440D58900B3C467 /* NavigationStateMachineHost.swift */,
-				E7EA222A243D1ED5009DDEEC /* NavigationTransaction.swift */,
-				E75B5DDE2440E9CF0096473A /* DeferredPromise.swift */,
-				E7EA2230243D1ED5009DDEEC /* UINavigationViewController+Extension.swift */,
-				E7EA2233243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift */,
-				E75C26B82440D53D00B3C467 /* Promise+Extensions.swift */,
-			);
-			name = FlowKit;
-			path = src/main/FlowKit;
 			sourceTree = "<group>";
 		};
 		E7EA2244243D21DB009DDEEC /* Frameworks */ = {
@@ -132,7 +155,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7EA223B243D1ED5009DDEEC /* FlowKit.h in Headers */,
+				E75DDB27244E6C720076CA51 /* FlowKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,18 +256,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7EA2238243D1ED5009DDEEC /* NavigationTransaction.swift in Sources */,
-				E7EAB95D244602370002898B /* ViewCache.swift in Sources */,
-				E75C26B1243FBB4100B3C467 /* FlowView.swift in Sources */,
-				E75C26B0243FBB4100B3C467 /* FlowViewController.swift in Sources */,
-				E75C26B92440D53D00B3C467 /* Promise+Extensions.swift in Sources */,
-				E7EA223E243D1ED5009DDEEC /* UINavigationViewController+Extension.swift in Sources */,
-				E75B5DE12440F5A70096473A /* SubFlow.swift in Sources */,
-				E7EAB9502444BB8B0002898B /* StateMachine.swift in Sources */,
-				E7EA2242243D1ED5009DDEEC /* Flow.swift in Sources */,
-				E7EA2241243D1ED5009DDEEC /* UINavigationViewController+Transaction.swift in Sources */,
-				E75B5DDF2440E9CF0096473A /* DeferredPromise.swift in Sources */,
-				E75C26BD2440D58900B3C467 /* NavigationStateMachineHost.swift in Sources */,
+				E75DDB26244E6C720076CA51 /* NavigationTransaction.swift in Sources */,
+				E75DDB21244E6C720076CA51 /* UINavigationViewController+Extension.swift in Sources */,
+				E75DDB23244E6C720076CA51 /* StateMachine.swift in Sources */,
+				E75DDB24244E6C720076CA51 /* FlowViewController.swift in Sources */,
+				E75DDB29244E6C720076CA51 /* FlowView.swift in Sources */,
+				E75DDB25244E6C720076CA51 /* Promise+Extensions.swift in Sources */,
+				E75DDB22244E6C720076CA51 /* NavStateMachine.swift in Sources */,
+				E75DDB2C244E6C720076CA51 /* ViewCache.swift in Sources */,
+				E75DDB2A244E6C720076CA51 /* SubFlow.swift in Sources */,
+				E75DDB2D244E6C720076CA51 /* Flow.swift in Sources */,
+				E75DDB28244E6C720076CA51 /* NavigationStateMachineHost.swift in Sources */,
+				E75DDB2B244E6C720076CA51 /* UINavigationViewController+Transaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +435,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = TLYSQC6HRM;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -422,6 +446,7 @@
 				);
 				INFOPLIST_FILE = src/main/swift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -431,7 +456,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.inmotionsoftware.FlowKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -444,6 +469,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = TLYSQC6HRM;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -454,6 +480,7 @@
 				);
 				INFOPLIST_FILE = src/main/swift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -463,7 +490,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.inmotionsoftware.FlowKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

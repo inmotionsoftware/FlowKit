@@ -26,6 +26,29 @@ public enum FlowError: Error {
     case back
 }
 
+public protocol Resolvable {
+    associatedtype Output
+    var resolver: Resolver<Output> { get }
+}
+
+public extension Resolvable {
+    func resolve(_ value: Output) {
+        self.resolver.fulfill(value)
+    }
+
+    func reject(_ error: Error) {
+        self.resolver.reject(error)
+    }
+
+    func cancel() {
+        self.reject(FlowError.canceled)
+    }
+
+    func back() {
+        self.reject(FlowError.back)
+    }
+}
+
 public enum Bootstrap {
 
 }
