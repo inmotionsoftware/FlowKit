@@ -1,0 +1,4 @@
+rootProject.name='ExampleApp'
+include ':app', ':lib', ':compiler'
+project(':lib').projectDir = new File('../../lib')
+project(':compiler').projectDir = new File('../../compiler')
