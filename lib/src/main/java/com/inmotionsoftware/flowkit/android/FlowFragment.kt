@@ -1,11 +1,11 @@
-package com.inmotionsoftware.example
+package com.inmotionsoftware.flowkit.android
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
-import com.inmotionsoftware.flowkit.Flow
 import com.inmotionsoftware.flowkit.FlowError
-import com.inmotionsoftware.promisekt.*
-import java.lang.RuntimeException
+import com.inmotionsoftware.promisekt.Resolver
+import com.inmotionsoftware.promisekt.fulfill
+import com.inmotionsoftware.promisekt.reject
 
 interface Backable {
     fun onBackPressed()

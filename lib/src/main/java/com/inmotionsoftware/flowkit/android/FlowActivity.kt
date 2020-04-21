@@ -1,13 +1,9 @@
 package com.inmotionsoftware.flowkit.android
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
-import com.inmotionsoftware.example.Backable
-import com.inmotionsoftware.flowkit.Flow
 import com.inmotionsoftware.flowkit.FlowError
-import com.inmotionsoftware.promisekt.Promise
 import com.inmotionsoftware.promisekt.Resolver
 import com.inmotionsoftware.promisekt.fulfill
 import com.inmotionsoftware.promisekt.reject

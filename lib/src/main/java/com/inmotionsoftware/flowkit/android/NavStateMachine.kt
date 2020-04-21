@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
-import com.inmotionsoftware.example.FlowFragment
-import com.inmotionsoftware.flowkit.*
+import com.inmotionsoftware.flowkit.Bootstrap
+import com.inmotionsoftware.flowkit.StateMachine
+import com.inmotionsoftware.flowkit.StateMachineHost
+import com.inmotionsoftware.flowkit.startFlow
 import com.inmotionsoftware.promisekt.Promise
 import com.inmotionsoftware.promisekt.ensure
-import com.inmotionsoftware.promisekt.map
-import com.inmotionsoftware.promisekt.thenMap
-import kotlin.Result
 
 interface Navigable {
     val fragmentManager: FragmentManager
