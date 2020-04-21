@@ -16,6 +16,9 @@ buildscript {
     }
 }
 
+group 'com.inmotionsoftware'
+version '1.0-SNAPSHOT'
+
 allprojects {
     repositories {
         mavenCentral()
