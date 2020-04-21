@@ -4,17 +4,12 @@
 xcuserdata/
 *.xccheckout
 
-.swiftpm
-Package.resolved
-
 # Trash files
 .DS_Store
 
 # Podfile locks
 *.lock
 DerivedData/
-
-
 
 # Built application files
 *.apk
@@ -37,6 +32,7 @@ out/
 .gradle/
 build/
 *.iml
+local.properties
 
 *.log
 .externalNativeBuild
