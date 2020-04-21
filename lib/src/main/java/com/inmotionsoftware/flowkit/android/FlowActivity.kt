@@ -3,19 +3,18 @@ package com.inmotionsoftware.flowkit.android
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.inmotionsoftware.example.Backable
 import com.inmotionsoftware.flowkit.FlowError
 import com.inmotionsoftware.flowkit.Result
 import com.inmotionsoftware.promisekt.Promise
 import com.inmotionsoftware.promisekt.fulfill
 import com.inmotionsoftware.promisekt.reject
-import java.lang.NullPointerException
 
 val FLOW_KIT_ACTIVITY_RESULT: String = "FLOWKIT_RESULT"
 val FLOW_KIT_ACTIVITY_INPUT: String = "FLOWKIT_INPUT"
@@ -92,6 +91,7 @@ class ResultDispatcher: LifecycleObserver {
         this.registry.remove(requestCode)?.let { it(resultCode, data) }
     }
 
+
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy(owner: LifecycleOwner) {
         println("onDestroy")
@@ -110,23 +110,65 @@ class ResultDispatcher: LifecycleObserver {
     }
 }
 
+//abstract class DispatchActivity: AppCompatActivity() {
+//    protected var dispatcher = ResultDispatcher()
+//
+//    @CallSuper
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        lifecycle.addObserver(dispatcher)
+//    }
+//
+//    @CallSuper
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        dispatcher.onActivityResult(requestCode, resultCode, data)
+//    }
+//
+//    inline fun <I, reified O, A: FlowActivity<I,O>> subflow(activity: Class<A>, context: I): Promise<O> {
+//        return dispatcher.subflow(parent=this, activity=activity, context=context)
+//    }
+//
+//    open fun handleBackButton(): Boolean = false
+//
+//    final override fun onBackPressed() {
+//        // see if we have a fragment to handle the back button
+//        (this.supportFragmentManager.fragments.firstOrNull() as? Backable?)?.let {
+//            it.onBackPressed()
+//            return
+//        }
+//
+//        // See if our subclass wants to handle it
+//        if (handleBackButton()) return
+//
+//        // finally let our superclass handle it
+//        super.onBackPressed()
+//    }
+//}
+
 abstract class DispatchActivity: AppCompatActivity() {
-    protected var dispatcher = ResultDispatcher()
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(dispatcher)
     }
 
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        dispatcher.onActivityResult(requestCode, resultCode, data)
+
     }
 
     inline fun <I, reified O, A: FlowActivity<I,O>> subflow(activity: Class<A>, context: I): Promise<O> {
-        return dispatcher.subflow(parent=this, activity=activity, context=context)
+        val pending = Promise.pending<O>()
+
+        val bundle = Bundle().put("context", context)
+        val intent = Intent(parent, activity).putExtra(FLOW_KIT_ACTIVITY_INPUT, bundle)
+        this.startActivityForResult(intent, 123)
+
+        // TODO
+
+        return pending.first
     }
 
     open fun handleBackButton(): Boolean = false
@@ -158,6 +200,11 @@ abstract class FlowActivity<Input, Output>: DispatchActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        // TODO
+    }
+
     private fun finish(code: Int, result: Result<Output>) {
         setResult(code, result.toIntent())
         finish()
@@ -179,8 +226,8 @@ abstract class FlowActivity<Input, Output>: DispatchActivity() {
         this.reject(FlowError.Back())
     }
 
-    override fun handleBackButton(): Boolean {
-        back()
-        return true
-    }
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        back()
+//    }
 }

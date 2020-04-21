@@ -1,23 +1,18 @@
 package com.inmotionsoftware.flowkit.android
 
-import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
-import com.inmotionsoftware.flowkit.Bootstrap
 import androidx.lifecycle.ViewModelProvider
 import com.inmotionsoftware.flowkit.Bootstrap
 import com.inmotionsoftware.flowkit.StateMachine
 import com.inmotionsoftware.flowkit.StateMachineHost
-import com.inmotionsoftware.example.FlowFragment
-import com.inmotionsoftware.example.FlowViewModel
-import com.inmotionsoftware.flowkit.*
-import com.inmotionsoftware.promisekt.*
-import java.lang.IllegalStateException
-import kotlin.Result
-import com.inmotionsoftware.flowkit.startFlow
 import com.inmotionsoftware.promisekt.Promise
+import com.inmotionsoftware.promisekt.catch
+import com.inmotionsoftware.promisekt.done
 import com.inmotionsoftware.promisekt.ensure
+import kotlin.Int
+import kotlin.Suppress
+import kotlin.Unit
 
 interface Navigable {
     val fragmentManager: FragmentManager

@@ -30,7 +30,9 @@ fun <T> Bundle.put(key: String?, value: T): Bundle {
         is Serializable -> this.putSerializable(key, value)
         is Size -> this.putSize(key, value)
         is SizeF -> this.putSizeF(key, value)
-        is Unit -> { /*this.remove(key)*/ }
+        is Unit -> {
+            /*this.remove(key)*/
+        }
         else -> throw ClassCastException("cannot put type ${value} into bundle")
     }
     return this

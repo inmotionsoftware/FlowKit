@@ -32,10 +32,10 @@ class UserService {
 
     fun autenticate(credentials: Credentials): Promise<OAuthToken> =
         Promise.value(Unit).map {
-            val user = users.find { it.email.equals(credentials.username, ignoreCase = true) && it.password.equals(credentials.password, ignoreCase = true) }
-            if (user == null) {
-                throw Error.invalidCreds()
-            }
+//            val user = users.find { it.email.equals(credentials.username, ignoreCase = true) && it.password.equals(credentials.password, ignoreCase = true) }
+//            if (user == null) {
+//                throw Error.invalidCreds()
+//            }
             val token = "ABC123DEF456"
             OAuthToken(token=token, type="Bearer", expiration=Date())
         }

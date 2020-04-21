@@ -1,5 +1,6 @@
 package com.inmotionsoftware.flowkit.compiler
 
+import java.io.Serializable
 import java.io.Writer
 
 private fun convertType(name: String?): String
@@ -8,31 +9,46 @@ private fun convertType(name: String?): String
     else -> name
 }
 
-fun Enumeration.toKotlin(builder: Writer) {
+
+
+fun Enumeration.toKotlin(builder: Writer, serializable: Boolean = true) {
     builder.append("sealed class ${name}()")
     if (!generics.isEmpty()) generics.joinTo(buffer=builder, prefix = "<", separator = ",", postfix = ">")
     builder.appendln(" {")
     aliasess.joinTo(buffer=builder, separator = "\n\t", prefix = "\t") { "public typealias ${it.first} = ${it.second}" }
-    builder.appendln()
-    values.joinTo(buffer=builder, separator= "\n\t", prefix = "\t") { "class ${it.name.capitalize()}(val context: ${convertType(it.context)}): ${name}()" }
-    builder.appendln()
+    values.joinTo(buffer=builder, separator= "\n\t", prefix = "\t", postfix = "\n") {
+
+        val title = it.name.capitalize()
+        val type = if (it.context == null)
+//            "context: Unit"
+            ""
+        else
+            "val context: ${it.context}"
+
+        val annotation = if (serializable)
+            "@Parcelize "
+        else
+            ""
+
+        val extension = if (serializable)
+            ", Parcelable"
+        else
+            ""
+
+        val body = ""
+
+//        val body = if (it.context != null)
+//            ""
+//        else
+//            "{ val context: Unit get() { return Unit } }"
+
+        "${annotation}class ${title}(${type}): ${name}()${extension} ${body}"
+    }
     nested.forEach {
         builder.append("\t")
-        it.toKotlin(builder)
-        val context = when (it.name) {
-            "Terminate" -> return@forEach
-            "Fail" -> ".Failure(context)"
-            "End" -> ".Success(context)"
-            else -> "context"
-        }
-//        builder.appendln("""
-//        constructor(substate: ${it.name}): this() {
-//            when (substate) {
-//                ${ it.values.joinToString(separator = "\n\t\t") { "is ${it.name.capitalize()} -> this = ${name}.${it.name.capitalize()}(context=substate.context)" } }
-//            }
-//            }""".trimIndent())
+        it.toKotlin(builder, false)
     }
-    builder.appendln("}");
+    builder.appendln("\t}");
     builder.appendln()
 }
 
@@ -40,8 +56,22 @@ fun Handler.toKotlin(builder: Writer) {
     builder.appendln("""
         internal fun to${this.state}(substate: ${this.state}.From${this.name}): ${this.state} = 
             when (substate) {
-                ${ this.enum.values.filter{ it.name != "Terminate" }.joinToString(separator="\n\t") { "is ${this.state}.From${this.name}.${it.name} -> ${this.state}.${it.name}(context=substate.context)" } }
-                ${ this.enum.values.filter{ it.name == "Terminate" }.joinToString(separator="\n\t") { "is ${this.state}.From${this.name}.${it.name} -> ${this.state}.${it.name}(context=Result.${ if (this.name == "End") "Success" else "Failure" }(substate.context))" } }
+                ${ this.enum.values.joinToString(separator="\n\t", prefix="\t", postfix="\n") {
+                    val arg = if (it.context == null) 
+                        ""
+                    else 
+                        "context=substate.context"
+        
+                    val context = if (it.name == "Terminate")
+                        if (this.name == "End")
+                            "context=Result.Success(${arg})"
+                        else
+                            "context=Result.Failure(${arg})"
+                    else
+                        arg
+        
+                    "is ${this.state}.From${this.name}.${it.name} -> ${this.state}.${it.name}(${arg})" }  
+                }
             }
     """.trimIndent())
 }
@@ -50,8 +80,10 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
     val stateEnum = Enumeration(stateName)
     val enums = mutableMapOf<String, Enumeration>()
 
-    val input = convertType(transitions.find { it.from.name == "Begin" }?.type)
-    val output = convertType(transitions.find { it.to.name == "End" }?.type)
+    val rawInput = transitions.find { it.from.name == "Begin" }?.type
+    val rawOutput = transitions.find { it.to.name == "End" }?.type
+    val input = convertType(rawInput)
+    val output = convertType(rawOutput)
     val result = "Result<${output}>"
 
     states.forEach {
@@ -69,12 +101,12 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
     val terminate = Enumeration.Value("Terminate", result )
     stateEnum.values.add(terminate)
 
-    enums["End"]?.values?.add(Enumeration.Value("Terminate", "${output}"))
+    enums["End"]?.values?.add(Enumeration.Value("Terminate", rawOutput))
     enums["Fail"]?.values?.add(Enumeration.Value("Terminate", "Throwable"))
 
     transitions.forEach {
         val enum = enums[it.from.name]!!
-        enum.values.add(Enumeration.Value(it.to.name, convertType(it.to.type)))
+        enum.values.add(Enumeration.Value(it.to.name, it.to.type))
     }
 
     var defaultInitialState: String? = null
@@ -90,6 +122,9 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
         import com.inmotionsoftware.promisekt.then
         import com.inmotionsoftware.promisekt.recover
         import com.inmotionsoftware.flowkit.*
+        import android.os.Parcelable
+        import kotlinx.android.parcel.Parcelize
+        import java.io.*
         
         """.trimIndent())
 
@@ -112,7 +147,7 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
 
             override fun dispatch(state: ${stateName}): Promise<${stateName}> =
                 when (state) {
-                    ${ stateEnum.values.filter{ it.name != "Terminate" }.joinToString(separator = "\n\t") { "is ${stateName}.${it.name} -> on${it.name}(state=state, context=state.context).map { to${stateName}(substate=it) }" } }
+                    ${ stateEnum.values.filter{ it.name != "Terminate" }.joinToString(separator = "\n\t") { "is ${stateName}.${it.name} -> on${it.name}(state=state, ${if (it.context == null) "context=Unit" else "context=state.context"}).map { to${stateName}(substate=it) }" } }
                     is ${stateName}.Terminate -> onTerminate(state=state, context=state.context).map { ${stateName}.Terminate(context=it) }
                 }
         

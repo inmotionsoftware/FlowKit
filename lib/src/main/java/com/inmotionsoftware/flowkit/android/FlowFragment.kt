@@ -15,6 +15,7 @@ import com.inmotionsoftware.flowkit.FlowError
 import com.inmotionsoftware.promisekt.Resolver
 import com.inmotionsoftware.promisekt.fulfill
 import com.inmotionsoftware.promisekt.reject
+import com.inmotionsoftware.promisekt.resolve
 
 interface Backable {
     fun onBackPressed()
@@ -29,7 +30,7 @@ abstract class FlowFragment<Input, Output>: Fragment(), Backable {
     lateinit var viewModel: FlowViewModel<Input, Output>
     val input: Input? get() { return viewModel.input.value }
 
-    fun resolve(result: Result<Output>) {
+    fun resolve(result: com.inmotionsoftware.promisekt.Result<Output>) {
         if (!this::viewModel.isInitialized) {
             Log.e(FlowFragment::class.java.name, "Resolver has not been initialized")
             return
@@ -39,11 +40,11 @@ abstract class FlowFragment<Input, Output>: Fragment(), Backable {
     }
 
     fun resolve(value: Output) {
-        resolve(Result.fulfilled(value))
+        resolve(com.inmotionsoftware.promisekt.Result.fulfilled(value))
     }
 
     fun reject(error: Throwable) {
-        resolve(Result.rejected(error))
+        resolve(com.inmotionsoftware.promisekt.Result.rejected(error))
     }
 
     fun cancel() {

@@ -1,25 +1,22 @@
 package com.inmotionsoftware.flowkit.android
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.inmotionsoftware.flowkit.StateMachine
-import com.inmotionsoftware.flowkit.StateMachineDelegate
 import com.inmotionsoftware.flowkit.StateMachineHost
-import com.inmotionsoftware.promisekt.*
+import com.inmotionsoftware.promisekt.catch
+import com.inmotionsoftware.promisekt.done
 
 class StateViewModel<S>: ViewModel() {
     val state = MutableLiveData<S>()
 }
 
-abstract class FragmentContainerActivity<S,I,O>(): FlowActivity<I,O>(), FragContainer, StateMachine<S,I,O>, NavStateMachine, StateMachineDelegate<S> {
+abstract class FragmentContainerActivity<S,I,O>(): FlowActivity<I,O>(), FragContainer, StateMachine<S,I,O>, NavStateMachine {
     override val viewId: Int = View.generateViewId()
     override val activity: DispatchActivity get() { return this }
 
