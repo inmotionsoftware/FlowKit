@@ -15,8 +15,15 @@ public protocol StateMachine {
     typealias Result = Swift.Result<Output, Error>
 
     func dispatch(state: State) -> Promise<State>
-    func terminal(state: State) -> Result?
+    func getResult(state: State) -> Result?
     func firstState(context: Input) -> State
+    func onTerminate(state: State, context: Result) -> Promise<Result>
+}
+
+public extension StateMachine {
+    func onTerminate(state: State, context: Result) -> Promise<Result> {
+        return Promise.value(context)
+    }
 }
 
 public protocol StateMachineDelegate {
@@ -56,12 +63,12 @@ public struct StateMachineHost<SM: StateMachine>: Flow {
     }
 
     fileprivate func nextState(prev: State, curr: State) -> Promise<SM.Result> {
-        if let d = self.delegate { d(prev, curr) }
-        guard let result = stateMachine.terminal(state: curr) else {
+        self.delegate.map { $0(prev, curr) }
+        guard let result = stateMachine.getResult(state: curr) else {
             return self.stateMachine.dispatch(state: curr).then { self.nextState(prev: curr, curr: $0) }
         }
 
-        return Promise.value(result)
+        return self.stateMachine.onTerminate(state: curr, context: result)
     }
 }
 

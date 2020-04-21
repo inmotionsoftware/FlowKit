@@ -101,11 +101,10 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
     builder.appendln("""
     public protocol ${stateMachineName}: StateMachine where State == ${this.stateName}, Input == ${input}, Output == ${output} {
         ${ stateEnum.values.filter{it.name != "Terminate"}.concatln { "func on${it.name}(state: State, context: ${convertType(it.context)}) -> Promise<State.${it.name}>" }}
-        func onTerminate(state: State, context: State.Result) -> Promise<State.Result>
     }
 
     public extension ${stateMachineName} {
-        func terminal(state: State) -> State.Result? {
+        func getResult(state: State) -> Result? {
             switch state {
             case .terminate(let context): return context
             default: return nil
@@ -121,7 +120,6 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
             }
         }
 
-        func onTerminate(state: State, context: State.Result) -> Promise<State.Result> { return Promise.value(context) }
         func onEnd(state: State, context: ${output}) -> Promise<State.End> { return Promise.value(.terminate(context)) }
         func onFail(state: State, context: Error) -> Promise<State.Fail> { return Promise.value(.terminate(context)) }
     }
