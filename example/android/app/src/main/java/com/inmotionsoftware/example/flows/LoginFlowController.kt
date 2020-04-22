@@ -20,6 +20,9 @@ import com.inmotionsoftware.example.views.ForgotPasswordFragment
 import com.inmotionsoftware.example.views.LoginFragment
 import com.inmotionsoftware.example.views.LoginViewResult
 import com.inmotionsoftware.flowkit.android.*
+import com.inmotionsoftware.flowkit.back
+import com.inmotionsoftware.flowkit.cancel
+import com.inmotionsoftware.flowkit.canceled
 import com.inmotionsoftware.flowkit.subflow
 import com.inmotionsoftware.promisekt.map
 import com.inmotionsoftware.promisekt.recover

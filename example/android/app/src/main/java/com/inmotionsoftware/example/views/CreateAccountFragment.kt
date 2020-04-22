@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.inmotionsoftware.example.FlowFragment
 import com.inmotionsoftware.example.R
 import com.inmotionsoftware.example.databinding.FragmentCreateAccountBinding
 import com.inmotionsoftware.example.models.User
+import com.inmotionsoftware.flowkit.android.FlowFragment
 import kotlinx.android.synthetic.main.fragment_create_account.*
 
 /**
