@@ -28,9 +28,23 @@ import com.android.build.gradle.BaseExtension
 open class FlowKitPluginExtension {
     var namespace: String? = null
     var export: String? = null
+    var generatedDir: File? = null
+    var sourceDir: FileTree? = null
 }
 
-fun getGeneratedPath(project: Project, format: ExportFormat): File = File("${project.buildDir}/generated/source/flowkit")
+fun FlowKitPluginExtension.getGeneratedPath(project: Project, format: ExportFormat): File {
+    val dir = generatedDir
+    return if (dir != null) {
+        if (dir.isRooted) {
+            dir
+        } else {
+            val root = project.buildDir
+            File(root, dir.toString())
+        }
+    } else {
+        File(project.buildDir, "/generated/source/flowkit")
+    }
+}
 
 class FlowKitPlugin: Plugin<Project> {
     override fun apply(project: Project) {
@@ -38,7 +52,7 @@ class FlowKitPlugin: Plugin<Project> {
 
         // TODO: pick the format more intelligently
         val format = ExportFormat.valueOf(extension.export?.toUpperCase() ?: "KOTLIN")
-        val outDir = getGeneratedPath(project, format)
+        val outDir = extension.getGeneratedPath(project, format)
 
         // android
         (project.extensions.findByName("android") as? BaseExtension)
@@ -52,7 +66,7 @@ class FlowKitPlugin: Plugin<Project> {
             ?.filter{ it.name == SourceSet.MAIN_SOURCE_SET_NAME}
             ?.forEach { it.java.srcDirs(outDir) }
 
-        val sourceSet = project.fileTree(outDir)
+//        val sourceSet = project.fileTree(outDir)
         val task = project.tasks.create("compileFlow", FlowKitGeneratorTask::class.java)
 //        project.tasks.findByName("build")?.dependsOn(task)
 
@@ -110,10 +124,11 @@ open class FlowKitGeneratorTask : DefaultTask() {
         val extension = project.extensions.findByType(FlowKitPluginExtension::class.java) ?: FlowKitPluginExtension()
         val format = ExportFormat.valueOf(extension.export?.toUpperCase() ?: "KOTLIN")
 
-        val outDir = getGeneratedPath( project, format )
-        val root = File("${project.projectDir}/src/${SourceSet.MAIN_SOURCE_SET_NAME}")
-        val sourceSet = project.fileTree(root).filter(Spec { it.extension == "puml" })
+        val outDir = extension.getGeneratedPath( project, format )
+        val source = extension.sourceDir ?: project.fileTree(File("${project.projectDir}/src/${SourceSet.MAIN_SOURCE_SET_NAME}"))
+        val sourceSet = source.filter(Spec { it.extension == "puml" })
 
+        var root = File(source.asPath)
         val files = mutableSetOf<File>()
 //        println("source set from ${root}")
         sourceSet.forEach {
