@@ -1,4 +1,4 @@
-package com.inmotionsoftware.example
+package com.inmotionsoftware.flowkit
 
 import com.inmotionsoftware.flowkit.FlowError
 import com.inmotionsoftware.promisekt.Promise
