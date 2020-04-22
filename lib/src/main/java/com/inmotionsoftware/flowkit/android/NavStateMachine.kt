@@ -45,6 +45,9 @@ interface NavStateMachine {
     var nav: FragContainer
 
     fun <Input, Output, Frag: FlowFragment<Input, Output>> subflow(to: Class<Frag>, context: Input): Promise<Output> = nav.subflow(to=to, context=context)
+    fun <State, Input, Output, SM: StateMachine<State, Input, Output>> subflow(stateMachine: StateMachine<State,Input,Output>, context: Input): Promise<Output> where SM: NavStateMachine =
+        NavigationStateMachineHost(stateMachine=stateMachine, activity=nav.activity, viewId=nav.viewId)
+            .startFlow(context=context)
 }
 
 fun <State, Input, Output> Bootstrap.Companion.startFlow(stateMachine: StateMachine<State, Input, Output>, activity: AppCompatActivity, viewId: Int, context: Input) {
