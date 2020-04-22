@@ -54,21 +54,13 @@ class FlowKitPlugin: Plugin<Project> {
 
         val sourceSet = project.fileTree(outDir)
         val task = project.tasks.create("compileFlow", FlowKitGeneratorTask::class.java)
-        project.tasks.findByName("build")?.dependsOn(task)
+//        project.tasks.findByName("build")?.dependsOn(task)
 
-//        val compileKotlinTasks = project.tasks.withType(KotlinCompile::class.java)
-//        compileKotlinTasks.configureEach {
-//            println("adding compileFlow to kotlin task ${it.name}")
-//            it.dependsOn(task)
-//            it.source = it.source.plus(sourceSet)
-//        }
-//
-//        val compileJavaTasks = project.tasks.withType(JavaCompile::class.java)
-//        compileJavaTasks.configureEach {
-//            println("adding compileFlow to java task ${it.name}")
-//            it.dependsOn(task)
-//            it.source = it.source.plus(sourceSet)
-//        }
+        val compileKotlinTasks = project.tasks.withType(KotlinCompile::class.java)
+        compileKotlinTasks.configureEach { it.dependsOn(task) }
+
+        val compileJavaTasks = project.tasks.withType(JavaCompile::class.java)
+        compileJavaTasks.configureEach { it.dependsOn(task) }
     }
 }
 
