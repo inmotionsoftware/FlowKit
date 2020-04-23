@@ -38,7 +38,6 @@ internal class SubFlow<View: FlowViewController>: Flow, ViewControllerDelegate {
         self.viewController.delegate = self
         // listen for back button delegates
         if (!proxy.promise.isPending) {
-            proxy.resolver.reject(FlowError.canceled)
             self.proxy = Promise<Output>.pending()
         }
 
