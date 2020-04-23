@@ -26,3 +26,17 @@ open class ViewCache: ViewCacher {
         return (res as! T)
     }
 }
+
+public extension ViewCacher {
+    func getView<T: UIViewController>(of view: T.Type, storyboard: String) -> T {
+        return getCache(type: T.self) {
+            let storyboard: UIStoryboard = UIStoryboard(name: storyboard, bundle: nil)
+            let id = String(describing: T.self)
+            return storyboard.instantiateViewController(withIdentifier: id) as! T
+        }
+    }
+
+    func getView<T: UIViewController>(of view: T.Type, nib: String) -> T {
+        return getCache(type: T.self) { T(nibName: nib, bundle: Bundle.main) }
+    }
+}

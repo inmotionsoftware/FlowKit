@@ -20,7 +20,12 @@ public protocol NavStateMachine: StateMachine, Navigable {}
 
 public extension NavStateMachine where Self: ViewCacher {
     func subflow<View: FlowViewController>(to view: View.Type, nib: String, context: View.Input) -> Promise<View.Output> {
-        let view = getCache(type: View.self) { View(nibName: nib, bundle: Bundle.main) }
+        let view = self.getView(of: View.self, nib: nib)
+        return self.subflow(to: view, context: context)
+    }
+
+    func subflow<View: FlowViewController>(to view: View.Type, storyboard: String, context: View.Input) -> Promise<View.Output> {
+        let view = self.getView(of: View.self, storyboard: storyboard)
         return self.subflow(to: view, context: context)
     }
 }

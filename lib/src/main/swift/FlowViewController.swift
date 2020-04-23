@@ -50,3 +50,48 @@ public extension FlowViewController {
         self.delegate?.willMove(toParent: parent)
     }
 }
+
+open class BaseFlowViewController<Input, Output>: UIViewController, FlowViewController {
+
+    public typealias Input = Input
+    public typealias Output = Output
+
+    private var proxy = Promise<Output>.pending()
+    public var delegate: ViewControllerDelegate?
+
+    open func startFlow(context: Input) -> Promise<Output> {
+        if (!proxy.promise.isPending) {
+            proxy.resolver.reject(FlowError.canceled)
+            proxy = Promise<Output>.pending()
+        }
+        do {
+            try onBegin(context: context)
+        } catch(let e) {
+            proxy.resolver.reject(e)
+        }
+        return proxy.promise
+    }
+
+    override open func willMove(toParent parent: UIViewController?) {
+        self.delegate?.willMove(toParent: parent)
+        super.willMove(toParent: parent)
+    }
+
+    open func onBegin(context: Input) throws {}
+
+    public func resolve(_ value: Output) {
+        self.proxy.resolver.fulfill(value)
+    }
+
+    public func reject(_ error: Error) {
+        self.proxy.resolver.reject(error)
+    }
+
+    public func cancel() {
+        self.reject(FlowError.canceled)
+    }
+
+    public func back() {
+        self.reject(FlowError.back)
+    }
+}
