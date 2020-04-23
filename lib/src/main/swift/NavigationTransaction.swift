@@ -6,6 +6,8 @@
 //  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
 
+#if os(iOS)
+
 import Foundation
 import UIKit
 
@@ -134,3 +136,5 @@ public class NavigationTransaction {
         }
     }
 }
+
+#endif

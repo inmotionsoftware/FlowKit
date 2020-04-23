@@ -5,6 +5,7 @@
 //  Created by Khuong Huynh on 1/5/17.
 //  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
+#if os(iOS)
 
 import UIKit
 import SwiftUI
@@ -38,3 +39,5 @@ extension UINavigationController {
         return viewController
     }
 }
+
+#endif

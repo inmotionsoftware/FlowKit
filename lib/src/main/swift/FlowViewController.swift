@@ -5,6 +5,9 @@
 //  Created by Brian Howard on 4/9/20.
 //  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
+
+#if os(iOS)
+
 import UIKit
 import PromiseKit
 
@@ -95,3 +98,5 @@ open class BaseFlowViewController<Input, Output>: UIViewController, FlowViewCont
         self.reject(FlowError.back)
     }
 }
+
+#endif

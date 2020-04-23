@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35B210B22449F2A300AD56FF /* PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = 35B210B12449F2A300AD56FF /* PromiseKit */; };
+		E73B38F824524C7F00067CF4 /* FlowKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E73B38F624524C7F00067CF4 /* FlowKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E73B38FB24524C9400067CF4 /* PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = E73B38FA24524C9400067CF4 /* PromiseKit */; };
 		E75DDB21244E6C720076CA51 /* UINavigationViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB13244E6C720076CA51 /* UINavigationViewController+Extension.swift */; };
 		E75DDB22244E6C720076CA51 /* NavStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB14244E6C720076CA51 /* NavStateMachine.swift */; };
 		E75DDB23244E6C720076CA51 /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB15244E6C720076CA51 /* StateMachine.swift */; };
 		E75DDB24244E6C720076CA51 /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB16244E6C720076CA51 /* FlowViewController.swift */; };
 		E75DDB25244E6C720076CA51 /* Promise+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB17244E6C720076CA51 /* Promise+Extensions.swift */; };
 		E75DDB26244E6C720076CA51 /* NavigationTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB18244E6C720076CA51 /* NavigationTransaction.swift */; };
-		E75DDB27244E6C720076CA51 /* FlowKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E75DDB19244E6C720076CA51 /* FlowKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E75DDB28244E6C720076CA51 /* NavigationStateMachineHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1A244E6C720076CA51 /* NavigationStateMachineHost.swift */; };
 		E75DDB29244E6C720076CA51 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1B244E6C720076CA51 /* FlowView.swift */; };
 		E75DDB2A244E6C720076CA51 /* SubFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75DDB1C244E6C720076CA51 /* SubFlow.swift */; };
@@ -36,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E73B38F624524C7F00067CF4 /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlowKit.h; sourceTree = "<group>"; };
+		E73B38F724524C7F00067CF4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E75DDAD6244E63F30076CA51 /* FlowKit_SwiftUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlowKit_SwiftUI.h; sourceTree = "<group>"; };
 		E75DDAD7244E63F30076CA51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E75DDB13244E6C720076CA51 /* UINavigationViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Extension.swift"; path = "src/main/swift/UINavigationViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -44,17 +46,13 @@
 		E75DDB16244E6C720076CA51 /* FlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowViewController.swift; path = src/main/swift/FlowViewController.swift; sourceTree = "<group>"; };
 		E75DDB17244E6C720076CA51 /* Promise+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Promise+Extensions.swift"; path = "src/main/swift/Promise+Extensions.swift"; sourceTree = "<group>"; };
 		E75DDB18244E6C720076CA51 /* NavigationTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationTransaction.swift; path = src/main/swift/NavigationTransaction.swift; sourceTree = "<group>"; };
-		E75DDB19244E6C720076CA51 /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlowKit.h; path = src/main/swift/FlowKit.h; sourceTree = "<group>"; };
 		E75DDB1A244E6C720076CA51 /* NavigationStateMachineHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NavigationStateMachineHost.swift; path = src/main/swift/NavigationStateMachineHost.swift; sourceTree = "<group>"; };
 		E75DDB1B244E6C720076CA51 /* FlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowView.swift; path = src/main/swift/FlowView.swift; sourceTree = "<group>"; };
 		E75DDB1C244E6C720076CA51 /* SubFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubFlow.swift; path = src/main/swift/SubFlow.swift; sourceTree = "<group>"; };
 		E75DDB1D244E6C720076CA51 /* UINavigationViewController+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UINavigationViewController+Transaction.swift"; path = "src/main/swift/UINavigationViewController+Transaction.swift"; sourceTree = "<group>"; };
 		E75DDB1E244E6C720076CA51 /* ViewCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewCache.swift; path = src/main/swift/ViewCache.swift; sourceTree = "<group>"; };
 		E75DDB1F244E6C720076CA51 /* Flow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Flow.swift; path = src/main/swift/Flow.swift; sourceTree = "<group>"; };
-		E75DDB20244E6C720076CA51 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = src/main/swift/Info.plist; sourceTree = "<group>"; };
 		E7EA2203243D1E2F009DDEEC /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7EA222D243D1ED5009DDEEC /* FlowKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlowKit.h; path = src/main/swift/FlowKit.h; sourceTree = SOURCE_ROOT; };
-		E7EA222F243D1ED5009DDEEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = src/main/swift/Info.plist; sourceTree = SOURCE_ROOT; };
 		E7EA2247243D21FD009DDEEC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E7EA2249243D2204009DDEEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -64,8 +62,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35B210B22449F2A300AD56FF /* PromiseKit in Frameworks */,
 				E7EA224A243D2204009DDEEC /* Foundation.framework in Frameworks */,
+				E73B38FB24524C9400067CF4 /* PromiseKit in Frameworks */,
 				E7EA2248243D21FD009DDEEC /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,20 +99,10 @@
 			name = FlowKit;
 			sourceTree = "<group>";
 		};
-		E75DDB2F244E6CB70076CA51 /* Other Files */ = {
-			isa = PBXGroup;
-			children = (
-				E75DDB19244E6C720076CA51 /* FlowKit.h */,
-				E75DDB20244E6C720076CA51 /* Info.plist */,
-			);
-			name = "Other Files";
-			sourceTree = "<group>";
-		};
 		E7EA21CB243D1C50009DDEEC = {
 			isa = PBXGroup;
 			children = (
 				E75DDADC244E658F0076CA51 /* FlowKit */,
-				E75DDB2F244E6CB70076CA51 /* Other Files */,
 				E7EA224B243D2269009DDEEC /* Resources */,
 				E75DDAD5244E63F30076CA51 /* FlowKit+SwiftUI */,
 				E7EA21D6243D1C50009DDEEC /* Products */,
@@ -142,8 +130,8 @@
 		E7EA224B243D2269009DDEEC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E7EA222D243D1ED5009DDEEC /* FlowKit.h */,
-				E7EA222F243D1ED5009DDEEC /* Info.plist */,
+				E73B38F624524C7F00067CF4 /* FlowKit.h */,
+				E73B38F724524C7F00067CF4 /* Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -155,7 +143,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E75DDB27244E6C720076CA51 /* FlowKit.h in Headers */,
+				E73B38F824524C7F00067CF4 /* FlowKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,7 +183,7 @@
 			);
 			name = FlowKit;
 			packageProductDependencies = (
-				35B210B12449F2A300AD56FF /* PromiseKit */,
+				E73B38FA24524C9400067CF4 /* PromiseKit */,
 			);
 			productName = FlowKit;
 			productReference = E7EA2203243D1E2F009DDEEC /* FlowKit.framework */;
@@ -444,7 +432,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = src/main/swift/Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -452,11 +440,11 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 0.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.inmotionsoftware.FlowKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -478,7 +466,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = src/main/swift/Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -486,11 +474,11 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 0.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.inmotionsoftware.FlowKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -540,7 +528,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		35B210B12449F2A300AD56FF /* PromiseKit */ = {
+		E73B38FA24524C9400067CF4 /* PromiseKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 35B210B02449F2A300AD56FF /* XCRemoteSwiftPackageReference "PromiseKit" */;
 			productName = PromiseKit;

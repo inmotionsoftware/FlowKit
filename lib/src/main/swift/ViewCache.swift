@@ -5,6 +5,9 @@
 //  Created by Brian Howard on 4/14/20.
 //  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
+
+#if os(iOS)
+
 import UIKit
 
 public protocol ViewCacher {
@@ -40,3 +43,5 @@ public extension ViewCacher {
         return getCache(type: T.self) { T(nibName: nib, bundle: Bundle.main) }
     }
 }
+
+#endif

@@ -5,6 +5,8 @@
 //  Created by Brian Howard on 4/9/20.
 //  Copyright © 2020 InMotion Software, LLC. All rights reserved.
 //
+
+#if os(iOS)
 import PromiseKit
 import UIKit
 import os
@@ -79,3 +81,5 @@ public extension NavigationStateMachineHost {
         }
     }
 }
+
+#endif

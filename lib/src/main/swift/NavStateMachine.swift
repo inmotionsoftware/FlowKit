@@ -6,6 +6,8 @@
 //  Copyright © 2020 InMotion Software. All rights reserved.
 //
 
+#if os(iOS)
+
 import Foundation
 import UIKit
 import PromiseKit
@@ -59,3 +61,5 @@ public extension Bootstrap {
         startFlow(stateMachine: stateMachine, nav: nav, context: ())
     }
 }
+
+#endif
