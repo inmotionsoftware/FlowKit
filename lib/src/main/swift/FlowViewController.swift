@@ -74,6 +74,10 @@ open class BaseFlowViewController<Input, Output>: UIViewController, FlowViewCont
         return proxy.promise
     }
 
+    open func navigationController(_ navigationController: UINavigationController, shouldPop viewController: UIViewController) -> Bool {
+        return self.delegate?.navigationController(navigationController, shouldPop: viewController) ?? false
+    }
+
     override open func willMove(toParent parent: UIViewController?) {
         self.delegate?.willMove(toParent: parent)
         super.willMove(toParent: parent)
