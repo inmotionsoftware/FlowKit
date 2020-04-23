@@ -64,7 +64,6 @@ open class BaseFlowViewController<Input, Output>: UIViewController, FlowViewCont
 
     open func startFlow(context: Input) -> Promise<Output> {
         if (!proxy.promise.isPending) {
-            proxy.resolver.reject(FlowError.canceled)
             proxy = Promise<Output>.pending()
         }
         do {

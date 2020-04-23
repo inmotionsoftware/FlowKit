@@ -21,7 +21,6 @@
 		E75B5E05244129F90096473A /* OAuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DF9244129F90096473A /* OAuthToken.swift */; };
 		E75B5E06244129F90096473A /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DFA244129F90096473A /* Credentials.swift */; };
 		E75B5E0724412A4E0096473A /* LoginFlow.puml in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DED244129F90096473A /* LoginFlow.puml */; };
-		E7CE7880244E6DC700DB40DB /* PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7CE787F244E6DC700DB40DB /* PromiseKit */; };
 		E7EA2259243D25A3009DDEEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2258243D25A3009DDEEC /* AppDelegate.swift */; };
 		E7EA225B243D25A3009DDEEC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA225A243D25A3009DDEEC /* SceneDelegate.swift */; };
 		E7EA225F243D25A7009DDEEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7EA225E243D25A7009DDEEC /* Assets.xcassets */; };
@@ -99,7 +98,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E70B0AF62446631E00F1601C /* FlowKit.framework in Frameworks */,
-				E7CE7880244E6DC700DB40DB /* PromiseKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,7 +236,6 @@
 			);
 			name = ExampleFlow;
 			packageProductDependencies = (
-				E7CE787F244E6DC700DB40DB /* PromiseKit */,
 			);
 			productName = ExampleFlow;
 			productReference = E7EA2255243D25A3009DDEEC /* ExampleFlow.app */;
@@ -521,14 +518,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		E7CE787F244E6DC700DB40DB /* PromiseKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E7CE787E244E6DC700DB40DB /* XCRemoteSwiftPackageReference "PromiseKit" */;
-			productName = PromiseKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E7EA224D243D25A3009DDEEC /* Project object */;
 }
