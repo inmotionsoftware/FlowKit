@@ -29,7 +29,7 @@ open class FlowKitPluginExtension {
     var namespace: String? = null
     var export: String? = null
     var generatedDir: File? = null
-    var sourceDir: FileTree? = null
+    var sourceDir: File? = null
 }
 
 fun FlowKitPluginExtension.getGeneratedPath(project: Project, format: ExportFormat): File {
@@ -85,8 +85,6 @@ open class FlowKitGeneratorTask : DefaultTask() {
         if (!outDir.exists()) project.mkdir(outDir)
 
         val out = File(outDir, "${name}.${format.extension}")
-
-//        println("compiling: ${file.absolutePath} to ${out}")
         val writer = FileWriter(out)
 
         var ns = namespace ?: defaultNameSpace
@@ -103,6 +101,7 @@ open class FlowKitGeneratorTask : DefaultTask() {
                     path = path.subpath(1, path.nameCount)
                 }
             }
+
             val str = path.joinToString(separator=".")
             if (str.isNotEmpty()) ns = str
         }
@@ -125,28 +124,15 @@ open class FlowKitGeneratorTask : DefaultTask() {
         val format = ExportFormat.valueOf(extension.export?.toUpperCase() ?: "KOTLIN")
 
         val outDir = extension.getGeneratedPath( project, format )
-        val source = extension.sourceDir ?: project.fileTree(File("${project.projectDir}/src/${SourceSet.MAIN_SOURCE_SET_NAME}"))
-        val sourceSet = source.filter(Spec { it.extension == "puml" })
 
-        var root = File(source.asPath)
+        val file = extension.sourceDir ?: File("${project.projectDir}/src/${SourceSet.MAIN_SOURCE_SET_NAME}")
+        val source = project.fileTree(file)
+        val sourceSet = source.filter(Spec { it.extension == "puml" })
+        val root = file
         val files = mutableSetOf<File>()
-//        println("source set from ${root}")
         sourceSet.forEach {
             val out = compile(root=root,file=it, namespace=extension.namespace, format=format, outDir=outDir)
             files.add(out)
         }
-
-//        if (!sourceSet.isEmpty) {
-//            val compileKotlinTasks = project.tasks.withType(KotlinCompile::class.java)
-//            compileKotlinTasks.configureEach {
-//                val name = it.name
-//                val compile = it
-////                val collection = project.files(files.toTypedArray())
-////                compile.source = compile.source.plus(collection).asFileTree
-//                println("Task: ${name}")
-////                it.classpath = it.classpath.plus(collection)
-//                compile.source.files.forEach { println("compile kotlin: ${it}") }
-//            }
-//        }
     }
 }
