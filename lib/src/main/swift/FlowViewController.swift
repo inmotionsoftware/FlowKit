@@ -11,23 +11,37 @@
 import UIKit
 import PromiseKit
 
+
+open class FlowUINavigationController: UINavigationController {
+    open override func navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool {
+        return __navigationBar(navigationBar, shouldPop: item)
+    }
+}
+
 /**
     This is a bit of hack to get global notifications of all navigation controller changes. We use this to forward
     back button notifications
+
+    Update: it appears there is a bug in the iOS 13 simulator that prevents this from working. You can fix that
+     by using a FlowUINavigationController directly instead
  */
-//extension UINavigationController: UINavigationBarDelegate {
-//    public func navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool {
-//        guard viewControllers.count >= (navigationBar.items?.count ?? 0) else { return true }
-//        guard let top = self.topViewController else { return true }
-//        guard top.navigationItem == item else { return false }
-//
-//        guard let delegate = top as? BackDelegate else {
-//            self.popViewController(animated: true) // TODO: should we animate?
-//            return false
-//        }
-//        return delegate.navigationController(self, shouldPop: top)
-//    }
-//}
+extension UINavigationController: UINavigationBarDelegate {
+    fileprivate func __navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool {
+        guard viewControllers.count >= (navigationBar.items?.count ?? 0) else { return true }
+        guard let top = self.topViewController else { return true }
+        guard top.navigationItem == item else { return false }
+
+        guard let delegate = top as? BackDelegate else {
+            self.popViewController(animated: true) // TODO: should we animate?
+            return false
+        }
+        return delegate.navigationController(self, shouldPop: top)
+    }
+
+    open func navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool {
+        return __navigationBar(navigationBar, shouldPop: item)
+    }
+}
 
 public protocol MoveDelegate {
     func willMove(toParent parent: UIViewController?)
