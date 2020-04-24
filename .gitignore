@@ -3,6 +3,8 @@
 # XCode files
 xcuserdata/
 *.xccheckout
+Package.resolved
+.swiftpm
 
 # Trash files
 .DS_Store
