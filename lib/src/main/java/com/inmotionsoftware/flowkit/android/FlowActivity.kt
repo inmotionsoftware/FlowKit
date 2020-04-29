@@ -47,17 +47,7 @@ fun <T> Result<T>.toIntent(): Intent =
         }
     }
 
-abstract class FlowActivity<Input, Output>: AppCompatActivity() {
-
-    abstract var input: Input
-
-    protected open fun loadInput(bundle: Bundle?): Input = bundle?.get("context") as Input
-
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        this.input = loadInput(intent.getBundleExtra(FLOW_KIT_ACTIVITY_RESULT))
-    }
+abstract class FlowActivity<Output>: AppCompatActivity() {
 
     private fun finish(code: Int, result: Result<Output>) {
         setResult(code, result.toIntent())
@@ -86,12 +76,15 @@ abstract class FlowActivity<Input, Output>: AppCompatActivity() {
     }
 }
 
-abstract class UnitFlowActivity<Output>: FlowActivity<Unit, Output>() {
-    // dummy input member
-    override var input: Unit
-        get() { Unit }
-        set(value) {}
+abstract class FlowInputActivity<Input, Output>: FlowActivity<Output>() {
 
-    override fun loadInput(bundle: Bundle?) = Unit
+    abstract var input: Input
+
+    protected open fun loadInput(bundle: Bundle?): Input = bundle?.get("context") as Input
+
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.input = loadInput(intent.getBundleExtra(FLOW_KIT_ACTIVITY_RESULT))
+    }
 }
-

@@ -28,9 +28,11 @@ import kotlin.random.Random
 
 interface NavStateMachine {
     fun <I, O, F: FlowFragment<I,O>> subflow(fragment: F, context: I): Promise<O>
-    fun <S, I, O, SM: StateMachineActivity<S, I, O>> subflow(stateMachine: Class<SM>, state: S): Promise<O>
+    fun <S: FlowState, I, O, SM: StateMachineActivity<S, I, O>> subflow(stateMachine: Class<SM>, state: S): Promise<O>
     fun <O, A: Activity> subflow(activity: Class<A>, bundle: Bundle?): Promise<O>
-    fun <I, O, A: FlowActivity<I,O>> subflow2(activity: Class<A>, context: I): Promise<O> =
+    fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, context: Unit): Promise<O> = subflow(activity=activity)
+    fun <O, A: FlowActivity<O>> subflow(activity: Class<A>): Promise<O> = subflow(activity=activity, bundle=null)
+    fun <I, O, A: FlowInputActivity<I,O>> subflow(activity: Class<A>, context: I): Promise<O> =
         subflow(activity=activity, bundle= Bundle().put("input", context))
 }
 
@@ -112,7 +114,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         return dispatch<O2>(intent)
     }
 
-    override fun <S2, I2, O2, SM2: StateMachineActivity<S2, I2, O2>> subflow(activity: Class<SM2>, state: S2): Promise<O2> {
+    override fun <S2: FlowState, I2, O2, SM2: StateMachineActivity<S2, I2, O2>> subflow(activity: Class<SM2>, state: S2): Promise<O2> {
         val intent = Intent(this, activity)
         intent.putExtra(FLOWKIT_BUNDLE_CONTEXT, Bundle().put("state", state))
         return dispatch<O2>(intent)
@@ -271,8 +273,6 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         super.onBackPressed()
     }
 }
-
-
 
 abstract class BootstrapActivity: StateMachineActivity<BootstrapActivity.State, Unit, Unit>(), StateMachine<BootstrapActivity.State, Unit, Unit> {
     @Parcelize

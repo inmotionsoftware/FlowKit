@@ -17,7 +17,7 @@ class AppFlowController: StateMachineActivity<AppState, Unit, Unit>(), AppStateM
     }
 
     override fun onHome(state: AppState, context: Unit): Promise<AppState.FromHome> =
-        this.subflow2(activity=HomeActivity::class.java, context=context)
+        this.subflow(activity=HomeActivity::class.java, context=context)
             .map {
                 when (it) {
                     is HomeResult.Login -> FromHome.Login(context=Unit)
