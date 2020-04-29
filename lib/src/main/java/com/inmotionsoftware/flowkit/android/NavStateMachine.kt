@@ -33,52 +33,7 @@ interface NavStateMachine {
     fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, context: Unit): Promise<O> = subflow(activity=activity)
     fun <O, A: FlowActivity<O>> subflow(activity: Class<A>): Promise<O> = subflow(activity=activity, bundle=null)
     fun <I, O, A: FlowInputActivity<I,O>> subflow(activity: Class<A>, context: I): Promise<O> =
-        subflow(activity=activity, bundle= Bundle().put("input", context))
-}
-
-typealias ActivitResultDelegate = (resultCode: Int, data: Intent?) -> Unit
-
-fun <O2> getResult(intent: Intent): Result<O2> {
-    val r = intent.getBundleExtra(FLOW_KIT_ACTIVITY_RESULT)?.get("result")
-    val v = r as? O2
-
-    return if (v == null) {
-        val e = r as? Throwable
-        if (e != null) {
-            Result.Failure<O2>(e)
-        } else {
-            Result.Failure<O2>(NullPointerException())
-        }
-    } else {
-        Result.Success(v)
-    }
-}
-
-fun <T> Resolver<T>.resolve(result: Result<T>) {
-    when (result) {
-        is Result.Success -> fulfill(result.value)
-        is Result.Failure -> reject(result.cause)
-    }
-}
-
-object FlowDispatcher {
-    private val registry = mutableMapOf<Int,ActivitResultDelegate>()
-    private val rand = Random(Date().time)
-    private var counter = 0
-
-    private fun nextRequestCode(): Int {
-        return (rand.nextInt() and 0x0000FF00) or (++counter)
-    }
-
-    fun register(delegate: ActivitResultDelegate): Int {
-        val code = nextRequestCode()
-        registry.put(code, delegate)
-        return code
-    }
-
-    fun dispatch(requestCode: Int, resultCode: Int, data: Intent?) {
-        registry.remove(requestCode)?.invoke(resultCode, data)
-    }
+        subflow(activity=activity, bundle=Bundle().put("input", context))
 }
 
 private const val FLOWKIT_BUNDLE_CONTEXT = "com.inmotionsoftware.flowkit.Context"

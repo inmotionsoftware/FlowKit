@@ -25,6 +25,10 @@ interface StateMachine<State: FlowState, Input, Output>: StateMachineDelegate<St
     override fun stateDidChange(from: State, to: State) {}
 }
 
+fun <S: FlowState, I, O, S2: FlowState, I2, O2, SM2: StateMachine<S2,I2,O2>> StateMachine<S,I,O>.subflow(stateMachine: SM2, context: I2): Promise<O2> =
+    StateMachineHost<S2,I2,O2, SM2>(stateMachine=stateMachine)
+        .startFlow(context=context)
+
 open class StateMachineHost<State: FlowState, Input, Output, SM: StateMachine<State, Input, Output>>(val stateMachine: SM) : Flow<Input, Output>, StateMachineDelegate<State> {
     var delegate: StateMachineDelegate<State>? = null
 

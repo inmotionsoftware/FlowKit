@@ -1,8 +1,7 @@
 package com.inmotionsoftware.flowkit
 
 import com.inmotionsoftware.flowkit.FlowError
-import com.inmotionsoftware.promisekt.Promise
-import com.inmotionsoftware.promisekt.recover
+import com.inmotionsoftware.promisekt.*
 
 fun <T> Promise<T>.back(closure: () -> T ): Promise<T> =
     canceled {
@@ -29,3 +28,10 @@ fun <T> Promise<T>.canceled(closure: (FlowError) -> T ): Promise<T> =
             throw it
         }
     }
+
+fun <T> Resolver<T>.resolve(result: Result<T>) {
+    when (result) {
+        is Result.Success -> fulfill(result.value)
+        is Result.Failure -> reject(result.cause)
+    }
+}
