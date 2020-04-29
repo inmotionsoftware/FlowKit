@@ -8,15 +8,20 @@
 import PromiseKit
 import os
 
-public protocol StateMachine {
-    associatedtype State
+public protocol FlowState {}
+
+public protocol StateFactory {
+    associatedtype State: FlowState
     associatedtype Input
+    func createState(context: Input) -> State
+}
+
+public protocol StateMachine: StateFactory {
     associatedtype Output
     typealias Result = Swift.Result<Output, Error>
 
     func dispatch(state: State) -> Promise<State>
     func getResult(state: State) -> Result?
-    func firstState(context: Input) -> State
     func onTerminate(state: State, context: Result) -> Promise<Result>
 }
 
@@ -51,7 +56,7 @@ public struct StateMachineHost<SM: StateMachine>: Flow {
     }
 
     public func startFlow(context: Input) -> Promise<Output> {
-        let begin = self.stateMachine.firstState(context: context)
+        let begin = self.stateMachine.createState(context: context)
         return self
             .nextState(prev: begin, curr: begin)
             .map {

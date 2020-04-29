@@ -1,6 +1,5 @@
 package com.inmotionsoftware.flowkit.compiler
 
-import java.io.Serializable
 import java.io.Writer
 
 private fun convertType(name: String?): String
@@ -9,46 +8,39 @@ private fun convertType(name: String?): String
     else -> name
 }
 
-
-
-fun Enumeration.toKotlin(builder: Writer, serializable: Boolean = true) {
-    builder.append("sealed class ${name}()")
+fun Enumeration.toKotlin(builder: Writer, isNested: Boolean = false) {
+    builder.append("sealed class ${name}")
     if (!generics.isEmpty()) generics.joinTo(buffer=builder, prefix = "<", separator = ",", postfix = ">")
+    builder.append("()")
+    if (!isNested) {
+        builder.append(": Parcelable, FlowState")
+    }
     builder.appendln(" {")
     aliasess.joinTo(buffer=builder, separator = "\n\t", prefix = "\t") { "public typealias ${it.first} = ${it.second}" }
-    values.joinTo(buffer=builder, separator= "\n\t", prefix = "\t", postfix = "\n") {
-
-        val title = it.name.capitalize()
-        val type = if (it.context == null)
-//            "context: Unit"
-            ""
-        else
-            "val context: ${it.context}"
-
-        val annotation = if (serializable)
-            "@Parcelize "
-        else
-            ""
-
-        val extension = if (serializable)
-            ", Parcelable"
-        else
-            ""
-
-        val body = ""
-
-//        val body = if (it.context != null)
-//            ""
-//        else
-//            "{ val context: Unit get() { return Unit } }"
-
-        "${annotation}class ${title}(${type}): ${name}()${extension} ${body}"
+    builder.appendln()
+    if (!isNested) {
+        values.joinTo(buffer=builder, separator= "\n\t", prefix = "\t") { "@Parcelize class ${it.name.capitalize()}(val context: ${convertType(it.context)}): ${name}(), Parcelable" }
+    } else {
+        values.joinTo(buffer=builder, separator= "\n\t", prefix = "\t") { "class ${it.name.capitalize()}(val context: ${convertType(it.context)}): ${name}()" }
     }
+    builder.appendln()
     nested.forEach {
         builder.append("\t")
-        it.toKotlin(builder, false)
+        it.toKotlin(builder=builder, isNested=true)
+        val context = when (it.name) {
+            "Terminate" -> return@forEach
+            "Fail" -> ".Failure(context)"
+            "End" -> ".Success(context)"
+            else -> "context"
+        }
+//        builder.appendln("""
+//        constructor(substate: ${it.name}): this() {
+//            when (substate) {
+//                ${ it.values.joinToString(separator = "\n\t\t") { "is ${it.name.capitalize()} -> this = ${name}.${it.name.capitalize()}(context=substate.context)" } }
+//            }
+//            }""".trimIndent())
     }
-    builder.appendln("\t}");
+    builder.appendln("}");
     builder.appendln()
 }
 
@@ -56,22 +48,8 @@ fun Handler.toKotlin(builder: Writer) {
     builder.appendln("""
         internal fun to${this.state}(substate: ${this.state}.From${this.name}): ${this.state} = 
             when (substate) {
-                ${ this.enum.values.joinToString(separator="\n\t", prefix="\t", postfix="\n") {
-                    val arg = if (it.context == null) 
-                        ""
-                    else 
-                        "context=substate.context"
-        
-                    val context = if (it.name == "Terminate")
-                        if (this.name == "End")
-                            "context=Result.Success(${arg})"
-                        else
-                            "context=Result.Failure(${arg})"
-                    else
-                        arg
-        
-                    "is ${this.state}.From${this.name}.${it.name} -> ${this.state}.${it.name}(${arg})" }  
-                }
+                ${ this.enum.values.filter{ it.name != "Terminate" }.joinToString(separator="\n\t") { "is ${this.state}.From${this.name}.${it.name} -> ${this.state}.${it.name}(context=substate.context)" } }
+                ${ this.enum.values.filter{ it.name == "Terminate" }.joinToString(separator="\n\t") { "is ${this.state}.From${this.name}.${it.name} -> ${this.state}.${it.name}(context=Result.${ if (this.name == "End") "Success" else "Failure" }(substate.context))" } }
             }
     """.trimIndent())
 }
@@ -80,10 +58,8 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
     val stateEnum = Enumeration(stateName)
     val enums = mutableMapOf<String, Enumeration>()
 
-    val rawInput = transitions.find { it.from.name == "Begin" }?.type
-    val rawOutput = transitions.find { it.to.name == "End" }?.type
-    val input = convertType(rawInput)
-    val output = convertType(rawOutput)
+    val input = convertType(transitions.find { it.from.name == "Begin" }?.type)
+    val output = convertType(transitions.find { it.to.name == "End" }?.type)
     val result = "Result<${output}>"
 
     states.forEach {
@@ -101,12 +77,12 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
     val terminate = Enumeration.Value("Terminate", result )
     stateEnum.values.add(terminate)
 
-    enums["End"]?.values?.add(Enumeration.Value("Terminate", rawOutput))
+    enums["End"]?.values?.add(Enumeration.Value("Terminate", "${output}"))
     enums["Fail"]?.values?.add(Enumeration.Value("Terminate", "Throwable"))
 
     transitions.forEach {
         val enum = enums[it.from.name]!!
-        enum.values.add(Enumeration.Value(it.to.name, it.to.type))
+        enum.values.add(Enumeration.Value(it.to.name, convertType(it.to.type)))
     }
 
     var defaultInitialState: String? = null
@@ -124,8 +100,6 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
         import com.inmotionsoftware.flowkit.*
         import android.os.Parcelable
         import kotlinx.android.parcel.Parcelize
-        import java.io.*
-        
         """.trimIndent())
 
     stateEnum.nested = enums.values
@@ -139,15 +113,17 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
         interface ${stateMachineName}: StateMachine<${stateName}, ${input}, ${output}> {
             ${ stateEnum.values
                 .filter{ it.name != "Terminate"  && it.name != "End" && it.name != "Fail" }
-                .joinToString(separator = "\n\t") { "fun on${it.name}(state: ${stateName}, context: ${convertType(it.context)}): Promise<${stateName}.From${it.name}>" } 
+                .joinToString(separator = "\n\t") { "fun on${it.name}(state: ${stateName}, context: ${convertType(it.context)}): Promise<${stateName}.From${it.name}>" }
             }
+
+            @Parcelize class Input(val value:  ${input}): Parcelable
 
             fun onEnd(state: ${stateName}, context: ${output}) :  Promise<${stateName}.FromEnd> = Promise.value(${stateName}.FromEnd.Terminate(context))
             fun onFail(state: ${stateName}, context: Throwable) :  Promise<${stateName}.FromFail> = Promise.value(${stateName}.FromFail.Terminate(context))
 
             override fun dispatch(state: ${stateName}): Promise<${stateName}> =
                 when (state) {
-                    ${ stateEnum.values.filter{ it.name != "Terminate" }.joinToString(separator = "\n\t") { "is ${stateName}.${it.name} -> on${it.name}(state=state, ${if (it.context == null) "context=Unit" else "context=state.context"}).map { to${stateName}(substate=it) }" } }
+                    ${ stateEnum.values.filter{ it.name != "Terminate" }.joinToString(separator = "\n\t") { "is ${stateName}.${it.name} -> on${it.name}(state=state, context=state.context).map { to${stateName}(substate=it) }" } }
                     is ${stateName}.Terminate -> onTerminate(state=state, context=state.context).map { ${stateName}.Terminate(context=it) }
                 }
         
@@ -157,7 +133,7 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
                     else -> null
                 }
         
-            override fun firstState(context: ${input}): ${stateName} = ${stateName}.Begin(context=context)
+            override fun createState(context: ${input}): ${stateName} = ${stateName}.Begin(context=context)
         }
 
 

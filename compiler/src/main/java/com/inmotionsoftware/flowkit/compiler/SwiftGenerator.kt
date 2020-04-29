@@ -21,9 +21,10 @@ public fun <T> Iterable<T>.fork(transform: (T) -> Boolean, a: (T) -> Unit, b: (T
     this.forEach { if (transform(it)) a(it) else b(it) }
 }
 
-fun Enumeration.toSwift(builder: Writer) {
+fun Enumeration.toSwift(builder: Writer, isNested: Boolean = false) {
     builder.append("public enum ${name}")
     if (!generics.isEmpty()) generics.joinTo(buffer=builder, prefix = "<", separator = ",", postfix = ">")
+    if (!isNested) builder.append(": FlowState")
     builder.appendln(" {")
     aliasess.joinTo(buffer=builder, separator = "\n\t", prefix = "\t") { "public typealias ${it.first} = ${it.second}" }
     builder.appendln()
@@ -31,7 +32,7 @@ fun Enumeration.toSwift(builder: Writer) {
     builder.appendln()
     nested.forEach {
         builder.append("\t")
-        it.toSwift(builder)
+        it.toSwift(builder=builder, isNested=true)
         val context = when (it.name) {
             "Terminate" -> return@forEach
             "Fail" -> ".failure(context)"
@@ -111,7 +112,7 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
             }
         }
 
-        func firstState(context: Input) -> State { return .begin(context) } 
+        func createState(context: Input) -> State { return .begin(context) } 
     
         func dispatch(state: State) -> Promise<State> {
             switch state {

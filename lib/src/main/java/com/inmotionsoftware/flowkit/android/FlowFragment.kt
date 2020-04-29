@@ -65,15 +65,10 @@ abstract class FlowFragment<Input, Output>: Fragment(), Backable {
         Log.d(this.javaClass.name, "input: ${viewModel.input.value}")
     }
 
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loadViewModel()
         // TODO: Load bundle
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        // TODO save data
     }
 }
