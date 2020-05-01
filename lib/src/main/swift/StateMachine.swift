@@ -57,8 +57,12 @@ public struct StateMachineHost<SM: StateMachine>: Flow {
 
     public func startFlow(context: Input) -> Promise<Output> {
         let begin = self.stateMachine.createState(context: context)
+        return self.jumpToState(state: begin)
+    }
+
+    fileprivate func jumpToState(state: State) -> Promise<Output> {
         return self
-            .nextState(prev: begin, curr: begin)
+            .nextState(prev: state, curr: state)
             .map {
                 switch ($0) {
                 case .success(let out): return out
@@ -80,6 +84,11 @@ public extension StateMachine {
     func subflow<SM: StateMachine>(to stateMachine: SM, context: SM.Input) -> Promise<SM.Output> {
         return StateMachineHost(stateMachine: stateMachine)
             .startFlow(context: context)
+    }
+
+    func subflow<SM: StateMachine>(to stateMachine: SM, state: SM.State) -> Promise<SM.Output> {
+        return StateMachineHost(stateMachine: stateMachine)
+            .jumpToState(state: state)
     }
 }
 
