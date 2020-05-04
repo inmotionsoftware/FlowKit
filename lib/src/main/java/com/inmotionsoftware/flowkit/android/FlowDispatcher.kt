@@ -10,8 +10,13 @@ typealias ActivitResultDelegate = (resultCode: Int, data: Intent?) -> Unit
 
 fun <O2> getResult(intent: Intent): Result<O2> {
     val r = intent.getBundleExtra(FLOW_KIT_ACTIVITY_RESULT)?.get("result")
-    val v = r as? O2
 
+    // FIXME: what if O2 is a throwable??
+    if (r is Throwable) {
+        return Result.Failure<O2>(r)
+    }
+
+    val v: O2? = r as? O2
     return if (v == null) {
         val e = r as? Throwable
         if (e != null) {
