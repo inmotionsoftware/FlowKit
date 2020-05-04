@@ -28,7 +28,7 @@ internal class SubFlow<View: FlowViewController>: Flow, ViewControllerDelegate {
         }
     }
 
-    public init(viewController: View, nav: UINavigationController, animated: Bool = true) {
+    public init(viewController: View, nav: UINavigationController, animated: Bool) {
         self.viewController = viewController
         self.nav = nav
         self.animated = animated

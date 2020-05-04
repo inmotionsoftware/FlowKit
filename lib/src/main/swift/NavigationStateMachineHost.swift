@@ -21,25 +21,27 @@ open class NavigationStateMachineHost<SM: NavStateMachine>: Flow  {
     public typealias State = SM.State
 
     private let stack: [UIViewController]
-    public var animated: Bool = true
+    public var animated: Bool
     public let nav: UINavigationController
 
     private var host: StateMachineHost<SM>
 
-    public init<D: StateMachineDelegate>(stateMachine: SM, nav: UINavigationController, delegate: D) where D.State == State {
+    public init<D: StateMachineDelegate>(stateMachine: SM, nav: UINavigationController, animated: Bool, delegate: D) where D.State == State {
         self.nav = nav
         self.stack = nav.viewControllers
         var cp = stateMachine
         cp.nav = nav
         self.host = StateMachineHost(stateMachine: cp, delegate: delegate)
+        self.animated = animated
     }
 
-    public init(stateMachine: SM, nav: UINavigationController) {
+    public init(stateMachine: SM, nav: UINavigationController, animated: Bool) {
         self.nav = nav
         self.stack = nav.viewControllers
         var cp = stateMachine
         cp.nav = nav
         self.host = StateMachineHost(stateMachine: cp)
+        self.animated = animated
     }
 
     public func startFlow(context: Input) -> Promise<Output> {

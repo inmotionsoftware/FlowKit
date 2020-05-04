@@ -33,23 +33,23 @@ public extension NavStateMachine where Self: ViewCacher {
 }
 
 public extension NavStateMachine {
-    func subflow<SM: NavStateMachine>(to stateMachine: SM, context: SM.Input) -> Promise<SM.Output> {
-        return NavigationStateMachineHost(stateMachine: stateMachine, nav: self.nav)
+    func subflow<SM: NavStateMachine>(to stateMachine: SM, context: SM.Input, animated: Bool = true) -> Promise<SM.Output> {
+        return NavigationStateMachineHost(stateMachine: stateMachine, nav: self.nav, animated: animated)
             .startFlow(context: context)
     }
 
-    func subflow<View: FlowViewController>(to view: View, context: View.Input) -> Promise<View.Output> {
-        return subflow(to: view, nav: self.nav, context: context)
+    func subflow<View: FlowViewController>(to view: View, context: View.Input, animated: Bool = true) -> Promise<View.Output> {
+        return subflow(to: view, nav: self.nav, context: context, animated: animated)
     }
 
-    func subflow<View: FlowViewController>(to view: View, nav: UINavigationController, context: View.Input) -> Promise<View.Output> {
-        return SubFlow(viewController: view, nav: nav).startFlow(context: context)
+    func subflow<View: FlowViewController>(to view: View, nav: UINavigationController, context: View.Input, animated: Bool = true) -> Promise<View.Output> {
+        return SubFlow(viewController: view, nav: nav, animated: animated).startFlow(context: context)
     }
 }
 
 public extension Bootstrap {
-    static func startFlow<SM: NavStateMachine&StateMachine>(stateMachine: SM, nav: UINavigationController, context: SM.Input) {
-        let _ = NavigationStateMachineHost(stateMachine: stateMachine, nav: nav)
+    static func startFlow<SM: NavStateMachine&StateMachine>(stateMachine: SM, nav: UINavigationController, context: SM.Input, animated: Bool = true) {
+        let _ = NavigationStateMachineHost(stateMachine: stateMachine, nav: nav, animated: animated)
             .startFlow(context: context)
             .ensure {
                 os_log("Root flow is being restarted", type: .error)
