@@ -21,14 +21,16 @@ public protocol NavStateMachine: StateMachine, Navigable {}
 
 
 public extension NavStateMachine where Self: ViewCacher {
-    func subflow<View: FlowViewController>(to view: View.Type, nib: String, context: View.Input) -> Promise<View.Output> {
+    func subflow<View: FlowViewController>(to view: View.Type, nib: String, context: View.Input, animated: Bool = true, transition: UIViewControllerTransitioningDelegate? = nil) -> Promise<View.Output> {
         let view = self.getView(of: View.self, nib: nib)
-        return self.subflow(to: view, context: context)
+        view.transitioningDelegate = transition
+        return self.subflow(to: view, context: context, animated: animated)
     }
 
-    func subflow<View: FlowViewController>(to view: View.Type, storyboard: String, context: View.Input) -> Promise<View.Output> {
+    func subflow<View: FlowViewController>(to view: View.Type, storyboard: String, context: View.Input, animated: Bool = true, transition: UIViewControllerTransitioningDelegate? = nil) -> Promise<View.Output> {
         let view = self.getView(of: View.self, storyboard: storyboard)
-        return self.subflow(to: view, context: context)
+        view.transitioningDelegate = transition
+        return self.subflow(to: view, context: context, animated: animated)
     }
 }
 
@@ -38,12 +40,12 @@ public extension NavStateMachine {
             .startFlow(context: context)
     }
 
-    func subflow<View: FlowViewController>(to view: View, context: View.Input) -> Promise<View.Output> {
-        return subflow(to: view, nav: self.nav, context: context)
+    func subflow<View: FlowViewController>(to view: View, context: View.Input, animated: Bool = true) -> Promise<View.Output> {
+        return subflow(to: view, nav: self.nav, context: context, animated: animated)
     }
 
-    func subflow<View: FlowViewController>(to view: View, nav: UINavigationController, context: View.Input) -> Promise<View.Output> {
-        return SubFlow(viewController: view, nav: nav).startFlow(context: context)
+    func subflow<View: FlowViewController>(to view: View, nav: UINavigationController, context: View.Input, animated: Bool = true) -> Promise<View.Output> {
+        return SubFlow(viewController: view, nav: nav, animated: animated).startFlow(context: context)
     }
 }
 

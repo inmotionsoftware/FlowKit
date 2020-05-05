@@ -71,17 +71,19 @@ public class FlowHostingController<Content: FlowableView>: UIHostingController<C
 
 @available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
 public extension NavStateMachine where Self: ViewCacher {
-    func subflow<View: FlowableView>(to view: View.Type, context: View.Input) -> Promise<View.Output> {
+    func subflow<View: FlowableView>(to view: View.Type, context: View.Input, animated: Bool = true, transition: UIViewControllerTransitioningDelegate? = nil) -> Promise<View.Output> {
         let host = getCache(type: FlowHostingController<View>.self) { FlowHostingController<View>(context: context) }
-        return self.subflow(to: host, context: context)
+        host.transitioningDelegate = transition
+        return self.subflow(to: host, context: context, animated: animated)
     }
 }
 
 @available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
 public extension NavStateMachine {
-    func subflow<View: FlowableView>(to view: View, context: View.Input) -> Promise<View.Output> {
+    func subflow<View: FlowableView>(to view: View, context: View.Input, animated: Bool = true, transition: UIViewControllerTransitioningDelegate? = nil) -> Promise<View.Output> {
         let host = FlowHostingController<View>(context: context)
-        return self.subflow(to: host, context: context)
+        host.transitioningDelegate = transition
+        return self.subflow(to: host, context: context, animated: animated)
     }
 }
 
