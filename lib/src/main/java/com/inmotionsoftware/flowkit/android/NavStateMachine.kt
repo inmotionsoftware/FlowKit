@@ -25,7 +25,7 @@ import kotlinx.android.parcel.Parcelize
 
 interface NavStateMachine {
     fun <I, O, F: FlowFragment<I,O>> subflow(fragment: F, context: I, animated: Boolean = true): Promise<O>
-    fun <S: FlowState, I, O, SM: StateMachineActivity<S, I, O>> subflow(stateMachine: Class<SM>, state: S): Promise<O>
+    fun <S: FlowState, I, O, SM: StateMachineActivity<S, I, O>> subflow(stateMachine: Class<SM>, state: S, animated: Boolean = true): Promise<O>
     fun <O, A: Activity> subflow(activity: Class<A>, bundle: Bundle?, animated: Boolean = true): Promise<O>
     fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, context: Unit, animated: Boolean = true): Promise<O> = subflow(activity=activity, animated=animated)
     fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, animated: Boolean = true): Promise<O> = subflow(activity=activity, bundle=null, animated=animated)
@@ -81,6 +81,16 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     override fun <O2, A: Activity> subflow(activity: Class<A>, bundle: Bundle?, animated: Boolean): Promise<O2> {
         val intent = Intent(this, activity)
         intent.putExtra(FLOWKIT_BUNDLE_CONTEXT, bundle)
+        if (!animated) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            this.overridePendingTransition(0, 0);
+        }
+        return dispatch<O2>(intent)
+    }
+
+    override fun <S2: FlowState, I2, O2, SM2: StateMachineActivity<S2, I2, O2>> subflow(stateMachine: Class<SM2>, state: S2, animated: Boolean): Promise<O2>  {
+        val intent = Intent(this, stateMachine)
+        intent.putExtra(FLOWKIT_BUNDLE_CONTEXT, Bundle().put("state", state))
         if (!animated) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             this.overridePendingTransition(0, 0);

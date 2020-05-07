@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.inmotionsoftware.example.R
 import com.inmotionsoftware.example.databinding.FragmentCreateAccountBinding
-import com.inmotionsoftware.example.models.User
+import com.inmotionsoftware.example.flows.User
 import com.inmotionsoftware.flowkit.android.FlowFragment
 import kotlinx.android.synthetic.main.fragment_create_account.*
 

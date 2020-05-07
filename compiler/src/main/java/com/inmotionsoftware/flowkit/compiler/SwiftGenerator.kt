@@ -30,7 +30,7 @@ fun Visibility.toSwift(): String =
 
 fun UmlClass.toSwift(writer: Writer) {
     writer.appendln("""
-        struct ${this.name}: Codable {
+        public struct ${this.name}: Codable {
             ${ this.fields.joinToString(separator="\n") { "${it.visibility.toSwift()} let ${it.name}: ${it.type} ${ if (it.def == null) "" else "= ${it.def}" }" } }
         }
     """.trimIndent())

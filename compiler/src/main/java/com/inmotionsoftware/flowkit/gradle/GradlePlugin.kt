@@ -76,36 +76,35 @@ open class FlowKitGeneratorTask : DefaultTask() {
         if (!outDir.exists()) project.mkdir(outDir)
 
         val out = File(outDir, "${name}.${format.extension}")
-        val writer = FileWriter(out)
+        FileWriter(out).use {
+            var ns = namespace ?: defaultNameSpace
 
-        var ns = namespace ?: defaultNameSpace
-
-        // generate our namespace package
-        // 1) use the extension override first
-        // 2) Use the folder name
-        // 3) If all else fails use the default
-        if (namespace == null) {
-            var path = file.relativeTo(root).parentFile.toPath()
-            path.firstOrNull()?.let {
-                val str = it.toString()
-                if (str == "kotlin" || str == "java") {
-                    path = path.subpath(1, path.nameCount)
+            // generate our namespace package
+            // 1) use the extension override first
+            // 2) Use the folder name
+            // 3) If all else fails use the default
+            if (namespace == null) {
+                var path = file.relativeTo(root).parentFile.toPath()
+                path.firstOrNull()?.let {
+                    val str = it.toString()
+                    if (str == "kotlin" || str == "java") {
+                        path = path.subpath(1, path.nameCount)
+                    }
                 }
+
+                val str = path.joinToString(separator=".")
+                if (str.isNotEmpty()) ns = str
             }
 
-            val str = path.joinToString(separator=".")
-            if (str.isNotEmpty()) ns = str
+            val list = processPuml(
+                namespace = ns,
+                inputFile = file,
+                imageDir = null,
+                exportFormat = format,
+                writer = it
+            )
+            list.forEach { println(it) }
         }
-
-        processPuml(
-            namespace = ns,
-            inputFile = file,
-            imageDir = outDir,
-            exportFormat = format,
-            writer = writer
-        )
-        writer.close()
-
         return out
     }
 
@@ -124,6 +123,7 @@ open class FlowKitGeneratorTask : DefaultTask() {
         sourceSet.forEach {
             val out = compile(root=root,file=it, namespace=extension.namespace, format=format, outDir=outDir)
             files.add(out)
+            println(out)
         }
     }
 }

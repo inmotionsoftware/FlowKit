@@ -10,5 +10,5 @@ import com.inmotionsoftware.promisekt.map
 
 class MainActivity: BootstrapActivity() {
     override fun onBegin(state: State, context: Unit): Promise<Unit> =
-        this.subflow(activity=AppFlowController::class.java, state=AppState.Begin(Unit))
+        this.subflow(stateMachine=AppFlowController::class.java, state=AppState.Begin(Unit))
 }

@@ -40,3 +40,28 @@ end note
 
 Authenticate --> [*]: OAuthToken
 @enduml
+
+@startuml
+class User {
+!if ($export_lang == "swift")
+    {field} +userId: UUID = UUID()
+!else
+    {field} +userId: UUID = UUID.randomUUID()
+!endif
+    +firstName: String
+    +lastName: String
+    +email: String
+    +password: String
+}
+
+class OAuthToken {
+    + token: String
+    + type: String
+    + expiration: Date
+}
+
+class Credentials {
+    + username: String
+    + password: String
+}
+@enduml

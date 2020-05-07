@@ -249,44 +249,42 @@ fun processPuml(namespace: String, inputFile: File, imageDir: File?, exportForma
 
     reader.blocks.forEach {
 
-        try {
-            // UML diagrams
-            val diagram = it.diagram
-            if (diagram is TitledDiagram) {
-                diagram.title?.let {
-                    val display = it.display
-                    if (display != null && display.size() > 0) {
-                        title = display.first().toString()
-                    }
+        // UML diagrams
+        val diagram = it.diagram
+        if (diagram is TitledDiagram) {
+            diagram.title?.let {
+                val display = it.display
+                if (display != null && display.size() > 0) {
+                    title = display.first().toString()
                 }
             }
+        }
 
-            when (diagram) {
-                is StateDiagram -> {
-                    val list = process(stateDiagram = diagram, title=title)
-                    list.forEach {
-                        val generator = StateMachineGenerator(title=it.name, states=it.states.values, transitions=it.transitions)
-                        generator.namespace = namespace
-                        when (exportFormat) {
-                            ExportFormat.JAVA -> { generator.toKotlin(writer) }
-                            ExportFormat.KOTLIN -> { generator.toKotlin(writer) }
-                            ExportFormat.SWIFT -> { generator.toSwift(writer) }
-                        }
-                    }
-                }
-                is ClassDiagram -> {
-                    val classes = process(classDiagram = diagram, title = title)
+        when (diagram) {
+            is StateDiagram -> {
+
+                val list = process(stateDiagram = diagram, title=title)
+                list.forEach {
+                    println(it.name)
+                    val generator = StateMachineGenerator(title=it.name, states=it.states.values, transitions=it.transitions)
+                    generator.namespace = namespace
                     when (exportFormat) {
-                        ExportFormat.JAVA -> { classes.forEach { it.toKotlin(writer) } }
-                        ExportFormat.KOTLIN -> { classes.forEach { it.toKotlin(writer) } }
-                        ExportFormat.SWIFT -> { classes.forEach { it.toSwift(writer) } }
+                        ExportFormat.JAVA -> { generator.toKotlin(writer) }
+                        ExportFormat.KOTLIN -> { generator.toKotlin(writer) }
+                        ExportFormat.SWIFT -> { generator.toSwift(writer) }
                     }
                 }
-                is ObjectDiagram -> process(objectDiagram = diagram, title = title)
-                else -> throw IllegalArgumentException("Unsupported uml diagram type")
             }
-        } catch (t: Throwable) {
-            printErrLn("${inputFile.absolutePath}: error: ${t.localizedMessage ?: t.toString()}")
+            is ClassDiagram -> {
+                val classes = process(classDiagram = diagram, title = title)
+                when (exportFormat) {
+                    ExportFormat.JAVA -> { classes.forEach { it.toKotlin(writer) } }
+                    ExportFormat.KOTLIN -> { classes.forEach { it.toKotlin(writer) } }
+                    ExportFormat.SWIFT -> { classes.forEach { it.toSwift(writer) } }
+                }
+            }
+            is ObjectDiagram -> process(objectDiagram = diagram, title = title)
+            else -> throw IllegalArgumentException("Unsupported uml diagram type")
         }
 
         imageDir?.let {

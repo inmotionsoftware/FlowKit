@@ -60,9 +60,11 @@ fun main(args: Array<String>) {
 //    println()
 
 //    val file = Paths.get("/Users/bghoward/Projects/FlowKit/compiler/src/main/java/com/inmotionsoftware/flowkit/compiler/test.puml")
+//    val file = Paths.get("/Users/bghoward/Projects/FlowKit/example/android/app/src/main/java/com/inmotionsoftware/example/flows/LoginFlow.puml")
 //    val args = arrayOf<String>(
-//        "--export", "swift",
-//        "--output", "./out.swift",
+//        "--export", "kotlin",
+//        "-i", "/Users/bghoward/Projects/FlowKit/example/android/app/build/generated/source/flowkit",
+//        "--output", "./out.kt",
 //        file.toAbsolutePath().toString()
 //    )
 

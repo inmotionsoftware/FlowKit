@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E707D4CE2464999E000954DB /* LoginFlow_001.png in Resources */ = {isa = PBXBuildFile; fileRef = E707D4CD2464999E000954DB /* LoginFlow_001.png */; };
 		E70B0AF62446631E00F1601C /* FlowKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E70B0AF52446631E00F1601C /* FlowKit.framework */; };
 		E70B0AF72446631E00F1601C /* FlowKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E70B0AF52446631E00F1601C /* FlowKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E75B5DFB244129F90096473A /* LoginFlowStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DEC244129F90096473A /* LoginFlowStateMachine.swift */; };
@@ -17,9 +18,6 @@
 		E75B5E01244129F90096473A /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DF4244129F90096473A /* ForgotPasswordViewController.swift */; };
 		E75B5E02244129F90096473A /* ForgotPassword.xib in Resources */ = {isa = PBXBuildFile; fileRef = E75B5DF5244129F90096473A /* ForgotPassword.xib */; };
 		E75B5E03244129F90096473A /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DF7244129F90096473A /* JWT.swift */; };
-		E75B5E04244129F90096473A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DF8244129F90096473A /* User.swift */; };
-		E75B5E05244129F90096473A /* OAuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DF9244129F90096473A /* OAuthToken.swift */; };
-		E75B5E06244129F90096473A /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DFA244129F90096473A /* Credentials.swift */; };
 		E75B5E0724412A4E0096473A /* LoginFlow.puml in Sources */ = {isa = PBXBuildFile; fileRef = E75B5DED244129F90096473A /* LoginFlow.puml */; };
 		E7EA2259243D25A3009DDEEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA2258243D25A3009DDEEC /* AppDelegate.swift */; };
 		E7EA225B243D25A3009DDEEC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EA225A243D25A3009DDEEC /* SceneDelegate.swift */; };
@@ -63,6 +61,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E707D4CD2464999E000954DB /* LoginFlow_001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LoginFlow_001.png; sourceTree = "<group>"; };
 		E70B0AF2244662AD00F1601C /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = ../../lib/Carthage/Build/iOS/PromiseKit.framework; sourceTree = "<group>"; };
 		E70B0AF52446631E00F1601C /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E75B5DEC244129F90096473A /* LoginFlowStateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFlowStateMachine.swift; sourceTree = "<group>"; };
@@ -74,9 +73,6 @@
 		E75B5DF4244129F90096473A /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		E75B5DF5244129F90096473A /* ForgotPassword.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForgotPassword.xib; sourceTree = "<group>"; };
 		E75B5DF7244129F90096473A /* JWT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
-		E75B5DF8244129F90096473A /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		E75B5DF9244129F90096473A /* OAuthToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthToken.swift; sourceTree = "<group>"; };
-		E75B5DFA244129F90096473A /* Credentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		E79306BC243E473F002C1A13 /* FlowKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FlowKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7EA2255243D25A3009DDEEC /* ExampleFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7EA2258243D25A3009DDEEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -137,9 +133,6 @@
 			isa = PBXGroup;
 			children = (
 				E75B5DF7244129F90096473A /* JWT.swift */,
-				E75B5DF8244129F90096473A /* User.swift */,
-				E75B5DF9244129F90096473A /* OAuthToken.swift */,
-				E75B5DFA244129F90096473A /* Credentials.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -213,6 +206,7 @@
 				E75B5DEC244129F90096473A /* LoginFlowStateMachine.swift */,
 				E75B5DED244129F90096473A /* LoginFlow.puml */,
 				E7EAB944244138C60002898B /* LoginFlow.png */,
+				E707D4CD2464999E000954DB /* LoginFlow_001.png */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -283,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7EA2265243D25A7009DDEEC /* LaunchScreen.storyboard in Resources */,
+				E707D4CE2464999E000954DB /* LoginFlow_001.png in Resources */,
 				E7EA2262243D25A7009DDEEC /* Preview Assets.xcassets in Resources */,
 				E7EAB95524451EEB0002898B /* app.png in Resources */,
 				E75B5E02244129F90096473A /* ForgotPassword.xib in Resources */,
@@ -305,11 +300,8 @@
 				E75B5E00244129F90096473A /* HomeView.swift in Sources */,
 				E75B5DFD244129F90096473A /* UserService.swift in Sources */,
 				E75B5DFE244129F90096473A /* RegisterAccountView.swift in Sources */,
-				E75B5E06244129F90096473A /* Credentials.swift in Sources */,
 				E7EA2259243D25A3009DDEEC /* AppDelegate.swift in Sources */,
-				E75B5E05244129F90096473A /* OAuthToken.swift in Sources */,
 				E7EA225B243D25A3009DDEEC /* SceneDelegate.swift in Sources */,
-				E75B5E04244129F90096473A /* User.swift in Sources */,
 				E75B5DFB244129F90096473A /* LoginFlowStateMachine.swift in Sources */,
 				E7EAB95724451EFF0002898B /* AppFlowController.swift in Sources */,
 			);
