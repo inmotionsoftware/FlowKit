@@ -5,6 +5,7 @@ import net.sourceforge.plantuml.cucadiagram.IEntity
 import net.sourceforge.plantuml.cucadiagram.IGroup
 import net.sourceforge.plantuml.cucadiagram.LeafType
 import net.sourceforge.plantuml.objectdiagram.ObjectDiagram
+import net.sourceforge.plantuml.skin.VisibilityModifier
 import net.sourceforge.plantuml.statediagram.StateDiagram
 import java.io.*
 import java.lang.IllegalArgumentException
@@ -159,9 +160,62 @@ fun process(stateDiagram: StateDiagram, title: String): List<StateMachine> {
     return states
 }
 
-fun process(classDiagram: ClassDiagram, title: String) {
-    TODO("Class diagrams are unsupported")
+enum class Visibility {
+    PUBLIC,
+    PROTECTED,
+    PRIVATE
 }
+
+class UmlField(val visibility: Visibility, val name: String, val type: String, val def: String?)
+class UmlMethod(val visibility: Visibility, val name: String, args: List<String>, result: String?)
+class UmlClass(val name: String) {
+    val fields = mutableListOf<UmlField>()
+}
+
+fun process(classDiagram: ClassDiagram, title: String): List<UmlClass> {
+    val classes = mutableListOf<UmlClass>()
+
+    classDiagram.entityFactory.leafs2()
+        .filter { it.leafType == LeafType.CLASS }
+        .forEach {
+
+        val clazz = UmlClass(it.codeGetName.toString().toJavaCase())
+
+        val modifier = it.visibilityModifier
+        val type = it.leafType
+        val symbol = it.uSymbol
+        val generic = it.generic
+        it.bodier.fieldsToDisplay.forEach {
+
+            val str = it.getDisplay(false)
+            val strs = str.split(":")
+            val name = strs.first()
+            var type = strs.last()
+
+            var def: String? = null
+            if (type.contains('=')) {
+                val vals = type.split("=")
+                type = vals.first()
+                def = vals.last()
+            }
+
+            val vis = when (it.visibilityModifier ?: VisibilityModifier.PUBLIC_FIELD) {
+                VisibilityModifier.PRIVATE_FIELD -> Visibility.PRIVATE
+                VisibilityModifier.PUBLIC_FIELD -> Visibility.PUBLIC
+                VisibilityModifier.PROTECTED_FIELD -> Visibility.PROTECTED
+                else -> throw IllegalArgumentException("Unsupported visibility ${it.visibilityModifier.toString()}")
+            }
+            clazz.fields.add(UmlField(visibility=vis, name=name.trim(), type=type.trim(), def=def?.trim()))
+        }
+
+        if (it.bodier.methodsToDisplay.size > 0) {
+            throw IllegalStateException("Methods are unsupported")
+        }
+        classes.add(clazz)
+    }
+    return classes
+}
+
 
 fun process(objectDiagram: ObjectDiagram, title: String) {
     TODO("Object diagrams are unsupported")
@@ -186,9 +240,16 @@ fun processPuml(namespace: String, inputFile: File, imageDir: File?, exportForma
 
     val reader: ISourceFileReader = SourceFileReader(inputFile, outdir, option)
     reader.setCheckMetadata(false)
-    reader.blocks.forEachIndexed {index, it ->
-        try {
 
+    when (exportFormat) {
+        ExportFormat.JAVA -> { writeKotlinHeader(namespace=namespace, writer=writer) }
+        ExportFormat.KOTLIN -> { writeKotlinHeader(namespace=namespace, writer=writer) }
+        ExportFormat.SWIFT -> { writeSwiftHeader(writer=writer) }
+    }
+
+    reader.blocks.forEach {
+
+        try {
             // UML diagrams
             val diagram = it.diagram
             if (diagram is TitledDiagram) {
@@ -207,19 +268,25 @@ fun processPuml(namespace: String, inputFile: File, imageDir: File?, exportForma
                         val generator = StateMachineGenerator(title=it.name, states=it.states.values, transitions=it.transitions)
                         generator.namespace = namespace
                         when (exportFormat) {
-                            ExportFormat.JAVA -> { generator.toKotlin(writer, index == 0) }
-                            ExportFormat.KOTLIN -> { generator.toKotlin(writer, index == 0) }
-                            ExportFormat.SWIFT -> { generator.toSwift(writer, index == 0) }
+                            ExportFormat.JAVA -> { generator.toKotlin(writer) }
+                            ExportFormat.KOTLIN -> { generator.toKotlin(writer) }
+                            ExportFormat.SWIFT -> { generator.toSwift(writer) }
                         }
                     }
                 }
-                is ClassDiagram -> process(classDiagram = diagram, title = title)
+                is ClassDiagram -> {
+                    val classes = process(classDiagram = diagram, title = title)
+                    when (exportFormat) {
+                        ExportFormat.JAVA -> { classes.forEach { it.toKotlin(writer) } }
+                        ExportFormat.KOTLIN -> { classes.forEach { it.toKotlin(writer) } }
+                        ExportFormat.SWIFT -> { classes.forEach { it.toSwift(writer) } }
+                    }
+                }
                 is ObjectDiagram -> process(objectDiagram = diagram, title = title)
                 else -> throw IllegalArgumentException("Unsupported uml diagram type")
             }
         } catch (t: Throwable) {
-            t.printStackTrace()
-            printErr("${it.fileOrDirname}:1:1: ${t.localizedMessage}")
+            printErrLn("${inputFile.absolutePath}: error: ${t.localizedMessage ?: t.toString()}")
         }
 
         imageDir?.let {

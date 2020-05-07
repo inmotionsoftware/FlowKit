@@ -56,10 +56,8 @@ fun printHelp() {
 fun main(args: Array<String>) {
 
 //    println("args: ")
-//    _args.forEach { println(it) }
+//    args.forEach { println(it) }
 //    println()
-
-//    val args = _args
 
 //    val file = Paths.get("/Users/bghoward/Projects/FlowKit/compiler/src/main/java/com/inmotionsoftware/flowkit/compiler/test.puml")
 //    val args = arrayOf<String>(
@@ -154,7 +152,7 @@ fun main(args: Array<String>) {
             }
 
         } catch (e: Throwable) {
-            e.printStackTrace()
+//            e.printStackTrace()
             printErrLn("${file.absolutePath}: error: ${e.localizedMessage ?: e.toString()}")
             exitProcess(1)
         }

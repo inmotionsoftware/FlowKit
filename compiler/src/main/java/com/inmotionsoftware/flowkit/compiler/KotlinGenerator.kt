@@ -44,6 +44,18 @@ fun Enumeration.toKotlin(builder: Writer, isNested: Boolean = false) {
     builder.appendln()
 }
 
+fun Visibility.toKotlin(): String =
+    when (this) {
+        Visibility.PUBLIC -> ""
+        Visibility.PRIVATE -> "private"
+        Visibility.PROTECTED -> "protected"
+    }
+
+
+fun UmlClass.toKotlin(writer: Writer) {
+    writer.appendln("@Parcelize data class ${this.name}( ${this.fields.joinToString(separator=",") { "${it.visibility.toKotlin()} val ${it.name}: ${it.type} ${ if (it.def == null) "" else "= ${it.def}" }" } } ): Parcelable")
+}
+
 fun Handler.toKotlin(builder: Writer) {
     builder.appendln("""
         internal fun to${this.state}(substate: ${this.state}.From${this.name}): ${this.state} = 
@@ -54,7 +66,21 @@ fun Handler.toKotlin(builder: Writer) {
     """.trimIndent())
 }
 
-fun StateMachineGenerator.toKotlin(builder: Writer, header: Boolean) {
+fun writeKotlinHeader(namespace: String, writer: Writer) {
+    writer.appendln("""
+        package ${ if (namespace.isNotEmpty()) namespace else "com.inmotionsoftware.flowkit.generated" }
+        import com.inmotionsoftware.promisekt.Promise
+        import com.inmotionsoftware.promisekt.thenMap
+        import com.inmotionsoftware.promisekt.map
+        import com.inmotionsoftware.promisekt.then
+        import com.inmotionsoftware.promisekt.recover
+        import com.inmotionsoftware.flowkit.*
+        import android.os.Parcelable
+        import kotlinx.android.parcel.Parcelize
+        """.trimIndent())
+}
+
+fun StateMachineGenerator.toKotlin(builder: Writer) {
     val stateEnum = Enumeration(stateName)
     val enums = mutableMapOf<String, Enumeration>()
 
@@ -88,20 +114,6 @@ fun StateMachineGenerator.toKotlin(builder: Writer, header: Boolean) {
     var defaultInitialState: String? = null
     transitions.find { it.from.name == "Begin" }?.let {
         defaultInitialState = it.to.name
-    }
-
-    if (header) {
-        builder.appendln("""
-        package ${ if (namespace.isNotEmpty()) namespace else "com.inmotionsoftware.flowkit.generated" }
-        import com.inmotionsoftware.promisekt.Promise
-        import com.inmotionsoftware.promisekt.thenMap
-        import com.inmotionsoftware.promisekt.map
-        import com.inmotionsoftware.promisekt.then
-        import com.inmotionsoftware.promisekt.recover
-        import com.inmotionsoftware.flowkit.*
-        import android.os.Parcelable
-        import kotlinx.android.parcel.Parcelize
-        """.trimIndent())
     }
 
     stateEnum.nested = enums.values

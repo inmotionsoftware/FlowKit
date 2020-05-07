@@ -21,6 +21,29 @@ public fun <T> Iterable<T>.fork(transform: (T) -> Boolean, a: (T) -> Unit, b: (T
     this.forEach { if (transform(it)) a(it) else b(it) }
 }
 
+fun Visibility.toSwift(): String =
+    when (this) {
+        Visibility.PUBLIC -> ""
+        Visibility.PRIVATE -> "private"
+        Visibility.PROTECTED -> "internal"
+    }
+
+fun UmlClass.toSwift(writer: Writer) {
+    writer.appendln("""
+        struct ${this.name}: Codable {
+            ${ this.fields.joinToString(separator="\n") { "${it.visibility.toSwift()} let ${it.name}: ${it.type} ${ if (it.def == null) "" else "= ${it.def}" }" } }
+        }
+    """.trimIndent())
+}
+
+fun writeSwiftHeader(writer: Writer) {
+    writer.appendln("""
+        import Foundation
+        import PromiseKit
+        import FlowKit         
+        """.trimIndent())
+}
+
 fun Enumeration.toSwift(builder: Writer, isNested: Boolean = false) {
     builder.append("public enum ${name}")
     if (!generics.isEmpty()) generics.joinTo(buffer=builder, prefix = "<", separator = ",", postfix = ">")
@@ -50,7 +73,7 @@ fun Enumeration.toSwift(builder: Writer, isNested: Boolean = false) {
     builder.appendln()
 }
 
-fun StateMachineGenerator.toSwift(builder: Writer, header: Boolean) {
+fun StateMachineGenerator.toSwift(builder: Writer) {
     val stateEnum = Enumeration(stateName)
     val enums = mutableMapOf<String, Enumeration>()
     
@@ -85,14 +108,6 @@ fun StateMachineGenerator.toSwift(builder: Writer, header: Boolean) {
     var defaultInitialState: String? = null
     transitions.find { it.from.name == "Begin" }?.let {
         defaultInitialState = it.to.name
-    }
-
-    if (header) {
-        builder.appendln("""
-        import Foundation
-        import PromiseKit
-        import FlowKit         
-        """.trimIndent())
     }
 
 //    stateEnum.values.add(Enumeration.Value("Terminate", "Result"))
