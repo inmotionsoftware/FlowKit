@@ -1,6 +1,8 @@
 package com.inmotionsoftware.flowkit.android
 
 import android.app.Activity
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -19,21 +21,16 @@ import com.inmotionsoftware.flowkit.*
 import com.inmotionsoftware.flowkit.Result
 import com.inmotionsoftware.promisekt.*
 import kotlinx.android.parcel.Parcelize
-import java.lang.NullPointerException
-import java.util.*
-import kotlin.Int
-import kotlin.Suppress
-import kotlin.Unit
-import kotlin.random.Random
+
 
 interface NavStateMachine {
-    fun <I, O, F: FlowFragment<I,O>> subflow(fragment: F, context: I): Promise<O>
+    fun <I, O, F: FlowFragment<I,O>> subflow(fragment: F, context: I, animated: Boolean = true): Promise<O>
     fun <S: FlowState, I, O, SM: StateMachineActivity<S, I, O>> subflow(stateMachine: Class<SM>, state: S): Promise<O>
-    fun <O, A: Activity> subflow(activity: Class<A>, bundle: Bundle?): Promise<O>
-    fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, context: Unit): Promise<O> = subflow(activity=activity)
-    fun <O, A: FlowActivity<O>> subflow(activity: Class<A>): Promise<O> = subflow(activity=activity, bundle=null)
-    fun <I, O, A: FlowInputActivity<I,O>> subflow(activity: Class<A>, context: I): Promise<O> =
-        subflow(activity=activity, bundle=Bundle().put("input", context))
+    fun <O, A: Activity> subflow(activity: Class<A>, bundle: Bundle?, animated: Boolean = true): Promise<O>
+    fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, context: Unit, animated: Boolean = true): Promise<O> = subflow(activity=activity, animated=animated)
+    fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, animated: Boolean = true): Promise<O> = subflow(activity=activity, bundle=null, animated=animated)
+    fun <I, O, A: FlowInputActivity<I,O>> subflow(activity: Class<A>, context: I, animated: Boolean = true): Promise<O> =
+        subflow(activity=activity, bundle=Bundle().put("input", context), animated=animated)
 }
 
 private const val FLOWKIT_BUNDLE_CONTEXT = "com.inmotionsoftware.flowkit.Context"
@@ -59,23 +56,39 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             }
             pending.second.resolve(result)
         }
+
         this.startActivityForResult(intent, code)
         return pending.first
     }
 
-    override fun <O2, A: Activity> subflow(activity: Class<A>, bundle: Bundle?): Promise<O2> {
+    private fun <A: Activity> shouldAnimate(activity: Class<A>): Boolean {
+        val am = this.applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val cn = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            am.getAppTasks().firstOrNull()?.getTaskInfo()?.topActivity;
+        } else {
+            //noinspection deprecation
+            am.getRunningTasks(1).firstOrNull()?.topActivity;
+        }
+        cn?.let {
+            if (it.javaClass == activity) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    override fun <O2, A: Activity> subflow(activity: Class<A>, bundle: Bundle?, animated: Boolean): Promise<O2> {
         val intent = Intent(this, activity)
         intent.putExtra(FLOWKIT_BUNDLE_CONTEXT, bundle)
+        if (!animated) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            this.overridePendingTransition(0, 0);
+        }
         return dispatch<O2>(intent)
     }
 
-    override fun <S2: FlowState, I2, O2, SM2: StateMachineActivity<S2, I2, O2>> subflow(activity: Class<SM2>, state: S2): Promise<O2> {
-        val intent = Intent(this, activity)
-        intent.putExtra(FLOWKIT_BUNDLE_CONTEXT, Bundle().put("state", state))
-        return dispatch<O2>(intent)
-    }
-
-    override fun <I2, O2, F: FlowFragment<I2,O2>> subflow(fragment: F, context: I2): Promise<O2> {
+    override fun <I2, O2, F: FlowFragment<I2,O2>> subflow(fragment: F, context: I2, animated: Boolean): Promise<O2> {
         if (this.isDestroyed) {
             return Promise(error= java.lang.IllegalStateException("Trying to add fragment to destroyed Activity"))
         }
@@ -86,16 +99,19 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             val viewModel = ViewModelProvider(this).get(FlowViewModel::class.java) as FlowViewModel<I2,O2>
             viewModel.input.value = context
             viewModel.resolver = pending.second
-            pushFragment(fragment)
+            pushFragment(fragment, animated)
         }
         return pending.first
     }
 
-    private fun pushFragment(fragment: Fragment) {
-        this.supportFragmentManager.beginTransaction()
+    private fun pushFragment(fragment: Fragment, animated: Boolean) {
+        val trans = this.supportFragmentManager
+            .beginTransaction()
             .replace(this.viewId, fragment)
             .addToBackStack(null)
-            .commit()
+
+            if (!animated) trans.setCustomAnimations(0, 0)
+            trans.commit()
     }
 
     override fun stateDidChange(from: S, to: S) {
