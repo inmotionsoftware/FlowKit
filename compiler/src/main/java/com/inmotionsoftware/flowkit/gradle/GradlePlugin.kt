@@ -3,24 +3,15 @@ package com.inmotionsoftware.flowkit.gradle
 import com.inmotionsoftware.flowkit.compiler.ExportFormat
 import com.inmotionsoftware.flowkit.compiler.defaultNameSpace
 import com.inmotionsoftware.flowkit.compiler.processPuml
-import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.file.FileTree
-import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.internal.file.collections.PatternFilterableFileTree
-import org.gradle.api.model.ObjectFactory
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.specs.Spec
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.SourceSet
-import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.JavaCompile
-import org.gradle.api.tasks.util.PatternFilterable
-import org.gradle.tooling.model.SourceDirectory
-import org.jetbrains.kotlin.gradle.plugin.android.AndroidGradleWrapper
 import java.io.File
 import java.io.FileWriter
 import com.android.build.gradle.BaseExtension
@@ -108,7 +99,7 @@ open class FlowKitGeneratorTask : DefaultTask() {
 
         processPuml(
             namespace = ns,
-            file = file,
+            inputFile = file,
             imageDir = outDir,
             exportFormat = format,
             writer = writer

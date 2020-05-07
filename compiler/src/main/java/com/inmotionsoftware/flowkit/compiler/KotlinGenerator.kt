@@ -54,12 +54,12 @@ fun Handler.toKotlin(builder: Writer) {
     """.trimIndent())
 }
 
-fun StateMachineGenerator.toKotlin(builder: Writer) {
+fun StateMachineGenerator.toKotlin(builder: Writer, header: Boolean) {
     val stateEnum = Enumeration(stateName)
     val enums = mutableMapOf<String, Enumeration>()
 
-    val input = convertType(transitions.find { it.from.name == "Begin" }?.type)
-    val output = convertType(transitions.find { it.to.name == "End" }?.type)
+    val input = convertType(states.find { it.name == "Begin" }?.type)
+    val output = convertType(states.find { it.name == "End" }?.type)
     val result = "Result<${output}>"
 
     states.forEach {
@@ -90,7 +90,8 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
         defaultInitialState = it.to.name
     }
 
-    builder.appendln("""
+    if (header) {
+        builder.appendln("""
         package ${ if (namespace.isNotEmpty()) namespace else "com.inmotionsoftware.flowkit.generated" }
         import com.inmotionsoftware.promisekt.Promise
         import com.inmotionsoftware.promisekt.thenMap
@@ -101,6 +102,7 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
         import android.os.Parcelable
         import kotlinx.android.parcel.Parcelize
         """.trimIndent())
+    }
 
     stateEnum.nested = enums.values
     stateEnum.toKotlin(builder)

@@ -23,11 +23,38 @@ extension StateMachine {
     }
 }
 
+public class CreateAccountFlowController: ViewCache, NavStateMachine, CreateAccountStateMachine {
+    public var nav: UINavigationController!
+    public typealias State = CreateAccountState
+    private let service = UserService()
+
+    public func onBegin(state: State, context: String?) -> Promise<State.Begin> {
+        return Promise.value(.enterInfo(context))
+    }
+
+    public func onEnterInfo(state: State, context: String?) -> Promise<State.EnterInfo> {
+        if let err = context {
+            self.showAlert(title: "Error", message: err)
+        }
+
+        return self
+            .subflow(to: RegisterView.self, context: ())
+            .map { .submit($0) }
+    }
+
+    public func onSubmit(state: State, context: User) -> Promise<State.Submit> {
+        return self.service
+            .createAccount(user: context)
+            .map { Credentials(username: context.email, password: context.password) }
+            .map { .end($0) }
+            .recover { Promise.value(.enterInfo($0.localizedDescription)) }
+    }
+}
+
 public class LoginFlowController: ViewCache, NavStateMachine, LoginFlowStateMachine {
 
     public var nav: UINavigationController!
     public typealias State = LoginFlowState
-    private var animated: Bool = false
     private let service = UserService()
 
     public func onBegin(state: State, context: Void) -> Promise<State.Begin> {
@@ -36,33 +63,22 @@ public class LoginFlowController: ViewCache, NavStateMachine, LoginFlowStateMach
 
     public func onPrompt(state: State, context: String?) -> Promise<State.Prompt> {
         return self.subflow(to: LoginView.self, context: context)
-            .map { result in
-                self.animated = true
-                switch (result) {
+            .map {
+                switch ($0) {
                     case .forgotPassword(let email): return .forgotPass(email)
                     case .login(let email, let pass): return .authenticate(Credentials(username: email, password: pass))
-                    case .register: return .enterAccountInfo(nil)
+                    case .register: return .createAccount(nil)
                 }
             }
-            .back {
-                self.animated = false
-                return .prompt(context)
-            }
-            .cancel {
-                self.animated = false
-                return .prompt(context)
-            }
+            .back { .prompt(context) }
+            .cancel { .prompt(context) }
     }
 
     public func onAuthenticate(state: State, context: Credentials) -> Promise<State.Authenticate> {
         return self.service
             .autenticate(credentials: context)
-            .map {
-                .end($0)
-            }
-            .recover {
-                Promise.value(.prompt($0.localizedDescription))
-        }
+            .map { .end($0) }
+            .recover { Promise.value(.prompt($0.localizedDescription)) }
     }
 
     public func onForgotPass(state: State, context: String) -> Promise<State.ForgotPass> {
@@ -73,27 +89,9 @@ public class LoginFlowController: ViewCache, NavStateMachine, LoginFlowStateMach
             .recover { Promise.value(.prompt($0.localizedDescription)) }
     }
 
-    public func onEnterAccountInfo(state: State, context: String?) -> Promise<State.EnterAccountInfo> {
-        if let err = context {
-            self.showAlert(title: "Error", message: err)
-        }
-
-        return self
-            .subflow(to: RegisterView.self, context: ())
-            .map { .createAccount($0) }
-            .back {
-                self.animated = false
-                return .prompt(context)
-            }
-    }
-
-    public func onCreateAccount(state: State, context: User) -> Promise<State.CreateAccount> {
-        return self.service
-            .createAccount(user: context)
-            .map {
-                let creds = Credentials(username: context.email, password: context.password)
-                return .authenticate(creds)
-            }
-            .recover { Promise.value(.enterAccountInfo($0.localizedDescription)) }
+    public func onCreateAccount(state: State, context: String?) -> Promise<State.CreateAccount> {
+        return self.subflow(to: CreateAccountFlowController(), context: context)
+            .map { .authenticate($0) }
+            .back{ .prompt(nil) }
     }
 }

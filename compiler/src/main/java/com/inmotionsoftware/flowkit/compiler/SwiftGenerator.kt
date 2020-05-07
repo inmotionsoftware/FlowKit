@@ -50,12 +50,12 @@ fun Enumeration.toSwift(builder: Writer, isNested: Boolean = false) {
     builder.appendln()
 }
 
-fun StateMachineGenerator.toSwift(builder: Writer) {
+fun StateMachineGenerator.toSwift(builder: Writer, header: Boolean) {
     val stateEnum = Enumeration(stateName)
     val enums = mutableMapOf<String, Enumeration>()
-
-    val input = convertType(transitions.find { it.from.name == "Begin" }?.type)
-    val output = convertType(transitions.find { it.to.name == "End" }?.type)
+    
+    val input = convertType(states.find { it.name == "Begin" }?.type)
+    val output = convertType(states.find { it.name == "End" }?.type)
 
     stateEnum.aliasess.add(Pair("Result", "Swift.Result<${output}, Error>"))
 
@@ -87,12 +87,13 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
         defaultInitialState = it.to.name
     }
 
-    builder.appendln("""
-    import Foundation
-    import PromiseKit
-    import FlowKit
-
-    """.trimIndent())
+    if (header) {
+        builder.appendln("""
+        import Foundation
+        import PromiseKit
+        import FlowKit         
+        """.trimIndent())
+    }
 
 //    stateEnum.values.add(Enumeration.Value("Terminate", "Result"))
     stateEnum.nested = enums.values

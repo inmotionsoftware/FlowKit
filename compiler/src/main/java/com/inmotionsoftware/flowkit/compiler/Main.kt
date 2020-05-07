@@ -3,6 +3,7 @@ package com.inmotionsoftware.flowkit.compiler
 import gnu.getopt.LongOpt;
 import gnu.getopt.Getopt;
 import java.io.*
+import java.nio.file.Paths
 import kotlin.system.exitProcess
 
 val appName = "flowkit"
@@ -52,17 +53,19 @@ fun printHelp() {
     System.exit(1)
 }
 
-fun main(_args: Array<String>) {
+fun main(args: Array<String>) {
+
 //    println("args: ")
 //    _args.forEach { println(it) }
 //    println()
 
-    val args = _args
+//    val args = _args
 
+//    val file = Paths.get("/Users/bghoward/Projects/FlowKit/compiler/src/main/java/com/inmotionsoftware/flowkit/compiler/test.puml")
 //    val args = arrayOf<String>(
 //        "--export", "swift",
-//        "--output", "/Users/bghoward/Library/Developer/Xcode/DerivedData/ExampleFlow-eaanvgxflaclurgpuxwawntdfgtl/Build/Intermediates.noindex/ExampleFlow.build/Debug-iphonesimulator/ExampleFlow.build/DerivedSources/LoginFlow.swift",
-//        "/Users/bghoward/Projects/FlowKit/example/ios/ExampleFlow/Flows/LoginFlow.puml"
+//        "--output", "./out.swift",
+//        file.toAbsolutePath().toString()
 //    )
 
     val longopts = arrayOf<LongOpt>(
@@ -80,6 +83,8 @@ fun main(_args: Array<String>) {
     var format = ExportFormat.KOTLIN
     var imageDir: File? = null
 
+    var outPath: String? = null
+
     while (true) {
         val c = getopt.getopt()
         if (c == -1) break
@@ -91,7 +96,9 @@ fun main(_args: Array<String>) {
                 }
             }
             'o'.toInt() -> {
-                output = OutputStreamWriter(FileOutputStream(getopt.optarg))
+                val path = getopt.optarg
+                output = OutputStreamWriter(FileOutputStream(path))
+                outPath = path
             }
             'h'.toInt() -> {
                 printHelp()
@@ -133,19 +140,25 @@ fun main(_args: Array<String>) {
 
             val name = file.nameWithoutExtension
             val title = name.capitalize()
+
             val out: Writer = output ?: OutputStreamWriter(System.out)
-            processPuml(
-                namespace = defaultNameSpace,
-                file = file,
-                imageDir = imageDir,
-                exportFormat = format,
-                writer = out
-            )
-            out.close()
+            out.use {
+                val list = processPuml(
+                    namespace = defaultNameSpace,
+                    inputFile = file,
+                    imageDir = imageDir,
+                    exportFormat = format,
+                    writer = out
+                )
+                list.forEach { println(it) }
+            }
+
         } catch (e: Throwable) {
             e.printStackTrace()
             printErrLn("${file.absolutePath}: error: ${e.localizedMessage ?: e.toString()}")
             exitProcess(1)
         }
     }
+
+    outPath?.let { println(it) }
 }

@@ -9,24 +9,27 @@ title Login Flow
 
 Prompt --> Authenticate
 Prompt -> ForgotPass
-Prompt --> EnterAccountInfo
+Prompt --> CreateAccount
 Prompt --> Prompt
 Prompt: String?
+
+state CreateAccount {
+    [*] --> EnterInfo
+    EnterInfo --> Submit
+    Submit --> EnterInfo
+    EnterInfo: String?
+    Submit: User
+    Submit --> [*]: Credentials
+}
+CreateAccount --> Prompt
+CreateAccount --> Authenticate
+CreateAccount: String?
 
 Authenticate --> Prompt
 Authenticate: Credentials
 
 ForgotPass -> Prompt
 ForgotPass: String
-EnterAccountInfo --> CreateAccount
-EnterAccountInfo --> Prompt
-
-CreateAccount: User
-CreateAccount --> Authenticate
-CreateAccount --> EnterAccountInfo
-
-EnterAccountInfo: String?
-
 
 note "This is a note $platform $export_lang about login " as N1
 
