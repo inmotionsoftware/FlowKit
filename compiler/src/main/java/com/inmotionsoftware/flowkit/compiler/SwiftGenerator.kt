@@ -23,7 +23,7 @@ public fun <T> Iterable<T>.fork(transform: (T) -> Boolean, a: (T) -> Unit, b: (T
 
 fun Visibility.toSwift(): String =
     when (this) {
-        Visibility.PUBLIC -> ""
+        Visibility.PUBLIC -> "public"
         Visibility.PRIVATE -> "private"
         Visibility.PROTECTED -> "internal"
     }
