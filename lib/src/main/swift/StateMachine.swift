@@ -14,6 +14,7 @@ public protocol StateFactory {
     associatedtype State: FlowState
     associatedtype Input
     func createState(context: Input) -> State
+    func createState(error: Error) -> State
 }
 
 public protocol StateMachine: StateFactory {
@@ -22,12 +23,15 @@ public protocol StateMachine: StateFactory {
 
     func dispatch(state: State) -> Promise<State>
     func getResult(state: State) -> Result?
-    func onTerminate(state: State, context: Result) -> Promise<Result>
+    func onTerminate(state: State, context: Result) -> Promise<Output>
 }
 
 public extension StateMachine {
-    func onTerminate(state: State, context: Result) -> Promise<Result> {
-        return Promise.value(context)
+    func onTerminate(state: State, context: Result) -> Promise<Output> {
+        switch (context) {
+        case .success(let out): return Promise.value(out)
+        case .failure(let err): return Promise(error: err)
+        }
     }
 }
 
@@ -61,22 +65,26 @@ public struct StateMachineHost<SM: StateMachine>: Flow {
     }
 
     fileprivate func jumpToState(state: State) -> Promise<Output> {
-        return self
-            .nextState(prev: state, curr: state)
+        return nextState(prev: state, curr: state)
             .map {
-                switch ($0) {
-                case .success(let out): return out
+                switch($0) {
+                case .success(let val): return val
                 case .failure(let err): throw err
                 }
             }
     }
 
-    fileprivate func nextState(prev: State, curr: State) -> Promise<SM.Result> {
+    fileprivate func nextState(prev: State, curr: State) -> Promise<Swift.Result<Output, Error>> {
         self.delegate.map { $0(prev, curr) }
         guard let result = stateMachine.getResult(state: curr) else {
-            return self.stateMachine.dispatch(state: curr).then { self.nextState(prev: curr, curr: $0) }
+        return self.stateMachine.dispatch(state: curr)
+            .then { self.nextState(prev: curr, curr: $0) }
+            .recover { self.nextState(prev: curr, curr: self.stateMachine.createState(error: $0)) }
         }
+
         return self.stateMachine.onTerminate(state: curr, context: result)
+            .map {.success($0) }
+            .recover { Promise.value(.failure($0)) }
     }
 }
 

@@ -138,15 +138,19 @@ fun StateMachineGenerator.toKotlin(builder: Writer) {
             override fun dispatch(state: ${stateName}): Promise<${stateName}> =
                 when (state) {
                     ${ stateEnum.values.filter{ it.name != "Terminate" }.joinToString(separator = "\n\t") { "is ${stateName}.${it.name} -> on${it.name}(state=state, context=state.context).map { to${stateName}(substate=it) }" } }
-                    is ${stateName}.Terminate -> onTerminate(state=state, context=state.context).map { ${stateName}.Terminate(context=it) }
+                    is ${stateName}.Terminate -> onTerminate(state=state, context=state.context)
+                        .map { ${stateName}.Terminate(context=Result.Success(it)) as ${stateName} }
+                        .recover { Promise.value(${stateName}.Terminate(Result.Failure(it)) as ${stateName}) }
                 }
-        
+                
+            
             override fun getResult(state: ${stateName}): ${result}? =
                 when (state) {
                     is ${stateName}.Terminate -> state.context
                     else -> null
                 }
         
+            override fun createState(error: Throwable):  ${stateName} = ${stateName}.Fail(context=error)        
             override fun createState(context: ${input}): ${stateName} = ${stateName}.Begin(context=context)
         }
 

@@ -15,12 +15,18 @@ interface StateMachineDelegate<State> {
 
 interface StateFactory<State: FlowState, Input> {
     fun createState(context: Input): State
+    fun createState(error: Throwable): State
 }
 
 interface StateMachine<State: FlowState, Input, Output>: StateMachineDelegate<State>, StateFactory<State, Input> {
     fun dispatch(state: State): Promise<State>
+
     fun getResult(state: State): Result<Output>?
-    fun onTerminate(state: State, context: Result<Output>) :  Promise<Result<Output>> = Promise.value(context)
+    fun onTerminate(state: State, context: Result<Output>) :  Promise<Output> =
+        when (context) {
+            is Result.Success -> Promise.value(context.value)
+            is Result.Failure -> Promise(error=context.cause)
+        }
 
     override fun stateDidChange(from: State, to: State) {}
 }
@@ -44,19 +50,21 @@ open class StateMachineHost<State: FlowState, Input, Output, SM: StateMachine<St
 
     private fun jumpToState(state: State): Promise<Output> =
         nextState(prev=state, curr=state)
-            .map {
-                when (it) {
-                    is Result.Success -> it.value
-                    is Result.Failure -> throw it.cause
-                }
-            }
+            .map { when(it) {
+                is Result.Success -> it.value
+                is Result.Failure -> throw it.cause
+            }}
 
     private fun nextState(prev: State, curr: State): Promise<Result<Output>> {
         this.stateDidChange(from=prev, to=curr)
         this.stateMachine.getResult(state=curr)?.let {
             return this.stateMachine.onTerminate(state=curr, context=it)
+                .map { Result.Success(it) as Result<Output> }
+                .recover { Promise.value(Result.Failure<Output>(it)) }
         }
-        return stateMachine.dispatch(state=curr).thenMap { nextState(prev=curr, curr=it) }
+        return stateMachine.dispatch(state=curr)
+            .thenMap { nextState(prev=curr, curr=it) }
+            .recover { nextState(prev=curr, curr=stateMachine.createState(error=it)) }
     }
 }
 

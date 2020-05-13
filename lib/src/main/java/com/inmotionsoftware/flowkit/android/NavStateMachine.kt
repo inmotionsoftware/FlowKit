@@ -30,10 +30,10 @@ interface NavStateMachine {
     fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, context: Unit, animated: Boolean = true): Promise<O> = subflow(activity=activity, animated=animated)
     fun <O, A: FlowActivity<O>> subflow(activity: Class<A>, animated: Boolean = true): Promise<O> = subflow(activity=activity, bundle=null, animated=animated)
     fun <I, O, A: FlowInputActivity<I,O>> subflow(activity: Class<A>, context: I, animated: Boolean = true): Promise<O> =
-        subflow(activity=activity, bundle=Bundle().put("input", context), animated=animated)
+        subflow(activity=activity, bundle=Bundle().put("context", context), animated=animated)
 }
 
-private const val FLOWKIT_BUNDLE_CONTEXT = "com.inmotionsoftware.flowkit.Context"
+internal const val FLOWKIT_BUNDLE_CONTEXT = "com.inmotionsoftware.flowkit.Context"
 
 abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), StateMachineDelegate<S>, NavStateMachine, StateMachine<S,I,O> {
 
@@ -134,19 +134,21 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
 
     protected open fun jumpToState(state: S): Promise<O> =
         nextState(prev=state, curr=state)
-            .map {
-                when (it) {
-                    is Result.Success -> it.value
-                    is Result.Failure -> throw it.cause
-                }
-            }
+            .map { when(it) {
+                is Result.Success -> it.value
+                is Result.Failure -> throw it.cause
+            }}
 
     private fun nextState(prev: S, curr: S): Promise<Result<O>> {
         this.stateDidChange(from=prev, to=curr)
         this.getResult(state=curr)?.let {
             return this.onTerminate(state=curr, context=it)
+                .map { Result.Success(it) as Result<O> }
+                .recover { Promise.value(Result.Failure<O>(it)) }
         }
-        return dispatch(state=curr).thenMap { nextState(prev=curr, curr=it) }
+        return dispatch(state=curr)
+            .thenMap { nextState(prev=curr, curr=it) }
+            .recover { nextState(prev=curr, curr=createState(error=it)) }
     }
 
     protected fun createFragmentContainerView(): Int {
@@ -256,13 +258,15 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
 }
 
 abstract class BootstrapActivity: StateMachineActivity<BootstrapActivity.State, Unit, Unit>(), StateMachine<BootstrapActivity.State, Unit, Unit> {
-    @Parcelize
-    class State(): FlowState, StateFactory<BootstrapActivity.State, Unit>, Parcelable {
-        override fun createState(context: Unit) = State()
+
+    sealed class State: FlowState {
+        @Parcelize class Begin(val context: Unit): State(), Parcelable
+        @Parcelize class Fail(val context: Throwable): State(), Parcelable
     }
 
     override fun defaultState() = createState(Unit)
-    override final fun createState(context: Unit) = State()
+    override final fun createState(context: Unit) = State.Begin(context=context)
+    override fun createState(error: Throwable): State = State.Fail(context=error)
 
     override final fun dispatch(state: State): Promise<State> =
         onBegin(state=state, context=Unit)
@@ -274,7 +278,11 @@ abstract class BootstrapActivity: StateMachineActivity<BootstrapActivity.State, 
             .map { defaultState() }
 
     override final fun getResult(state: State): Result<Unit>? = null
-    override final fun onTerminate(state: State, context: Result<Unit>) :  Promise<Result<Unit>> = Promise.value(context)
+    override final fun onTerminate(state: State, context: Result<Unit>) :  Promise<Unit> =
+        when (context) {
+            is Result.Success -> Promise.value(context.value)
+            is Result.Failure -> Promise(error=context.cause)
+        }
 
     abstract fun onBegin(state: State, context: Unit): Promise<Unit>
     open fun onFail(state: State, context: Throwable): Promise<Unit> {
