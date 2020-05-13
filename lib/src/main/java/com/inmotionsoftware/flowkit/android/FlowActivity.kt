@@ -17,7 +17,6 @@ import com.inmotionsoftware.promisekt.fulfill
 import com.inmotionsoftware.promisekt.reject
 
 val FLOW_KIT_ACTIVITY_RESULT: String = "FLOWKIT_RESULT"
-val FLOW_KIT_ACTIVITY_INPUT: String = "FLOWKIT_INPUT"
 
 inline fun <reified T> toResult(intent: Intent): Result<T> =
     intent
@@ -85,6 +84,6 @@ abstract class FlowInputActivity<Input, Output>: FlowActivity<Output>() {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.input = loadInput(intent.getBundleExtra(FLOW_KIT_ACTIVITY_RESULT))
+        this.input = loadInput(intent.getBundleExtra(FLOWKIT_BUNDLE_CONTEXT))
     }
 }

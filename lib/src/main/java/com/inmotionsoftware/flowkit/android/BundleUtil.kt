@@ -7,6 +7,8 @@ import android.util.SizeF
 import java.io.Serializable
 
 fun <T> Bundle.put(key: String?, value: T): Bundle {
+    if (value == null) return this
+
     when (value) {
         is Boolean -> this.putBoolean(key, value)
         is Byte -> this.putByte(key, value)
