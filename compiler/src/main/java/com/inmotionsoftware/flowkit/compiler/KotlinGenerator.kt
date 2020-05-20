@@ -44,6 +44,21 @@ fun Enumeration.toKotlin(builder: Writer, isNested: Boolean = false) {
     builder.appendln()
 }
 
+fun UmlEnum.toKotlin(writer: Writer) {
+    val hasTypes = this.cases.any { it.value.type != null }
+    val name = this.name.toJavaCase()
+    if (hasTypes) {
+        writer.appendln("sealed class ${name} {")
+        this.cases.values.filter { it.type != null }.joinTo(writer, separator = "\t\n", postfix = "\n") { "@Parcelize class ${it.name.toJavaCase()}(val context: ${it.type}): ${name}(), Parcelable" }
+        this.cases.values.filter { it.type == null }.joinTo(writer, separator = "\t\n", postfix = "\n") { "@Parcelize class ${it.name.toJavaCase()}: ${name}(), Parcelable" }
+        writer.appendln("}")
+    } else {
+        writer.appendln("enum class ${name} {")
+        this.cases.values.joinTo(writer, separator = ",\n\t", postfix = "\n") { it.name }
+        writer.appendln("}")
+    }
+}
+
 fun Visibility.toKotlin(): String =
     when (this) {
         Visibility.PUBLIC -> ""

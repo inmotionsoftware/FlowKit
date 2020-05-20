@@ -10,12 +10,6 @@ import SwiftUI
 import FlowKit
 import PromiseKit
 
-public enum LoginViewResult {
-    case login(email: String, password: String)
-    case register
-    case forgotPassword(email: String)
-}
-
 struct LoginView: FlowableView {
     typealias Input = String?
     typealias Output = LoginViewResult
@@ -32,7 +26,7 @@ struct LoginView: FlowableView {
     }
 
     func login() {
-        self.resolve(.login(email: email, password: password))
+        self.resolve(.login(Credentials(username: email, password: password)) )
     }
 
     func register() {
@@ -40,7 +34,7 @@ struct LoginView: FlowableView {
     }
 
     func forgot() {
-        self.resolve(.forgotPassword(email: email))
+        self.resolve(.forgotPassword(email))
     }
 
     var body: some View {

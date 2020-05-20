@@ -172,53 +172,105 @@ class UmlClass(val name: String) {
     val fields = mutableListOf<UmlField>()
 }
 
-fun process(classDiagram: ClassDiagram, title: String): List<UmlClass> {
+class UmlResults(val classes: List<UmlClass>, val enums: List<UmlEnum>)
+
+class UmlEnum(val name: String) {
+    class Case(val name: String, val type: String? = null)
+    val cases = mutableMapOf<String,Case>()
+
+    fun add(case: Case) {
+        cases.put(case.name, case)
+    }
+}
+
+fun processClasses(classDiagram: ClassDiagram): List<UmlClass> {
     val classes = mutableListOf<UmlClass>()
 
+    // Process classes
     classDiagram.entityFactory.leafs2()
         .filter { it.leafType == LeafType.CLASS }
         .forEach {
 
-        val clazz = UmlClass(it.codeGetName.toString().toJavaCase())
+            val clazz = UmlClass(it.codeGetName.toString().toJavaCase())
 
-        val modifier = it.visibilityModifier
-        val type = it.leafType
-        val symbol = it.uSymbol
-        val generic = it.generic
-        it.bodier.fieldsToDisplay.forEach {
+            val modifier = it.visibilityModifier
+            val type = it.leafType
+            val symbol = it.uSymbol
+            val generic = it.generic
+            it.bodier.fieldsToDisplay.forEach {
 
-            val str = it.getDisplay(false)
-            val strs = str.split(":")
-            val name = strs.first()
-            var type = strs.last()
+                val str = it.getDisplay(false)
+                val strs = str.split(":")
+                val name = strs.first()
+                var type = strs.last()
 
-            var def: String? = null
-            if (type.contains('=')) {
-                val vals = type.split("=")
-                type = vals.first()
-                def = vals.last()
+                var def: String? = null
+                if (type.contains('=')) {
+                    val vals = type.split("=")
+                    type = vals.first()
+                    def = vals.last()
+                }
+
+                val vis = when (it.visibilityModifier ?: VisibilityModifier.PUBLIC_FIELD) {
+                    VisibilityModifier.PRIVATE_FIELD -> Visibility.PRIVATE
+                    VisibilityModifier.PUBLIC_FIELD -> Visibility.PUBLIC
+                    VisibilityModifier.PROTECTED_FIELD -> Visibility.PROTECTED
+                    else -> throw IllegalArgumentException("Unsupported visibility ${it.visibilityModifier.toString()}")
+                }
+                clazz.fields.add(UmlField(visibility=vis, name=name.trim(), type=type.trim(), def=def?.trim()))
             }
 
-            val vis = when (it.visibilityModifier ?: VisibilityModifier.PUBLIC_FIELD) {
-                VisibilityModifier.PRIVATE_FIELD -> Visibility.PRIVATE
-                VisibilityModifier.PUBLIC_FIELD -> Visibility.PUBLIC
-                VisibilityModifier.PROTECTED_FIELD -> Visibility.PROTECTED
-                else -> throw IllegalArgumentException("Unsupported visibility ${it.visibilityModifier.toString()}")
+            if (it.bodier.methodsToDisplay.size > 0) {
+                throw IllegalStateException("Methods are unsupported")
             }
-            clazz.fields.add(UmlField(visibility=vis, name=name.trim(), type=type.trim(), def=def?.trim()))
+            classes.add(clazz)
         }
-
-        if (it.bodier.methodsToDisplay.size > 0) {
-            throw IllegalStateException("Methods are unsupported")
-        }
-        classes.add(clazz)
-    }
     return classes
 }
 
+fun processEnums(classDiagram: ClassDiagram): List<UmlEnum> {
+    val enums = mutableListOf<UmlEnum>()
+    // Process Enums...
+    classDiagram.entityFactory.leafs2()
+        .filter { it.leafType == LeafType.ENUM }
+        .forEach {
+            val name = it.code.name
+            val enum = UmlEnum(name)
+            it.bodier.rawBody.forEach {
+                val case = if (it.contains(':')) {
+                    val values = it.split(':')
+                    val name = values.first().trim()
+                    val type = values.last().trim()
+                    UmlEnum.Case(name, type)
+                } else {
+                    UmlEnum.Case(it)
+                }
+                enum.add(case)
+            }
+            enums += enum
+        }
+    return enums
+}
+
+fun process(classDiagram: ClassDiagram, title: String): UmlResults {
+    return UmlResults(
+        processClasses(classDiagram),
+        processEnums(classDiagram)
+    )
+}
 
 fun process(objectDiagram: ObjectDiagram, title: String) {
     TODO("Object diagrams are unsupported")
+}
+
+fun UmlResults.toKotlin(writer: Writer) {
+    this.classes.forEach { it.toKotlin(writer) }
+    this.enums.forEach { it.toKotlin(writer) }
+}
+
+fun UmlResults.toSwift(writer: Writer) {
+    this.classes.forEach { it.toSwift(writer) }
+    this.enums.forEach { it.toSwift(writer) }
 }
 
 fun String.toJavaCase(): String {
@@ -276,11 +328,11 @@ fun processPuml(namespace: String, inputFile: File, imageDir: File?, exportForma
                 }
             }
             is ClassDiagram -> {
-                val classes = process(classDiagram = diagram, title = title)
+                val result = process(classDiagram = diagram, title = title)
                 when (exportFormat) {
-                    ExportFormat.JAVA -> { classes.forEach { it.toKotlin(writer) } }
-                    ExportFormat.KOTLIN -> { classes.forEach { it.toKotlin(writer) } }
-                    ExportFormat.SWIFT -> { classes.forEach { it.toSwift(writer) } }
+                    ExportFormat.JAVA -> { result.toKotlin(writer) }
+                    ExportFormat.KOTLIN -> { result.toKotlin(writer) }
+                    ExportFormat.SWIFT -> { result.toSwift(writer) }
                 }
             }
             is ObjectDiagram -> process(objectDiagram = diagram, title = title)

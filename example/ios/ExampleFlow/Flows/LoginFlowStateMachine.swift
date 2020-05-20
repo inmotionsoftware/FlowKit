@@ -11,6 +11,10 @@ import PromiseKit
 import SwiftUI
 import FlowKit
 
+extension UUID {
+    static func randomUUID() -> UUID { return UUID() }
+}
+
 extension StateMachine {
     @discardableResult
     func showAlert(title: String, message: String) -> Promise<Void> {
@@ -66,7 +70,7 @@ public class LoginFlowController: ViewCache, NavStateMachine, LoginFlowStateMach
             .map {
                 switch ($0) {
                     case .forgotPassword(let email): return .forgotPass(email)
-                    case .login(let email, let pass): return .authenticate(Credentials(username: email, password: pass))
+                    case .login(let creds): return .authenticate(creds)
                     case .register: return .createAccount(nil)
                 }
             }

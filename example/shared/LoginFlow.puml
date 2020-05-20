@@ -42,12 +42,14 @@ Authenticate --> [*]: OAuthToken
 @enduml
 
 @startuml
+enum LoginViewResult {
+    login: Credentials
+    register
+    forgotPassword: String
+}
+
 class User {
-!if ($export_lang == "swift")
-    {field} +userId: UUID = UUID()
-!else
     {field} +userId: UUID = UUID.randomUUID()
-!endif
     +firstName: String
     +lastName: String
     +email: String

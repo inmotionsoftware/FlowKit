@@ -5,7 +5,6 @@ import com.inmotionsoftware.example.service.UserService
 import com.inmotionsoftware.example.views.CreateAccountFragment
 import com.inmotionsoftware.example.views.ForgotPasswordFragment
 import com.inmotionsoftware.example.views.LoginFragment
-import com.inmotionsoftware.example.views.LoginViewResult
 import com.inmotionsoftware.flowkit.android.StateMachineActivity
 import com.inmotionsoftware.flowkit.back
 import com.inmotionsoftware.flowkit.cancel
@@ -50,8 +49,8 @@ class LoginFlowController() : StateMachineActivity<LoginFlowState, Unit, OAuthTo
         this.subflow(fragment=LoginFragment(), context=context)
             .map {
                 when(it) {
-                    is LoginViewResult.ForgotPassword -> FromPrompt.ForgotPass(it.email)
-                    is LoginViewResult.Login -> FromPrompt.Authenticate(Credentials(username=it.email, password=it.password))
+                    is LoginViewResult.ForgotPassword -> FromPrompt.ForgotPass(it.context)
+                    is LoginViewResult.Login -> FromPrompt.Authenticate(it.context)
                     is LoginViewResult.Register -> FromPrompt.CreateAccount(null)
                 }
             }

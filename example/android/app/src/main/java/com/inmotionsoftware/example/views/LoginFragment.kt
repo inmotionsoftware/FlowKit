@@ -6,14 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.inmotionsoftware.example.R
+import com.inmotionsoftware.example.flows.Credentials
+import com.inmotionsoftware.example.flows.LoginViewResult
 import com.inmotionsoftware.flowkit.android.FlowFragment
 import kotlinx.android.synthetic.main.fragment_login.*
-
-sealed class LoginViewResult {
-    class Login(val email: String, val password: String): LoginViewResult()
-    class Register: LoginViewResult()
-    class ForgotPassword(val email: String): LoginViewResult()
-}
 
 /**
  * A simple [Fragment] subclass.
@@ -21,19 +17,17 @@ sealed class LoginViewResult {
  * create an instance of this fragment.
  */
 class LoginFragment : FlowFragment<String?, LoginViewResult>() {
-//    lateinit var binding: FragmentLoginBinding
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         this.error.setText(this.input ?: "")
         this.login.setOnClickListener {
             val email = email.text.toString()
             val pass = password.text.toString()
-            this.resolve(LoginViewResult.Login(email,pass))
+            this.resolve(LoginViewResult.Login(Credentials(username = email, password = pass)))
         }
 
         this.forgot_pass.setOnClickListener {
             val email = email.text.toString()
-            this.resolve(LoginViewResult.ForgotPassword(email = email))
+            this.resolve(LoginViewResult.ForgotPassword(email))
         }
 
         this.create.setOnClickListener {

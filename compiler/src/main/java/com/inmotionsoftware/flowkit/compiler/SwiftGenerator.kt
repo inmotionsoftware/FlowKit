@@ -36,6 +36,14 @@ fun UmlClass.toSwift(writer: Writer) {
     """.trimIndent())
 }
 
+fun UmlEnum.toSwift(writer: Writer) {
+    val name = this.name.toJavaCase()
+    writer.appendln("public enum ${name} {")
+    this.cases.values.filter { it.type != null }.joinTo(writer, separator = "\n\t", postfix = "\n") { "case ${it.name.decapitalize()}(_ context: ${it.type})" }
+    this.cases.values.filter { it.type == null }.joinTo(writer, separator = "\n\t", postfix = "\n") { "case ${it.name.decapitalize()}" }
+    writer.appendln("}")
+}
+
 fun writeSwiftHeader(writer: Writer) {
     writer.appendln("""
         import Foundation
