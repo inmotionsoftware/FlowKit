@@ -175,6 +175,90 @@ extension MyFlowController {
 }
 ```
 
+# Generating Model classes
+
+FlowKit can be used to generate simple model classes. This is useful when passing complex types between states, you can define the type directly in the puml file and let FlowKit generate the kotlin / swift code. This is limited to simple POJO objects, it has no support for inheritance, abstract classes, constructors, etc.
+
+```plantuml
+@startuml
+class Credentials {
+    +username: String
+    +password: String
+}
+@enduml
+```
+
+Will generate the following swift:
+
+```swift
+public struct Credentials {
+    public username: String
+    public password: String
+}
+```
+
+And the following Kotlin:
+```kotlin
+data class Credentials(
+    val username: String,
+    val password: String
+)
+```
+
+You can also generate enums as well:
+
+```plantuml
+@startuml
+enum MyEnum {
+    One
+    Two
+}
+@enduml
+```
+This will generate swift:
+
+```swift
+enum MyEnum {
+    case one
+    case two
+}
+```
+
+and Kotlin:
+```kotlin
+enum class MyEnum {
+    One,
+    Two
+}
+```
+
+You can create enums with associated values
+
+```plantuml
+@startuml
+enum MyEnum {
+    One: Int
+    Two: String
+}
+@enduml
+```
+This will generate:
+
+```swift
+enum MyEnum {
+    case one(_ context: Int)
+    case two(_ context: String)
+}
+```
+
+This works for Kotlin as well, in this case a `sealed class` is used
+```kotlin
+sealed class MyEnum {
+    class One(val context: Int): MyEnum()
+    class Two(val context: String): MyEnum()
+}
+```
+
 <!--
 ## Example
 [Example Login Flow](example/ios/ExampleFlow/Flows/LoginFlowStateMachine.swift)
