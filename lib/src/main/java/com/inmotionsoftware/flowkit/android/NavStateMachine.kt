@@ -151,7 +151,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             .recover { nextState(prev=curr, curr=createState(error=it)) }
     }
 
-    protected fun createFragmentContainerView(): Int {
+    protected open fun createFragmentContainerView(): Int {
         val viewId = View.generateViewId()
 
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
