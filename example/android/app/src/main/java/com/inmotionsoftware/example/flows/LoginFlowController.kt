@@ -24,7 +24,7 @@ class CreateAccountFlowController(): StateMachineActivity<CreateAccountState, St
     }
 
     override fun onEnterInfo(state: CreateAccountState, context: String?): Promise<CreateAccountState.FromEnterInfo> =
-        this.subflow(fragment=CreateAccountFragment(), context=context)
+        this.subflow2(fragment=CreateAccountFragment::class.java, context=context)
             .map { CreateAccountState.FromEnterInfo.Submit(it) }
 
     override fun onSubmit(state: CreateAccountState, context: User): Promise<CreateAccountState.FromSubmit> =
@@ -46,7 +46,7 @@ class LoginFlowController() : StateMachineActivity<LoginFlowState, Unit, OAuthTo
         Promise.value(FromBegin.Prompt(null))
 
     override fun onPrompt(state: LoginFlowState, context: String?): Promise<FromPrompt> =
-        this.subflow(fragment=LoginFragment(), context=context)
+        this.subflow2(fragment=LoginFragment::class.java, context=context)
             .map {
                 when(it) {
                     is LoginViewResult.ForgotPassword -> FromPrompt.ForgotPass(it.context)
@@ -66,7 +66,7 @@ class LoginFlowController() : StateMachineActivity<LoginFlowState, Unit, OAuthTo
             }
 
     override fun onForgotPass(state: LoginFlowState, context: String): Promise<FromForgotPass> =
-        this.subflow(fragment=ForgotPasswordFragment(), context=context)
+        this.subflow2(fragment=ForgotPasswordFragment::class.java, context=context)
         .map { FromForgotPass.Prompt(it) as FromForgotPass }
             .canceled { FromForgotPass.Prompt(null) as FromForgotPass }
             .recover { Promise.value(FromForgotPass.Prompt(it.localizedMessage)) }

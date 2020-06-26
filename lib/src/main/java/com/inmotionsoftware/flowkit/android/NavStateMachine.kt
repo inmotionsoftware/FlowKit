@@ -37,6 +37,17 @@ internal const val FLOWKIT_BUNDLE_CONTEXT = "com.inmotionsoftware.flowkit.Contex
 
 abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), StateMachineDelegate<S>, NavStateMachine, StateMachine<S,I,O> {
 
+    private val fragmentCache = mutableMapOf<Class<Fragment>, Fragment>()
+
+    fun <F: Fragment> getFragment(fragment: Class<F>): F {
+        val key = fragment as Class<Fragment>
+        fragmentCache.get(key)?.let { return it as F }
+        val f = fragment.newInstance()
+        fragmentCache[key] = f
+        return f
+    }
+
+
     inner class Model: ViewModel() {
         val state = MutableLiveData<S>()
         val pending = MutableLiveData<Boolean>()
@@ -97,6 +108,9 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         }
         return dispatch<O2>(intent)
     }
+
+    fun <I2, O2, F: FlowFragment<I2,O2>> subflow2(fragment: Class<F>, context: I2, animated: Boolean = true): Promise<O2> =
+            subflow(fragment=getFragment(fragment), context=context, animated=animated)
 
     override fun <I2, O2, F: FlowFragment<I2,O2>> subflow(fragment: F, context: I2, animated: Boolean): Promise<O2> {
         if (this.isDestroyed) {
