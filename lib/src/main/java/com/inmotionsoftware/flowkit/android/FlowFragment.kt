@@ -1,4 +1,5 @@
 package com.inmotionsoftware.flowkit.android
+import android.icu.util.Output
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.inmotionsoftware.flowkit.Flow
@@ -21,21 +23,27 @@ interface Backable {
     fun onBackPressed()
 }
 
-class FlowViewModel<I, O>: ViewModel() {
-    val input = MutableLiveData<I>()
-    lateinit var resolver: Resolver<O>
+
+class FlowViewModelFactory<Input, Output>(val input: Input, val resolver: Resolver<Output>): ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return modelClass.getConstructor(Object::class.java, Resolver::class.java).newInstance(input, resolver)
+    }
+}
+
+class FlowViewModel<I, O>(input: I, var resolver: Resolver<O>): ViewModel() {
+    val input = MutableLiveData<I>(input)
 }
 
 abstract class FlowFragment<Input, Output>: Fragment(), Backable {
-    lateinit var viewModel: FlowViewModel<Input, Output>
-    val input: Input? get() { return viewModel.input.value }
+    private val viewModel: FlowViewModel<Input,Output> by lazy {
+        val key = "${DEFAULT_KEY}:${FlowViewModel::class.java.canonicalName}:${this.javaClass.canonicalName}"
+        @Suppress("UNCHECKED_CAST")
+        ViewModelProvider(this.requireActivity()).get(key, FlowViewModel::class.java) as FlowViewModel<Input,Output>
+    }
+
+    abstract fun onInputAttached(input: Input)
 
     fun resolve(result: com.inmotionsoftware.promisekt.Result<Output>) {
-        if (!this::viewModel.isInitialized) {
-            Log.e(FlowFragment::class.java.name, "Resolver has not been initialized")
-            return
-        }
-
         viewModel.resolver.resolve(result)
     }
 
@@ -59,16 +67,11 @@ abstract class FlowFragment<Input, Output>: Fragment(), Backable {
         back()
     }
 
-    private fun loadViewModel() {
-        @Suppress("UNCHECKED_CAST")
-        viewModel = ViewModelProvider(requireActivity()).get(FlowViewModel::class.java) as FlowViewModel<Input,Output>
-        Log.d(this.javaClass.name, "input: ${viewModel.input.value}")
-    }
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadViewModel()
-        // TODO: Load bundle
+        this.viewModel.input.observe(requireActivity(), Observer {
+            this.onInputAttached(input=it)
+        })
     }
 }

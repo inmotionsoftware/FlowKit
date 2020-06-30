@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.icu.util.Output
 import android.os.Bundle
 import android.os.Parcelable
 import android.os.PersistableBundle
@@ -14,13 +15,13 @@ import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.inmotionsoftware.flowkit.*
 import com.inmotionsoftware.flowkit.Result
 import com.inmotionsoftware.promisekt.*
 import kotlinx.android.parcel.Parcelize
+import java.lang.IllegalStateException
+import java.lang.RuntimeException
 
 
 interface NavStateMachine {
@@ -34,6 +35,7 @@ interface NavStateMachine {
 }
 
 internal const val FLOWKIT_BUNDLE_CONTEXT = "com.inmotionsoftware.flowkit.Context"
+internal const val DEFAULT_KEY = "com.inmotionsoftware.flowkit.android.ViewModelProvider.DefaultKey"
 
 abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), StateMachineDelegate<S>, NavStateMachine, StateMachine<S,I,O> {
 
@@ -119,8 +121,10 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
 
         val pending = Promise.pending<O2>()
         this.runOnUiThread {
-            @Suppress("UNCHECKED_CAST")
-            val viewModel = ViewModelProvider(this).get(FlowViewModel::class.java) as FlowViewModel<I2,O2>
+            val factory = FlowViewModelFactory(context, pending.second)
+            val key = "${DEFAULT_KEY}:${FlowViewModel::class.java.canonicalName}:${fragment.javaClass.canonicalName}"
+            val provider = ViewModelProvider(this@StateMachineActivity, factory)
+            val viewModel = provider.get(key, FlowViewModel::class.java) as FlowViewModel<I2, O2>
             viewModel.input.value = context
             viewModel.resolver = pending.second
             pushFragment(fragment, animated)

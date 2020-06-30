@@ -17,8 +17,14 @@ import kotlinx.android.synthetic.main.fragment_login.*
  * create an instance of this fragment.
  */
 class LoginFragment : FlowFragment<String?, LoginViewResult>() {
+
+    private var errorString: String? = null
+    override fun onInputAttached(input: String?) {
+        errorString = input
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        this.error.setText(this.input ?: "")
+        this.error.setText(errorString ?: "")
         this.login.setOnClickListener {
             val email = email.text.toString()
             val pass = password.text.toString()

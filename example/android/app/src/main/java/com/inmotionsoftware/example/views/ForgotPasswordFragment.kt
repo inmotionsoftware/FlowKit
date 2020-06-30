@@ -17,9 +17,14 @@ import kotlinx.android.synthetic.main.fragment_forgot_password.*
  */
 class ForgotPasswordFragment : FlowFragment<String?, String>() {
 
+    private var emailString: String? = null
+    override fun onInputAttached(input: String?) {
+        emailString = input
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        email.setText(this.input ?: "")
-        submit.setOnClickListener {
+        this.email.setText(emailString)
+        this.submit.setOnClickListener {
             val email = email.text.toString()
             this.resolve(email)
         }

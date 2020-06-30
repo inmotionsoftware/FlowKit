@@ -18,8 +18,14 @@ import kotlinx.android.synthetic.main.fragment_create_account.*
  */
 class CreateAccountFragment : FlowFragment<String?, User>() {
 
+    private var errorString: String? = null
+    override fun onInputAttached(input: String?) {
+        errorString = input
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        this.error.setText(this.input ?: "")
+        this.error.setText(errorString ?: "")
+
         this.create.setOnClickListener {
             val firstName = this.firstName.text.toString()
             val lastName = this.lastName.text.toString()
