@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.icu.util.Output
 import android.os.Bundle
 import android.os.Parcelable
 import android.os.PersistableBundle
@@ -37,7 +36,65 @@ interface NavStateMachine {
 internal const val FLOWKIT_BUNDLE_CONTEXT = "com.inmotionsoftware.flowkit.Context"
 internal const val DEFAULT_KEY = "com.inmotionsoftware.flowkit.android.ViewModelProvider.DefaultKey"
 
-abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), StateMachineDelegate<S>, NavStateMachine, StateMachine<S,I,O> {
+fun <T> ignore_error(lambda: () -> T): T? =
+    when(val rt = attempt(lambda)) {
+        is com.inmotionsoftware.promisekt.Result.fulfilled -> rt.value
+        is com.inmotionsoftware.promisekt.Result.rejected -> null
+    }
+
+fun <T> attempt(lambda: () -> T): com.inmotionsoftware.promisekt.Result<T> {
+    try {
+        val rt = lambda()
+        return com.inmotionsoftware.promisekt.Result.fulfilled(rt)
+    } catch(e: Throwable) {
+        return com.inmotionsoftware.promisekt.Result.rejected(e)
+    }
+}
+
+private interface StateMachineViewModelDelegate<S: FlowState, I,O>: StateMachineDelegate<S> {
+    val stateMachine: StateMachine<S,I,O>
+    fun resolve(result: O)
+    fun reject(cause: Throwable)
+}
+
+private class StateMachineViewModel<S: FlowState, I, O>: ViewModel(), StateMachineDelegate<S> {
+    var state: S? = null
+    var pending: Boolean = false
+    lateinit var delegate: StateMachineViewModelDelegate<S, I, O>
+
+    override fun stateDidChange(from: S, to: S) {
+        state = to
+        this.delegate.stateDidChange(from=from, to=to)
+    }
+
+    fun jumpToState(state: S) =
+        nextState(prev=state, curr=state)
+            .done { when(it) {
+                is Result.Success -> delegate.resolve(it.value)
+                is Result.Failure -> delegate.reject(it.cause)
+            }}
+
+    private fun nextState(prev: S, curr: S): Promise<Result<O>> {
+        this.stateDidChange(from = prev, to = curr)
+        delegate.stateMachine.getResult(state=curr)?.let {
+            return delegate.stateMachine.onTerminate(state=curr, context=it)
+                .map { Result.Success(it) as Result<O> }
+                .recover { Promise.value(Result.Failure<O>(it)) }
+        }
+
+        return delegate.stateMachine.dispatch(state=curr)
+            .thenMap { nextState(prev=curr, curr=it) }
+            .recover { nextState(prev=curr, curr=delegate.stateMachine.createState(error=it)) }
+    }
+}
+
+internal object StateMachineViewModelStore: ViewModelStoreOwner {
+    private val store = ViewModelStore()
+    override fun getViewModelStore(): ViewModelStore = store
+}
+
+abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), StateMachineViewModelDelegate<S, I, O>, NavStateMachine, StateMachine<S,I,O> {
+    override val stateMachine: StateMachine<S,I,O> get() = this
 
     private val fragmentCache = mutableMapOf<Class<Fragment>, Fragment>()
 
@@ -49,15 +106,15 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         return f
     }
 
-
-    inner class Model: ViewModel() {
-        val state = MutableLiveData<S>()
-        val pending = MutableLiveData<Boolean>()
-    }
-
     var delegate: StateMachineDelegate<S>? = null
     private var viewId = 0
-    val viewModel = Model()
+    private val viewModel by lazy {
+        val store = StateMachineViewModelStore.viewModelStore
+        val key = "${DEFAULT_KEY}:${this.javaClass.canonicalName}:${StateMachineViewModel::class.java}"
+        val vm = ViewModelProvider(StateMachineViewModelStore).get(key, StateMachineViewModel::class.java) as StateMachineViewModel<S, I, O>
+        vm.delegate = this
+        vm
+    }
 
     private fun <O2> dispatch(intent: Intent): Promise<O2> {
         val pending = Promise.pending<O2>()
@@ -70,7 +127,11 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             pending.second.resolve(result)
         }
 
-        this.startActivityForResult(intent, code)
+        try {
+            this.startActivityForResult(intent, code)
+        } catch (t: Throwable) {
+            pending.second.reject(t)
+        }
         return pending.first
     }
 
@@ -92,6 +153,10 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     }
 
     override fun <O2, A: Activity> subflow(activity: Class<A>, bundle: Bundle?, animated: Boolean): Promise<O2> {
+        if (this.isDestroyed) {
+            return Promise(error=IllegalStateException("Trying to add fragment to destroyed Activity"))
+        }
+
         val intent = Intent(this, activity)
         intent.putExtra(FLOWKIT_BUNDLE_CONTEXT, bundle)
         if (!animated) {
@@ -101,29 +166,22 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         return dispatch<O2>(intent)
     }
 
-    override fun <S2: FlowState, I2, O2, SM2: StateMachineActivity<S2, I2, O2>> subflow(stateMachine: Class<SM2>, state: S2, animated: Boolean): Promise<O2>  {
-        val intent = Intent(this, stateMachine)
-        intent.putExtra(FLOWKIT_BUNDLE_CONTEXT, Bundle().put("state", state))
-        if (!animated) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            this.overridePendingTransition(0, 0);
-        }
-        return dispatch<O2>(intent)
-    }
+    override fun <S2: FlowState, I2, O2, SM2: StateMachineActivity<S2, I2, O2>> subflow(stateMachine: Class<SM2>, state: S2, animated: Boolean): Promise<O2> =
+        subflow(activity=stateMachine, bundle=Bundle().put("state", state), animated=animated)
 
     fun <I2, O2, F: FlowFragment<I2,O2>> subflow2(fragment: Class<F>, context: I2, animated: Boolean = true): Promise<O2> =
             subflow(fragment=getFragment(fragment), context=context, animated=animated)
 
     override fun <I2, O2, F: FlowFragment<I2,O2>> subflow(fragment: F, context: I2, animated: Boolean): Promise<O2> {
         if (this.isDestroyed) {
-            return Promise(error= java.lang.IllegalStateException("Trying to add fragment to destroyed Activity"))
+            return Promise(error=IllegalStateException("Trying to add fragment to destroyed Activity"))
         }
 
         val pending = Promise.pending<O2>()
         this.runOnUiThread {
             val factory = FlowViewModelFactory(context, pending.second)
             val key = "${DEFAULT_KEY}:${FlowViewModel::class.java.canonicalName}:${fragment.javaClass.canonicalName}"
-            val provider = ViewModelProvider(this@StateMachineActivity, factory)
+            val provider = ViewModelProvider(StateMachineViewModelStore, factory)
             val viewModel = provider.get(key, FlowViewModel::class.java) as FlowViewModel<I2, O2>
             viewModel.input.value = context
             viewModel.resolver = pending.second
@@ -142,32 +200,6 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             trans.commit()
     }
 
-    override fun stateDidChange(from: S, to: S) {
-        this.runOnUiThread {
-            Log.d(this.localClassName, "stateDidChange: ${from} -> ${to}")
-            this.viewModel.state.value = to
-        }
-        this.delegate?.stateDidChange(from=from, to=to)
-    }
-
-    protected open fun jumpToState(state: S): Promise<O> =
-        nextState(prev=state, curr=state)
-            .map { when(it) {
-                is Result.Success -> it.value
-                is Result.Failure -> throw it.cause
-            }}
-
-    private fun nextState(prev: S, curr: S): Promise<Result<O>> {
-        this.stateDidChange(from=prev, to=curr)
-        this.getResult(state=curr)?.let {
-            return this.onTerminate(state=curr, context=it)
-                .map { Result.Success(it) as Result<O> }
-                .recover { Promise.value(Result.Failure<O>(it)) }
-        }
-        return dispatch(state=curr)
-            .thenMap { nextState(prev=curr, curr=it) }
-            .recover { nextState(prev=curr, curr=createState(error=it)) }
-    }
 
     protected open fun createFragmentContainerView(): Int {
         val viewId = View.generateViewId()
@@ -181,18 +213,12 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         return viewId
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        val pending = this.viewModel.pending.value
-        if (pending == null || !pending) {
-            // start the statemachine
-            val state = this.viewModel.state.value!!
-            Log.d(this.localClassName, "loading state: ${state}")
-            jumpToState(state)
-                .done { this.resolve(it) }
-                .catch { this.reject(it) }
+    override fun stateDidChange(from: S, to: S) {
+        if (this.isDestroyed) {
+            throw IllegalStateException("activity has been destroyed!")
         }
+        super.stateDidChange(from, to)
+        this.delegate?.stateDidChange(from, to)
     }
 
     open fun defaultState(): S {
@@ -201,12 +227,28 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
 
     private fun setup(savedInstanceState: Bundle?) {
         this.viewId = createFragmentContainerView()
+        this.viewModel.delegate = this
 
-        // load our state machine...
-        this.viewModel.state.value = if (savedInstanceState == null) {
-            this.defaultState()
+        // check the ViewModel's state. If we have one in memory it's very likely that it is more
+        // up to date then our saved instance.
+        if (this.viewModel.state == null) {
+
+            // we don't have a ViewModel state, let's try to load one from our saved instance. Failing
+            // that we'll load the default state
+            val state = if (savedInstanceState != null) {
+                (savedInstanceState.get("state") as? S) ?: this.defaultState()
+            } else {
+                this.defaultState()
+            }
+            // load our state machine...
+            this.viewModel.state = state
+            Log.d(this.localClassName, "loading state: ${state}")
+
+            // jump into the state machine
+            this.viewModel.jumpToState(state)
         } else {
-            (savedInstanceState.get("state") as? S) ?: this.defaultState()
+            // If we have a ViewModel state, no need to jump into the state machine, one is already
+            // up and running
         }
     }
 
@@ -225,7 +267,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val state = this.viewModel.state.value
+        val state = this.viewModel.state
         Log.d(this.localClassName, "saving state: ${state}")
         outState.put("state", state)
     }
@@ -233,7 +275,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
-        val state = this.viewModel.state.value
+        val state = this.viewModel.state
         Log.d(this.localClassName, "saving state: ${state}")
         outState.put("state", state)
     }
@@ -241,7 +283,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        this.viewModel.pending.value = true
+        this.viewModel.pending = true
         FlowDispatcher.dispatch(requestCode, resultCode, data)
     }
 
@@ -258,11 +300,13 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         this.finish()
     }
 
-    protected fun resolve(result: O) {
+    override fun resolve(result: O) {
+        if (this.isDestroyed) return
         this.finish(Result.Success(result))
     }
 
-    protected fun reject(cause: Throwable) {
+    override fun reject(cause: Throwable) {
+        if (this.isDestroyed) return
         this.finish(Result.Failure(cause))
     }
 

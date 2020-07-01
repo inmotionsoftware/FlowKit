@@ -38,7 +38,7 @@ abstract class FlowFragment<Input, Output>: Fragment(), Backable {
     private val viewModel: FlowViewModel<Input,Output> by lazy {
         val key = "${DEFAULT_KEY}:${FlowViewModel::class.java.canonicalName}:${this.javaClass.canonicalName}"
         @Suppress("UNCHECKED_CAST")
-        ViewModelProvider(this.requireActivity()).get(key, FlowViewModel::class.java) as FlowViewModel<Input,Output>
+        ViewModelProvider(StateMachineViewModelStore).get(key, FlowViewModel::class.java) as FlowViewModel<Input,Output>
     }
 
     abstract fun onInputAttached(input: Input)

@@ -1,5 +1,6 @@
 package com.inmotionsoftware.example.flows
 
+import android.os.Bundle
 import com.inmotionsoftware.example.flows.LoginFlowState.*
 import com.inmotionsoftware.example.service.UserService
 import com.inmotionsoftware.example.views.CreateAccountFragment
@@ -9,38 +10,44 @@ import com.inmotionsoftware.flowkit.android.StateMachineActivity
 import com.inmotionsoftware.flowkit.back
 import com.inmotionsoftware.flowkit.cancel
 import com.inmotionsoftware.flowkit.canceled
-import com.inmotionsoftware.promisekt.Promise
-import com.inmotionsoftware.promisekt.map
+import com.inmotionsoftware.promisekt.*
 import com.inmotionsoftware.promisekt.recover
+import java.util.concurrent.Executor
+import kotlin.Result
+import com.inmotionsoftware.example.flows.CreateAccountState.FromSubmit
+import com.inmotionsoftware.flowkit.FlowState
 
 typealias UUID = java.util.UUID
 typealias Date = java.util.Date
 
 class CreateAccountFlowController(): StateMachineActivity<CreateAccountState, String?, Credentials>(), CreateAccountStateMachine {
-    private val service = UserService()
+    val service = UserService()
 
-    override fun onBegin(state: CreateAccountState, context: String?): Promise<CreateAccountState.FromBegin> {
-        TODO("Not yet implemented")
-    }
+    override fun onBegin(state: CreateAccountState, context: String?): Promise<CreateAccountState.FromBegin> =
+        Promise.value(CreateAccountState.FromBegin.EnterInfo(context))
 
     override fun onEnterInfo(state: CreateAccountState, context: String?): Promise<CreateAccountState.FromEnterInfo> =
         this.subflow2(fragment=CreateAccountFragment::class.java, context=context)
             .map { CreateAccountState.FromEnterInfo.Submit(it) }
 
-    override fun onSubmit(state: CreateAccountState, context: User): Promise<CreateAccountState.FromSubmit> =
+    override fun onSubmit(state: CreateAccountState, context: User): Promise<FromSubmit> =
         this.service
             .createAccount(user=context)
             .map {
                 val creds = Credentials(username=context.email, password=context.password)
-                CreateAccountState.FromSubmit.End(creds) as CreateAccountState.FromSubmit
+                FromSubmit.End(creds) as FromSubmit
             }
-            .recover { Promise.value(CreateAccountState.FromSubmit.EnterInfo(null)) }
+            .recover { Promise.value(FromSubmit.EnterInfo(it.localizedMessage)) }
 
 }
 
 class LoginFlowController() : StateMachineActivity<LoginFlowState, Unit, OAuthToken>(), LoginFlowStateMachine {
 
     private val service = UserService()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onBegin(state: LoginFlowState, context: Unit): Promise<FromBegin> =
         Promise.value(FromBegin.Prompt(null))

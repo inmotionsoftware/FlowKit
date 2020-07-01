@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_home.view.*
 
 sealed class HomeResult: Parcelable {
     @Parcelize class Login(): HomeResult()
+    @Parcelize class Profile(): HomeResult()
 }
 
 class HomeActivity : FlowActivity<HomeResult>() {
@@ -22,6 +23,10 @@ class HomeActivity : FlowActivity<HomeResult>() {
 
         this.login.setOnClickListener {
             this.resolve(HomeResult.Login())
+        }
+
+        this.profile.setOnClickListener {
+            this.resolve(HomeResult.Profile())
         }
     }
 }

@@ -4,6 +4,9 @@
 Home --> Login
 Home --> Home
 
+Home --> Profile
+Profile --> Home
+
 Login --> Home
 Home --> [*]
 

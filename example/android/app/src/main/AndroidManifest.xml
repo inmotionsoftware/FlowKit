@@ -10,9 +10,10 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
 
-        <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".flows.LoginFlowController"></activity>
-        <activity android:name=".flows.AppFlowController"></activity>
+        <activity android:name=".HomeActivity"/>
+        <activity android:name=".flows.LoginFlowController"/>
+        <activity android:name=".flows.AppFlowController"/>
+        <activity android:name=".flows.CreateAccountFlowController"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>
