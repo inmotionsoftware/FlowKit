@@ -21,6 +21,8 @@ import com.inmotionsoftware.promisekt.*
 import kotlinx.android.parcel.Parcelize
 import java.lang.IllegalStateException
 import java.lang.RuntimeException
+import java.nio.BufferUnderflowException
+import java.util.*
 
 
 interface NavStateMachine {
@@ -34,7 +36,6 @@ interface NavStateMachine {
 }
 
 internal const val FLOWKIT_BUNDLE_CONTEXT = "com.inmotionsoftware.flowkit.Context"
-internal const val DEFAULT_KEY = "com.inmotionsoftware.flowkit.android.ViewModelProvider.DefaultKey"
 
 fun <T> ignore_error(lambda: () -> T): T? =
     when(val rt = attempt(lambda)) {
@@ -51,13 +52,13 @@ fun <T> attempt(lambda: () -> T): com.inmotionsoftware.promisekt.Result<T> {
     }
 }
 
-private interface StateMachineViewModelDelegate<S: FlowState, I,O>: StateMachineDelegate<S> {
+interface StateMachineViewModelDelegate<S: FlowState, I,O>: StateMachineDelegate<S> {
     val stateMachine: StateMachine<S,I,O>
     fun resolve(result: O)
     fun reject(cause: Throwable)
 }
 
-private class StateMachineViewModel<S: FlowState, I, O>: ViewModel(), StateMachineDelegate<S> {
+class StateMachineViewModel<S: FlowState, I, O>: ViewModel(), StateMachineDelegate<S> {
     var state: S? = null
     var pending: Boolean = false
     lateinit var delegate: StateMachineViewModelDelegate<S, I, O>
@@ -88,9 +89,53 @@ private class StateMachineViewModel<S: FlowState, I, O>: ViewModel(), StateMachi
     }
 }
 
-internal object StateMachineViewModelStore: ViewModelStoreOwner {
-    private val store = ViewModelStore()
-    override fun getViewModelStore(): ViewModelStore = store
+internal object StateMachineViewModelProvider {
+    private class Owner: ViewModelStoreOwner {
+        private val store = ViewModelStore()
+        override fun getViewModelStore(): ViewModelStore = store
+    }
+
+    private val map = mutableMapOf<String, ViewModelStoreOwner>()
+
+    private fun getViewModelOwner(key: String): ViewModelStoreOwner {
+        val map = this.map
+        map.get(key)?.let { return it }
+        val owner = Owner()
+        map.put(key, owner)
+        return owner
+    }
+
+    fun <S: FlowState, I,O> finish(activity: StateMachineActivity<S, I, O>) {
+        val key = activity.javaClass.canonicalName!!
+        val map = this.map
+        map.remove(key)?.viewModelStore?.clear()
+    }
+
+    fun <S: FlowState, I,O, SM: StateMachineActivity<S, I, O>> of(activity: SM): StateMachineViewModel<S, I,O> {
+        val owner = getViewModelOwner(activity.javaClass.canonicalName!!)
+        val key = getViewModelKey(viewModel=StateMachineViewModel::class.java, target=activity)
+        @Suppress("UNCHECKED_CAST")
+        return ViewModelProvider(owner).get(key, StateMachineViewModel::class.java) as StateMachineViewModel<S, I,O>
+    }
+
+    fun <I, O, F: FlowFragment<I,O>> of(activity: Activity, fragment: F): FlowViewModel<I,O> {
+        val owner = getViewModelOwner(activity.javaClass.canonicalName!!)
+        val key = getViewModelKey(viewModel=FlowViewModel::class.java, target= fragment)
+        @Suppress("UNCHECKED_CAST")
+        return ViewModelProvider(owner).get(key, FlowViewModel::class.java) as FlowViewModel<I,O>
+    }
+
+    fun <I, O, F: FlowFragment<I,O>> of(activity: Activity, fragment: F, factory: ViewModelProvider.Factory): FlowViewModel<I,O> {
+        val owner = getViewModelOwner(activity.javaClass.canonicalName!!)
+        val key = getViewModelKey(viewModel=FlowViewModel::class.java, target= fragment)
+        @Suppress("UNCHECKED_CAST")
+        return ViewModelProvider(owner, factory).get(key, FlowViewModel::class.java) as FlowViewModel<I,O>
+    }
+}
+
+private const val DEFAULT_KEY = "com.inmotionsoftware.flowkit.android.ViewModelProvider.DefaultKey"
+internal fun <VM: ViewModel> getViewModelKey(viewModel: Class<VM>, target: Any): String {
+    return "${DEFAULT_KEY}:${viewModel.canonicalName}:${target.javaClass.canonicalName}"
 }
 
 abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), StateMachineViewModelDelegate<S, I, O>, NavStateMachine, StateMachine<S,I,O> {
@@ -109,9 +154,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     var delegate: StateMachineDelegate<S>? = null
     private var viewId = 0
     private val viewModel by lazy {
-        val store = StateMachineViewModelStore.viewModelStore
-        val key = "${DEFAULT_KEY}:${this.javaClass.canonicalName}:${StateMachineViewModel::class.java}"
-        val vm = ViewModelProvider(StateMachineViewModelStore).get(key, StateMachineViewModel::class.java) as StateMachineViewModel<S, I, O>
+        val vm = StateMachineViewModelProvider.of(this)
         vm.delegate = this
         vm
     }
@@ -127,6 +170,8 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             pending.second.resolve(result)
         }
 
+        // start a new ViewModel store on the stack. We use this to scope all of the subflow's
+        // ViewModels, this allows us to destroy them after the flow unwinds
         try {
             this.startActivityForResult(intent, code)
         } catch (t: Throwable) {
@@ -180,9 +225,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         val pending = Promise.pending<O2>()
         this.runOnUiThread {
             val factory = FlowViewModelFactory(context, pending.second)
-            val key = "${DEFAULT_KEY}:${FlowViewModel::class.java.canonicalName}:${fragment.javaClass.canonicalName}"
-            val provider = ViewModelProvider(StateMachineViewModelStore, factory)
-            val viewModel = provider.get(key, FlowViewModel::class.java) as FlowViewModel<I2, O2>
+            val viewModel = StateMachineViewModelProvider.of(activity=this, fragment=fragment, factory=factory)
             viewModel.input.value = context
             viewModel.resolver = pending.second
             pushFragment(fragment, animated)
@@ -298,6 +341,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         }
         this.setResult(code, intent)
         this.finish()
+        StateMachineViewModelProvider.finish(this)
     }
 
     override fun resolve(result: O) {
