@@ -19,7 +19,7 @@ interface StateFactory<State: FlowState, Input> {
 }
 
 interface StateMachine<State: FlowState, Input, Output>: StateMachineDelegate<State>, StateFactory<State, Input> {
-    fun dispatch(state: State): Promise<State>
+    fun dispatch(prev: State, state: State): Promise<State>
 
     fun getResult(state: State): Result<Output>?
     fun onTerminate(state: State, context: Result<Output>) :  Promise<Output> =
@@ -62,7 +62,7 @@ open class StateMachineHost<State: FlowState, Input, Output, SM: StateMachine<St
                 .map { Result.Success(it) as Result<Output> }
                 .recover { Promise.value(Result.Failure<Output>(it)) }
         }
-        return stateMachine.dispatch(state=curr)
+        return stateMachine.dispatch(prev=prev, state=curr)
             .thenMap { nextState(prev=curr, curr=it) }
             .recover { nextState(prev=curr, curr=stateMachine.createState(error=it)) }
     }

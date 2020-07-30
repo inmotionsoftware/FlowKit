@@ -83,7 +83,7 @@ class StateMachineViewModel<S: FlowState, I, O>: ViewModel(), StateMachineDelega
                 .recover { Promise.value(Result.Failure<O>(it)) }
         }
 
-        return delegate.stateMachine.dispatch(state=curr)
+        return delegate.stateMachine.dispatch(prev=prev, state=curr)
             .thenMap { nextState(prev=curr, curr=it) }
             .recover { nextState(prev=curr, curr=delegate.stateMachine.createState(error=it)) }
     }
@@ -374,12 +374,12 @@ abstract class BootstrapActivity: StateMachineActivity<BootstrapActivity.State, 
     override final fun createState(context: Unit) = State.Begin(context=context)
     override fun createState(error: Throwable): State = State.Fail(context=error)
 
-    override final fun dispatch(state: State): Promise<State> =
-        onBegin(state=state, context=Unit)
-            .recover { onFail(state=state, context=it) }
+    override final fun dispatch(prev: State, state: State): Promise<State> =
+        onBegin(state=prev, context=Unit)
+            .recover { onFail(state=prev, context=it) }
             .ensure {
                 Log.w(BootstrapActivity::class.java.simpleName, "Bootstrap StateMachine was resolved, restarting now")
-                dispatch(state=state)
+                dispatch(state=prev)
             }
             .map { defaultState() }
 
