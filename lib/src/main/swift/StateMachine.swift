@@ -21,7 +21,7 @@ public protocol StateMachine: StateFactory {
     associatedtype Output
     typealias Result = Swift.Result<Output, Error>
 
-    func dispatch(state: State) -> Promise<State>
+    func dispatch(prev: State, state: State) -> Promise<State>
     func getResult(state: State) -> Result?
     func onTerminate(state: State, context: Result) -> Promise<Output>
 }
@@ -77,7 +77,7 @@ public struct StateMachineHost<SM: StateMachine>: Flow {
     fileprivate func nextState(prev: State, curr: State) -> Promise<Swift.Result<Output, Error>> {
         self.delegate.map { $0(prev, curr) }
         guard let result = stateMachine.getResult(state: curr) else {
-        return self.stateMachine.dispatch(state: curr)
+        return self.stateMachine.dispatch(prev: prev, state: curr)
             .then { self.nextState(prev: curr, curr: $0) }
             .recover { self.nextState(prev: curr, curr: self.stateMachine.createState(error: $0)) }
         }

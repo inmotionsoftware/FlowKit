@@ -379,7 +379,7 @@ abstract class BootstrapActivity: StateMachineActivity<BootstrapActivity.State, 
             .recover { onFail(state=prev, context=it) }
             .ensure {
                 Log.w(BootstrapActivity::class.java.simpleName, "Bootstrap StateMachine was resolved, restarting now")
-                dispatch(state=prev)
+                dispatch(prev=prev, state=prev)
             }
             .map { defaultState() }
 

@@ -139,12 +139,12 @@ fun StateMachineGenerator.toSwift(builder: Writer) {
         func createState(error: Error) -> State { return .fail(error) }    
         func createState(context: Input) -> State { return .begin(context) } 
     
-        func dispatch(state: State) -> Promise<State> {
+        func dispatch(prev: State, state: State) -> Promise<State> {
             switch state {
-            case .terminate(let context): return onTerminate(state: state, context: context)
+            case .terminate(let context): return onTerminate(state: prev, context: context)
                 .map { State.terminate(Result.success($0)) }
                 .recover { Promise.value(State.terminate(Result.failure($0))) }
-            ${ enums.values.concatln { "case .${it.name.decapitalize()}(let context): return on${it.name}(state: state, context: context).map { State(substate: \$0) }" } }
+            ${ enums.values.concatln { "case .${it.name.decapitalize()}(let context): return on${it.name}(state: prev, context: context).map { State(substate: \$0) }" } }
             }
         }
 
