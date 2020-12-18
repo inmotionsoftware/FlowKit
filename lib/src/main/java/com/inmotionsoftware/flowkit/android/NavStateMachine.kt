@@ -290,8 +290,18 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             // jump into the state machine
             this.viewModel.jumpToState(state)
         } else {
-            // If we have a ViewModel state, no need to jump into the state machine, one is already
-            // up and running
+            //
+            // Jump to the saved state if there is one.
+            // Use case:
+            //    1. Put the app to the background
+            //    2. Receive push notification
+            //    3. Select the notification to open the app
+            //
+            // Without jumping to the saved state, the app would present a blank screen
+            //
+            this.viewModel.apply {
+                state?.let { jumpToState(it) }
+            }
         }
     }
 
