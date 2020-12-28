@@ -68,6 +68,10 @@ abstract class FlowFragment<Input, Output>: Fragment(), Backable {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.viewModel.input.value?.let {
+            this.onInputAttached(input = it)
+        }
+
         this.viewModel.input.observe(requireActivity(), Observer {
             this.onInputAttached(input=it)
         })
