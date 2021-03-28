@@ -308,12 +308,11 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setup(savedInstanceState)
-    }
-
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+        val clearVm = intent.extras?.getBoolean("clear_vm") ?: false
+        if(clearVm){
+            //clear out the viewModel for app restore
+            clearProvider()
+        }
         setup(savedInstanceState)
     }
 
@@ -343,6 +342,10 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         }
         this.setResult(code, intent)
         this.finish()
+        StateMachineViewModelProvider.finish(this)
+    }
+
+    protected fun clearProvider(){
         StateMachineViewModelProvider.finish(this)
     }
 
