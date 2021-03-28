@@ -311,7 +311,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         val clearVm = intent.extras?.getBoolean("clear_vm") ?: false
         if(clearVm){
             //clear out the viewModel for app restore
-            clearProvider()
+            this.viewModel.state = null
         }
         setup(savedInstanceState)
     }
