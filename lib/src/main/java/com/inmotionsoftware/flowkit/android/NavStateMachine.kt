@@ -326,14 +326,6 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     }
 
     @CallSuper
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        val state = this.viewModel.state
-        Log.d(this.localClassName, "saving state: ${state}")
-        outState.put("state", state)
-    }
-
-    @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         this.viewModel.pending = true
