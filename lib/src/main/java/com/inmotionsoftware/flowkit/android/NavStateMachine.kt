@@ -308,11 +308,9 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val clearVm = intent.extras?.getBoolean("clear_vm") ?: false
-        if(clearVm){
-            //clear out the viewModel for app restore
-            this.viewModel.state = null
-        }
+        //clear out the viewModel for app restore
+        this.viewModel.state = null
+
         setup(savedInstanceState)
     }
 
