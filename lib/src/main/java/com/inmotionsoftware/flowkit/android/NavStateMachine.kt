@@ -226,8 +226,8 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         this.runOnUiThread {
             val factory = FlowViewModelFactory(context, pending.second)
             val viewModel = StateMachineViewModelProvider.of(activity=this, fragment=fragment, factory=factory)
-            viewModel.input.value = context
-            viewModel.resolver = pending.second
+
+            viewModel.init(context, pending.second)
             pushFragment(fragment, animated)
         }
         return pending.first

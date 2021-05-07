@@ -30,8 +30,15 @@ class FlowViewModelFactory<Input, Output>(val input: Input, val resolver: Resolv
     }
 }
 
-class FlowViewModel<I, O>(input: I, var resolver: Resolver<O>): ViewModel() {
-    val input = MutableLiveData<I>(input)
+class FlowViewModel<I, O>: ViewModel() {
+    private var _resolver: Resolver<O>? = null
+    val resolver: Resolver<O> = _resolver!!
+    val input = MutableLiveData<I>()
+
+    fun init(inputValue: I, resolver: Resolver<O>) {
+        input.value = inputValue
+        _resolver = resolver
+    }
 }
 
 abstract class FlowFragment<Input, Output>: Fragment(), Backable {
