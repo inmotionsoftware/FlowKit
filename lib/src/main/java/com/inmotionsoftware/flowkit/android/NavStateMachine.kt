@@ -224,7 +224,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
 
         val pending = Promise.pending<O2>()
         this.runOnUiThread {
-            val factory = FlowViewModelFactory(context, pending.second)
+            val factory = FlowViewModelFactory()
             val viewModel = StateMachineViewModelProvider.of(activity=this, fragment=fragment, factory=factory)
 
             viewModel.init(context, pending.second)

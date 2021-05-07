@@ -24,15 +24,17 @@ interface Backable {
 }
 
 
-class FlowViewModelFactory<Input, Output>(val input: Input, val resolver: Resolver<Output>): ViewModelProvider.Factory {
+class FlowViewModelFactory: ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(Object::class.java, Resolver::class.java).newInstance(input, resolver)
+        return modelClass.getConstructor().newInstance()
     }
 }
 
 class FlowViewModel<I, O>: ViewModel() {
     private var _resolver: Resolver<O>? = null
-    val resolver: Resolver<O> = _resolver!!
+    val resolver: Resolver<O>
+        get() = _resolver!!
+
     val input = MutableLiveData<I>()
 
     fun init(inputValue: I, resolver: Resolver<O>) {
