@@ -32,7 +32,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -46,8 +45,6 @@ import com.inmotionsoftware.flowkit.Result
 import com.inmotionsoftware.promisekt.*
 import kotlinx.android.parcel.Parcelize
 import java.lang.IllegalStateException
-import java.lang.RuntimeException
-import java.nio.BufferUnderflowException
 import java.util.*
 
 
@@ -270,8 +267,8 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     }
 
 
-    protected open fun createFragmentContainerView(): Int {
-        val viewId = View.generateViewId()
+    protected open fun createFragmentContainerView(restoredViewId: Int?): Int {
+        val viewId = restoredViewId ?: View.generateViewId()
 
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         val layout = LinearLayout(this.applicationContext)
@@ -295,7 +292,20 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     }
 
     private fun setup(savedInstanceState: Bundle?) {
-        this.viewId = createFragmentContainerView()
+        if (savedInstanceState != null) {
+            this.viewId = createFragmentContainerView(savedInstanceState.getInt("view_id"))
+
+            val fragments = supportFragmentManager.fragments
+            // This implementation use local cache variable
+            // as the source of truth for fragments.
+            // In case of restoring we need to put all saved fragments to cache
+            fragments.forEach { fragment ->
+                val key = fragment.javaClass as Class<Fragment>
+                fragmentCache[key] = fragment
+            }
+        } else {
+            this.viewId = createFragmentContainerView(null)
+        }
         this.viewModel.delegate = this
 
         // check the ViewModel's state. If we have one in memory it's very likely that it is more
@@ -346,6 +356,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         val state = this.viewModel.state
         Log.d(this.localClassName, "saving state: ${state}")
         outState.put("state", state)
+        outState.putInt("view_id", viewId)
     }
 
     @CallSuper
