@@ -263,7 +263,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             .addToBackStack(null)
 
             if (!animated) trans.setCustomAnimations(0, 0)
-            trans.commit()
+            trans.commitAllowingStateLoss()
     }
 
 
