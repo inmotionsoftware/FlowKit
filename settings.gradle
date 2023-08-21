@@ -1,3 +1,13 @@
 rootProject.name='FlowKit'
 include ':lib', ':compiler'
 //project(':app').projectDir = new File('example/android/app')
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' } // <- here we go
+        gradlePluginPortal()
+    }
+}
