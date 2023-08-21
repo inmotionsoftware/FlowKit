@@ -29,8 +29,8 @@ package com.inmotionsoftware.flowkit
 
 import android.os.Parcelable
 import com.inmotionsoftware.promisekt.Promise
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 interface Flow<Input, Output> {
     fun startFlow(context: Input): Promise<Output>

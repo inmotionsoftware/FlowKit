@@ -29,12 +29,9 @@ package com.inmotionsoftware.flowkit
 
 import android.os.Parcelable
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
-import com.inmotionsoftware.flowkit.android.*
 import com.inmotionsoftware.promisekt.*
 
-interface FlowState: Parcelable {}
+interface FlowState: Parcelable
 
 interface StateMachineDelegate<State> {
     fun stateDidChange(from: State, to: State)
@@ -58,8 +55,12 @@ interface StateMachine<State: FlowState, Input, Output>: StateMachineDelegate<St
     override fun stateDidChange(from: State, to: State) {}
 }
 
-fun <S: FlowState, I, O, S2: FlowState, I2, O2, SM2: StateMachine<S2,I2,O2>> StateMachine<S,I,O>.subflow(stateMachine: SM2, context: I2): Promise<O2> =
-    StateMachineHost<S2,I2,O2, SM2>(stateMachine=stateMachine)
+@Suppress("unused")
+fun <S2: FlowState, I2, O2, SM2: StateMachine<S2,I2,O2>> subflow(
+    stateMachine: SM2,
+    context: I2
+): Promise<O2> =
+    StateMachineHost(stateMachine=stateMachine)
         .startFlow(context=context)
 
 open class StateMachineHost<State: FlowState, Input, Output, SM: StateMachine<State, Input, Output>>(val stateMachine: SM) : Flow<Input, Output>, StateMachineDelegate<State> {
@@ -86,8 +87,8 @@ open class StateMachineHost<State: FlowState, Input, Output, SM: StateMachine<St
         this.stateDidChange(from=prev, to=curr)
         this.stateMachine.getResult(state=curr)?.let {
             return this.stateMachine.onTerminate(state=curr, context=it)
-                .map { Result.Success(it) as Result<Output> }
-                .recover { Promise.value(Result.Failure<Output>(it)) }
+                .map { res -> Result.Success<Output>(res) as Result<Output> }
+                .recover { err -> Promise.value(Result.Failure(err)) }
         }
         return stateMachine.dispatch(prev=prev, state=curr)
             .thenMap { nextState(prev=curr, curr=it) }
@@ -95,6 +96,7 @@ open class StateMachineHost<State: FlowState, Input, Output, SM: StateMachine<St
     }
 }
 
+@Suppress("unused")
 fun <S: FlowState, I, O, SM: StateMachine<S, I, O>> Bootstrap.Companion.startFlow(stateMachine: SM, context: I): Unit =
     StateMachineHost(stateMachine=stateMachine)
     .startFlow(context=context)
@@ -105,7 +107,7 @@ fun <S: FlowState, I, O, SM: StateMachine<S, I, O>> Bootstrap.Companion.startFlo
             Log.e(Bootstrap::javaClass.name, "Root flow is being restarted", it)
         }
         .finally {
-            startFlow<S,I,O,SM>(stateMachine=stateMachine, context=context)
+            startFlow(stateMachine=stateMachine, context=context)
         }
 
 

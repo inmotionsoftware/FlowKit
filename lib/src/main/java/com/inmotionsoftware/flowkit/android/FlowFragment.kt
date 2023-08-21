@@ -52,7 +52,7 @@ interface Backable {
 
 
 class FlowViewModelFactory: ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    public override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return modelClass.getConstructor().newInstance()
     }
 }

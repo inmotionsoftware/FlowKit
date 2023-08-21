@@ -3,13 +3,12 @@ package com.inmotionsoftware.example
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
+import com.inmotionsoftware.example.databinding.ActivityHomeBinding
 import com.inmotionsoftware.flowkit.android.FlowActivity
 import com.inmotionsoftware.promisekt.features.after
 import com.inmotionsoftware.promisekt.map
 import com.inmotionsoftware.promisekt.then
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.activity_home.view.*
+import kotlinx.parcelize.Parcelize
 
 sealed class HomeResult: Parcelable {
     @Parcelize class Login(): HomeResult()
@@ -17,15 +16,20 @@ sealed class HomeResult: Parcelable {
 }
 
 class HomeActivity : FlowActivity<HomeResult>() {
+    private lateinit var binding: ActivityHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        this.login.setOnClickListener {
+        binding = ActivityHomeBinding.inflate( layoutInflater )
+        val view = binding.root
+        setContentView(view)
+
+        binding.login.setOnClickListener {
             this.resolve(HomeResult.Login())
         }
 
-        this.profile.setOnClickListener {
+        binding.profile.setOnClickListener {
             this.resolve(HomeResult.Profile())
         }
     }

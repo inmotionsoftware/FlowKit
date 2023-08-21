@@ -36,7 +36,6 @@ import com.inmotionsoftware.example.R
 import com.inmotionsoftware.example.databinding.FragmentCreateAccountBinding
 import com.inmotionsoftware.example.flows.User
 import com.inmotionsoftware.flowkit.android.FlowFragment
-import kotlinx.android.synthetic.main.fragment_create_account.*
 
 /**
  * A simple [Fragment] subclass.
@@ -44,6 +43,7 @@ import kotlinx.android.synthetic.main.fragment_create_account.*
  * create an instance of this fragment.
  */
 class CreateAccountFragment : FlowFragment<String?, User>() {
+    private lateinit var binding: FragmentCreateAccountBinding
 
     private var errorString: String? = null
     override fun onInputAttached(input: String?) {
@@ -51,20 +51,21 @@ class CreateAccountFragment : FlowFragment<String?, User>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        this.error.setText(errorString ?: "")
+        binding.error.setText(errorString ?: "")
 
-        this.create.setOnClickListener {
-            val firstName = this.firstName.text.toString()
-            val lastName = this.lastName.text.toString()
-            val email = this.email.text.toString()
-            val pass = this.password.text.toString()
+        binding.create.setOnClickListener {
+            val firstName = binding.firstName.text.toString()
+            val lastName = binding.lastName.text.toString()
+            val email = binding.email.text.toString()
+            val pass = binding.password.text.toString()
             val user = User(firstName=firstName, lastName = lastName, email = email, password = pass)
             this.resolve(user)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_account, container, false)
+        binding = FragmentCreateAccountBinding.inflate( inflater, container, false)
+        val view = binding.root
+        return view
     }
 }

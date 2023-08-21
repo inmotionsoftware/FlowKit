@@ -33,10 +33,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.inmotionsoftware.example.R
+import com.inmotionsoftware.example.databinding.FragmentLoginBinding
 import com.inmotionsoftware.example.flows.Credentials
 import com.inmotionsoftware.example.flows.LoginViewResult
 import com.inmotionsoftware.flowkit.android.FlowFragment
-import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
  * A simple [Fragment] subclass.
@@ -44,6 +44,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
  * create an instance of this fragment.
  */
 class LoginFragment : FlowFragment<String?, LoginViewResult>() {
+    private lateinit var binding: FragmentLoginBinding
 
     private var errorString: String? = null
     override fun onInputAttached(input: String?) {
@@ -51,25 +52,28 @@ class LoginFragment : FlowFragment<String?, LoginViewResult>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        this.error.setText(errorString ?: "")
-        this.login.setOnClickListener {
-            val email = email.text.toString()
-            val pass = password.text.toString()
+        binding.error.setText(errorString ?: "")
+        binding.login.setOnClickListener {
+            val email = binding.email.text.toString()
+            val pass = binding.password.text.toString()
             this.resolve(LoginViewResult.Login(Credentials(username = email, password = pass)))
         }
 
-        this.forgot_pass.setOnClickListener {
-            val email = email.text.toString()
+        binding.forgotPass.setOnClickListener {
+            val email = binding.email.text.toString()
             this.resolve(LoginViewResult.ForgotPassword(email))
         }
 
-        this.create.setOnClickListener {
-            val email = email.text.toString()
+        binding.create.setOnClickListener {
+            val email = binding.email.text.toString()
             this.resolve(LoginViewResult.Register())
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        // Inflate the layout for this fragment
-        inflater.inflate(R.layout.fragment_login, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+
 }
