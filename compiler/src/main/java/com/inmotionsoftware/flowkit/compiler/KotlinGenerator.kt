@@ -118,7 +118,7 @@ fun writeKotlinHeader(namespace: String, writer: Writer) {
         import com.inmotionsoftware.promisekt.recover
         import com.inmotionsoftware.flowkit.*
         import android.os.Parcelable
-        import kotlinx.android.parcel.Parcelize
+        import kotlinx.parcelize.Parcelize
         """.trimIndent())
 }
 

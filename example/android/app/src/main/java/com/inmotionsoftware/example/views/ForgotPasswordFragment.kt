@@ -35,7 +35,6 @@ import android.view.ViewGroup
 import com.inmotionsoftware.example.R
 import com.inmotionsoftware.example.databinding.FragmentForgotPasswordBinding
 import com.inmotionsoftware.flowkit.android.FlowFragment
-import kotlinx.android.synthetic.main.fragment_forgot_password.*
 
 /**
  * A simple [Fragment] subclass.
@@ -44,21 +43,22 @@ import kotlinx.android.synthetic.main.fragment_forgot_password.*
  */
 class ForgotPasswordFragment : FlowFragment<String?, String>() {
 
+    private lateinit var binding: FragmentForgotPasswordBinding
     private var emailString: String? = null
     override fun onInputAttached(input: String?) {
         emailString = input
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        this.email.setText(emailString)
-        this.submit.setOnClickListener {
-            val email = email.text.toString()
+        binding.email.setText(emailString)
+        binding.submit.setOnClickListener {
+            val email = binding.email.text.toString()
             this.resolve(email)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forgot_password, container, false)
+        binding = FragmentForgotPasswordBinding.inflate(inflater, container, false)
+        return binding.root
     }
 }
