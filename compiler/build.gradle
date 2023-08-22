@@ -9,6 +9,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
         maven { url 'https://jitpack.io' } // <- here we go
     }
 }
@@ -18,7 +19,7 @@ dependencies {
     compileOnly gradleApi()
     compileOnly group: 'com.android.tools.build', name: 'gradle', version: '7.4.2'
     implementation "com.github.inmotionsoftware:promisekt:1.0.0"
-    //implementation 'com.github.User:Repo:Version'
+    implementation 'com.github.User:Repo:Tag'
     implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'net.sourceforge.plantuml:plantuml:1.2020.4'
