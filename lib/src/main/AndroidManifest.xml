@@ -1,2 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.inmotionsoftware.flowkit" />
+        package="com.inmotionsoftware.flowkit" >
+    <application>
+        <activity android:name=".android.BootstrapActivity" android:exported="true"/>
+    </application>
+</manifest>

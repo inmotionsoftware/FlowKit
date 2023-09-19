@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 
 buildscript {
     dependencies {
@@ -12,13 +12,12 @@ buildscript {
 apply plugin: 'flow-kit-compiler'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.inmotionsoftware.example"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion 24
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -35,6 +34,7 @@ android {
     viewBinding {
         enabled = true
     }
+    namespace 'com.inmotionsoftware.example'
 }
 
 dependencies {

@@ -262,8 +262,8 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
             .replace(this.viewId, fragment)
             .addToBackStack(null)
 
-            if (!animated) trans.setCustomAnimations(0, 0)
-            trans.commitAllowingStateLoss()
+        if (!animated) trans.setCustomAnimations(0, 0)
+        trans.commitAllowingStateLoss()
     }
 
 
@@ -288,7 +288,7 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
     }
 
     open fun defaultState(): S {
-        return this.intent.getBundleExtra(FLOWKIT_BUNDLE_CONTEXT).get("state") as S
+        return this.intent.getBundleExtra(FLOWKIT_BUNDLE_CONTEXT)?.get("state") as S
     }
 
     private fun setup(savedInstanceState: Bundle?) {
