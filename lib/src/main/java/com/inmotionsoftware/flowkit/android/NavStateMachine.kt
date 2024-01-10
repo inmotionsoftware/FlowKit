@@ -45,8 +45,6 @@ import com.inmotionsoftware.flowkit.Result
 import com.inmotionsoftware.promisekt.*
 import kotlinx.parcelize.Parcelize
 import java.lang.IllegalStateException
-import java.util.*
-
 
 interface NavStateMachine {
     fun <I, O, F: FlowFragment<I,O>> subflow(fragment: F, context: I, animated: Boolean = true): Promise<O>
@@ -163,6 +161,9 @@ internal fun <VM: ViewModel> getViewModelKey(viewModel: Class<VM>, target: Any):
 abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), StateMachineViewModelDelegate<S, I, O>, NavStateMachine, StateMachine<S,I,O> {
     override val stateMachine: StateMachine<S,I,O> get() = this
 
+    @get:JvmName("getStateMachineDelegate")
+    @set:JvmName("setStateMachineDelegate")
+    var delegate: StateMachineDelegate<S>? = null
     private val fragmentCache = mutableMapOf<Class<Fragment>, Fragment>()
 
     fun <F: Fragment> getFragment(fragment: Class<F>): F {
@@ -173,7 +174,6 @@ abstract class StateMachineActivity<S: FlowState,I,O>: AppCompatActivity(), Stat
         return f
     }
 
-    var delegate: StateMachineDelegate<S>? = null
     private var viewId = 0
     private val viewModel by lazy {
         val vm = StateMachineViewModelProvider.of(this)
